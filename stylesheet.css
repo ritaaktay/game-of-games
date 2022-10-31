@@ -1,0 +1,20 @@
+.background {
+  background: rgb(73, 35, 160);
+  table-layout: fixed;
+  border-spacing: 0;
+}
+.background td {
+  padding: 0;
+}
+.actor {
+  position: absolute;
+}
+.player {
+  background: rgb(255, 255, 255);
+}
+.game {
+  overflow: hidden;
+  max-width: 600px;
+  max-height: 450px;
+  position: relative;
+}
