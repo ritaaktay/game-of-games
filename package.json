@@ -5,7 +5,8 @@
   "main": "bundle.js",
   "scripts": {
     "test": "jest",
-    "build": "esbuild index.js --bundle --outfile=bundle.js"
+    "build": "esbuild index.js --outfile=bundle.js --bundle --watch",
+    "start": "http-server -c-1"
   },
   "author": "",
   "license": "ISC",

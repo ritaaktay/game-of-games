@@ -31,6 +31,7 @@
         constructor(pos, speed) {
           this.pos = pos;
           this.speed = speed;
+          this.xySpeed = 6;
         }
         get type() {
           return "player";
@@ -38,7 +39,27 @@
         static create(pos) {
           return new Player(pos, new Vec(0, 0));
         }
-        update(time, state) {
+        update(time, state, keys) {
+          let xSpeed = 0;
+          if (keys.ArrowLeft)
+            xSpeed -= this.xySpeed;
+          if (keys.ArrowRight)
+            xSpeed += this.xySpeed;
+          let ySpeed = 0;
+          if (keys.ArrowUp)
+            ySpeed -= this.xySpeed;
+          if (keys.ArrowDown)
+            ySpeed += this.xySpeed;
+          let pos = this.pos;
+          let movedX = pos.plus(new Vec(xSpeed * time, 0));
+          if (!state.level.touches(movedX, this.size, "wall")) {
+            pos = movedX;
+          }
+          let movedY = pos.plus(newVec(0, ySpeed * time));
+          if (!state.level.touches(movedY, this.size, "wall")) {
+            pos = movedY;
+          }
+          return new Player(pos, new Vec(xSpeed, ySpeed));
         }
       };
       Player.prototype.size = new Vec(1, 1);
@@ -141,6 +162,12 @@
             this.#drawGrid(level2)
           );
           this.actorLayer = null;
+          this.arrowKeys = this.#trackKeys([
+            "ArrowLeft",
+            "ArrowRight",
+            "ArrowUp",
+            "ArrowDown"
+          ]);
           parent.appendChild(this.dom);
         }
         clear() {
@@ -218,6 +245,18 @@
               this.dom.scrollTop = center.y + margin - height;
             }
           }
+        }
+        #trackKeys(keys) {
+          let down = /* @__PURE__ */ Object.create(null);
+          function track(event) {
+            if (keys.includes(event.key)) {
+              down[event.key] = event.type == "keydown";
+              event.preventDefault();
+            }
+          }
+          window.addEventListener("keydown", track);
+          window.addEventListener("keyup", track);
+          return down;
         }
       };
       module.exports = DOMDisplay2;
