@@ -293,13 +293,13 @@ var require_game = __commonJS({
         this.#runAnimation(this.#updateFrame);
       }
       #updateFrame = (time) => {
-        const state = this.state.update(time, this.arrowKeys);
+        this.state = this.state.update(time, this.arrowKeys);
         this.display.syncState(this.state);
-        if (state.status == "playing") {
+        if (this.state.status == "playing") {
           return true;
         } else {
           display.clear();
-          resolve(state.status);
+          resolve(this.state.status);
           return false;
         }
       };
