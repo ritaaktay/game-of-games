@@ -34,6 +34,11 @@
   border: 1px solid black;
 }
 
+#block_jump_game_container {
+  top: 400px;
+  position: fixed;
+}
+
 #character {
   width: 20px;
   height: 50px;
