@@ -28,11 +28,10 @@
   margin: 0;
 }
 
-#game {
+#block_jump_game {
   width: 500px;
   height: 200px;
   border: 1px solid black;
-  top: 150px;
 }
 
 #character {
