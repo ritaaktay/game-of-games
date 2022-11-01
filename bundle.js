@@ -107,7 +107,7 @@
     "lib/DOMDisplay.js"(exports, module) {
       var DOMDisplay2 = class {
         constructor(parent, level2) {
-          this.scale = 20;
+          this.scale = 40;
           this.dom = this.#createElements(
             "div",
             { class: "game" },

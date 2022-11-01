@@ -2,7 +2,7 @@
   "name": "squid-game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bundle.js",
   "scripts": {
     "test": "jest",
     "build": "esbuild index.js --bundle --outfile=bundle.js"
