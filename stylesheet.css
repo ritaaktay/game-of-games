@@ -10,7 +10,7 @@
   position: absolute;
 }
 .player {
-  background: rgb(255, 255, 255);
+  background: rgb(143, 143, 143);
 }
 .game {
   overflow: hidden;

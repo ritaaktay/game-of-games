@@ -38,6 +38,8 @@
         static create(pos) {
           return new Player(pos, new Vec(0, 0));
         }
+        update(time, state) {
+        }
       };
       Player.prototype.size = new Vec(1, 1);
       module.exports = Player;
@@ -77,6 +79,21 @@
             });
           });
         }
+        touchesElement = function(pos, size, type) {
+          let xStart = Math.floor(pos.x);
+          let xEnd = Math.ceil(pos.x + size.x);
+          let yStart = Math.floor(pos.y);
+          let yEnd = Math.ceil(pos.y + size.y);
+          for (let y = yStart; y < yEnd; y++) {
+            for (let x = xStart; x < xEnd; x++) {
+              let isOutside = x < 0 || x >= this.width || y < 0 || y >= this.height;
+              let here = isOutside ? "wall" : this.rows[y][x];
+              if (here == type)
+                return true;
+            }
+          }
+          return false;
+        };
       };
       module.exports = Level2;
     }
@@ -97,6 +114,16 @@
         get player() {
           return this.actors.find((a) => a.type == "player");
         }
+        update = function(time, keys) {
+          let actors = this.actors.map((actor) => actor.update(time, this, keys));
+          let newState = new State2(this.level, actors, this.status);
+          if (newState.status != "playing")
+            return newState;
+          return newState;
+        };
+        overlap = function(actor1, actor2) {
+          return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
+        };
       };
       module.exports = State2;
     }
