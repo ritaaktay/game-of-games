@@ -162,12 +162,6 @@
             this.#drawGrid(level2)
           );
           this.actorLayer = null;
-          this.arrowKeys = this.#trackKeys([
-            "ArrowLeft",
-            "ArrowRight",
-            "ArrowUp",
-            "ArrowDown"
-          ]);
           parent.appendChild(this.dom);
         }
         clear() {
