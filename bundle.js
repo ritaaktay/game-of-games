@@ -159,11 +159,8 @@ var require_DOMDisplay = __commonJS({
         this.actorLayer = this.#drawActors(state.actors);
         this.dom.appendChild(this.actorLayer);
         this.dom.className = `game ${state.status}`;
-        this.#scrollPlayerIntoView(state);
       }
       #drawGrid(level2) {
-        console.log(this.scale);
-        console.log(`${level2.width * this.scale}px`);
         return this.#createElements(
           "table",
           {
@@ -204,27 +201,6 @@ var require_DOMDisplay = __commonJS({
           dom.appendChild(child);
         }
         return dom;
-      }
-      #scrollPlayerIntoView(state) {
-        {
-          let width = this.dom.clientWidth;
-          let height = this.dom.clientHeight;
-          let margin = width / 3;
-          let left = this.dom.scrollLeft, right = left + width;
-          let top = this.dom.scrollTop, bottom = top + height;
-          let player = state.player;
-          let center = player.pos.plus(player.size.times(0.5)).times(this.scale);
-          if (center.x < left + margin) {
-            this.dom.scrollLeft = center.x - margin;
-          } else if (center.x > right - margin) {
-            this.dom.scrollLeft = center.x + margin - width;
-          }
-          if (center.y < top + margin) {
-            this.dom.scrollTop = center.y - margin;
-          } else if (center.y > bottom - margin) {
-            this.dom.scrollTop = center.y + margin - height;
-          }
-        }
       }
       trackKeys(keys) {
         let down = /* @__PURE__ */ Object.create(null);
@@ -320,11 +296,53 @@ var require_game = __commonJS({
   }
 });
 
+// lib/blockJumpGame.js
+var require_blockJumpGame = __commonJS({
+  "lib/blockJumpGame.js"(exports, module2) {
+    var BlockJumpGame2 = class {
+      constructor() {
+        this.character = document.getElementById("character");
+        this.block = document.getElementById("block");
+        this.button = document.getElementById("jump-button");
+        this.checkIfDead();
+        console.log(this.block);
+        this.button.addEventListener("click", this.jump);
+      }
+      checkIfDead() {
+        setInterval(function() {
+          var characterTop = parseInt(
+            window.getComputedStyle(this.character).getPropertyValue("top")
+          );
+          var blockLeft = parseInt(
+            window.getComputedStyle(this.block).getPropertyValue("left")
+          );
+          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 130) {
+            block.style.animation = "none";
+            block.style.display = "none";
+            alert("You Lost.");
+          }
+        }, 10);
+      }
+      jump = () => {
+        if (this.character.classList != "animate") {
+          this.character.classList.add("animate");
+        }
+        setTimeout(function() {
+          this.character.classList.remove("animate");
+        }, 500);
+      };
+    };
+    module2.exports = BlockJumpGame2;
+  }
+});
+
 // index.js
 var Level = require_level();
 var levelPlans = require_levelPlans();
 var DOMDisplay = require_DOMDisplay();
 var Game = require_game();
+var BlockJumpGame = require_blockJumpGame();
 var level = new Level(levelPlans[0]);
 var game = new Game(level, DOMDisplay);
 game.run();
+var blockJumpGame = new BlockJumpGame();
