@@ -282,7 +282,7 @@ var require_game = __commonJS({
         this.level = level2;
         this.display = new Display(document.body, level2);
         this.state = State.start(level2);
-        this.arrowKeys = this.display.trackKeys([
+        this.arrowKeysTracker = this.display.trackKeys([
           "ArrowLeft",
           "ArrowRight",
           "ArrowUp",
@@ -293,13 +293,12 @@ var require_game = __commonJS({
         this.#runAnimation(this.#updateFrame);
       }
       #updateFrame = (time) => {
-        this.state = this.state.update(time, this.arrowKeys);
+        this.state = this.state.update(time, this.arrowKeysTracker);
         this.display.syncState(this.state);
         if (this.state.status == "playing") {
           return true;
         } else {
           display.clear();
-          resolve(this.state.status);
           return false;
         }
       };
