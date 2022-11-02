@@ -8,4 +8,4 @@ const level = new Level(levelPlans[0]);
 const game = new Game(level, DOMDisplay);
 game.run();
 
-const blockJumpGame = new BlockJumpGame();
+const blockJumpGame = new BlockJumpGame((message) => console.log(message));

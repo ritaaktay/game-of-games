@@ -300,21 +300,22 @@ var require_game = __commonJS({
 var require_blockJumpGame = __commonJS({
   "lib/blockJumpGame.js"(exports, module2) {
     var BlockJumpGame2 = class {
-      constructor() {
+      constructor(callback) {
         this.character = document.getElementById("character");
         this.block = document.getElementById("block");
         this.jumpButton = document.getElementById("jump-button");
         this.startButton = document.getElementById("start-button");
+        this.jumpCounter = 0;
+        this.callback = callback;
         this.checkIfDead();
         this.jumpButton.addEventListener("click", this.jump);
         this.startButton.addEventListener("click", this.start);
-        this.jumpCounter = 0;
       }
-      start() {
+      start = () => {
         block.style.animation = "block 1s infinite linear";
-      }
-      checkIfDead() {
-        setInterval(function() {
+      };
+      checkIfDead = () => {
+        setInterval(() => {
           var characterTop = parseInt(
             window.getComputedStyle(this.character).getPropertyValue("top")
           );
@@ -325,17 +326,19 @@ var require_blockJumpGame = __commonJS({
             block.style.animation = "none";
             block.style.display = "none";
             alert("You Lost.");
+            this.callback("Lost");
           }
         }, 10);
-      }
+      };
       jump = () => {
         this.jumpCounter += 1;
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
           if (this.jumpCounter > 4) {
-            setTimeout(function() {
+            setTimeout(() => {
               block.style.animation = "none";
-              alert("You won!");
+              alert("You Won!");
+              this.callback("Won");
             }, 500);
           }
         }
@@ -357,4 +360,4 @@ var BlockJumpGame = require_blockJumpGame();
 var level = new Level(levelPlans[0]);
 var game = new Game(level, DOMDisplay);
 game.run();
-var blockJumpGame = new BlockJumpGame();
+var blockJumpGame = new BlockJumpGame((message) => console.log(message));
