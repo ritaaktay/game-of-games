@@ -171,11 +171,7 @@ var require_DOMDisplay = __commonJS({
             (row) => this.#createElements(
               "tr",
               { style: `height: ${this.scale}px` },
-              ...row.map((type) => {
-                console.log(row);
-                console.log(type);
-                return this.#createElements("td", { class: type });
-              })
+              ...row.map((type) => this.#createElements("td", { class: type }))
             )
           )
         );
