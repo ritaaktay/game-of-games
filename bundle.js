@@ -311,7 +311,7 @@ var require_blockJumpGame = __commonJS({
         this.jumpCounter = 0;
       }
       start() {
-        block.style.animation = "block 2s infinite linear";
+        block.style.animation = "block 1s infinite linear";
       }
       checkIfDead() {
         setInterval(function() {
