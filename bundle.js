@@ -303,10 +303,15 @@ var require_blockJumpGame = __commonJS({
       constructor() {
         this.character = document.getElementById("character");
         this.block = document.getElementById("block");
-        this.button = document.getElementById("jump-button");
+        this.jumpButton = document.getElementById("jump-button");
+        this.startButton = document.getElementById("start-button");
         this.checkIfDead();
-        console.log(this.block);
-        this.button.addEventListener("click", this.jump);
+        this.jumpButton.addEventListener("click", this.jump);
+        this.startButton.addEventListener("click", this.start);
+        this.jumpCounter = 0;
+      }
+      start() {
+        block.style.animation = "block 2s infinite linear";
       }
       checkIfDead() {
         setInterval(function() {
@@ -324,8 +329,15 @@ var require_blockJumpGame = __commonJS({
         }, 10);
       }
       jump = () => {
+        this.jumpCounter += 1;
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
+          if (this.jumpCounter > 4) {
+            setTimeout(function() {
+              block.style.animation = "none";
+              alert("You won!");
+            }, 500);
+          }
         }
         setTimeout(function() {
           this.character.classList.remove("animate");

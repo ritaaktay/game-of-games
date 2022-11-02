@@ -51,6 +51,9 @@
   animation: jump 500ms;
 }
 
+.animate-block {
+}
+
 @keyframes jump {
   0% {
     top: 150px;
@@ -73,7 +76,7 @@
   position: relative;
   top: 130px;
   left: 480px;
-  animation: block 2s infinite linear;
+  animation: none;
 }
 
 @keyframes block {
