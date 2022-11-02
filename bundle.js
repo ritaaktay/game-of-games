@@ -321,7 +321,7 @@ var require_blockJumpGame = __commonJS({
           var blockLeft = parseInt(
             window.getComputedStyle(this.block).getPropertyValue("left")
           );
-          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 130) {
+          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             block.style.animation = "none";
             block.style.display = "none";
             alert("You Lost.");

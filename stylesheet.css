@@ -29,8 +29,8 @@
 }
 
 #block_jump_game {
-  width: 500px;
-  height: 200px;
+  width: 720px;
+  height: 360px;
   border: 1px solid black;
 }
 
@@ -44,28 +44,25 @@
   height: 50px;
   background-color: red;
   position: relative;
-  top: 150px;
+  top: 310px;
 }
 
 .animate {
   animation: jump 500ms;
 }
 
-.animate-block {
-}
-
 @keyframes jump {
   0% {
-    top: 150px;
+    top: 310px;
   }
   30% {
-    top: 100px;
+    top: 260px;
   }
   70% {
-    top: 100px;
+    top: 260px;
   }
   100% {
-    top: 150px;
+    top: 310px;
   }
 }
 
@@ -74,7 +71,7 @@
   height: 20px;
   background-color: blue;
   position: relative;
-  top: 130px;
+  top: 290px;
   left: 480px;
   animation: none;
 }
