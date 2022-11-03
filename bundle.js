@@ -239,6 +239,12 @@ var require_state = __commonJS({
         let newState = new State(this.level, actors, this.status);
         if (newState.status != "playing")
           return newState;
+        let player = newState.player;
+        for (let actor of actors) {
+          if (actor != player && this.overlap(actor, player)) {
+            newState = actor.collide(newState);
+          }
+        }
         return newState;
       };
       overlap = function(actor1, actor2) {
@@ -351,13 +357,47 @@ var require_blockJumpGame = __commonJS({
   }
 });
 
+// lib/dumbMiniGame.js
+var require_dumbMiniGame = __commonJS({
+  "lib/dumbMiniGame.js"(exports, module2) {
+    var DumbMiniGame2 = class {
+      constructor() {
+        this.redButton = document.getElementById("red-button");
+        this.blueButton = document.getElementById("blue-button");
+        this.callback;
+        this.result = 0;
+      }
+      run = (callback) => {
+        this.callback = callback;
+        document.getElementById("dumb-mini-game").style.display = "inline";
+        this.redButton.addEventListener("click", this.redButtonEventListener);
+        this.blueButton.addEventListener("click", this.blueButtonEventListener);
+        return result;
+      };
+      redButtonEventListener = () => {
+        this.result = "won";
+        const newState = this.callback("lost");
+      };
+      blueButtonEventListener = () => {
+        this.result = "lost";
+        this.callback("won");
+      };
+    };
+    module2.exports = DumbMiniGame2;
+  }
+});
+
 // index.js
 var Level = require_level();
 var levelPlans = require_levelPlans();
 var DOMDisplay = require_DOMDisplay();
 var Game = require_game();
 var BlockJumpGame = require_blockJumpGame();
+var DumbMiniGame = require_dumbMiniGame();
 var level = new Level(levelPlans[0]);
 var game = new Game(level, DOMDisplay);
 game.run();
+var dumbGame = new DumbMiniGame();
+var callbackFunction = (message) => console.log(message);
+dumbGame.run(callbackFunction);
 var blockJumpGame = new BlockJumpGame((message) => console.log(message));
