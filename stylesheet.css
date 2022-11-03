@@ -14,13 +14,15 @@
 .player {
   background: rgb(143, 143, 143);
 }
+.cookieJar {
+  background: rgb(238, 235, 42);
+}
 .game {
   /* overflow: hidden; */
   max-width: 600px;
   max-height: 450px;
   position: relative;
 }
-
 #dumb-mini-game {
   display: none;
 }
