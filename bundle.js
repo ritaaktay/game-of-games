@@ -148,6 +148,10 @@ var require_state = __commonJS({
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
+        const cookieJar = this.actors.find((actor) => actor.type == "cookieJar");
+        if (!this.overlap(cookieJar, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+          newState.miniGameStatus = null;
+        }
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
             newState = actor.collide(newState);
