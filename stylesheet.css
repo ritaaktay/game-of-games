@@ -26,3 +26,68 @@
 #dumb-mini-game {
   display: none;
 }
+
+/* mini-game: block-jump */
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+#block_jump_game {
+  width: 720px;
+  height: 360px;
+  border: 1px solid black;
+}
+
+#block_jump_game_container {
+  top: 400px;
+  position: fixed;
+  display: none;
+}
+
+#character {
+  width: 20px;
+  height: 50px;
+  background-color: red;
+  position: relative;
+  top: 310px;
+}
+
+.animate {
+  animation: jump 500ms;
+}
+
+@keyframes jump {
+  0% {
+    top: 310px;
+  }
+  30% {
+    top: 260px;
+  }
+  70% {
+    top: 260px;
+  }
+  100% {
+    top: 310px;
+  }
+}
+
+#block {
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  position: relative;
+  top: 290px;
+  left: 700px;
+  animation: none;
+}
+
+@keyframes block {
+  0% {
+    left: 720px;
+  }
+  100% {
+    left: -40px;
+  }
+}

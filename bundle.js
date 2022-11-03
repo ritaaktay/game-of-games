@@ -70,19 +70,23 @@ var require_player = __commonJS({
 var require_blockJumpGame = __commonJS({
   "lib/blockJumpGame.js"(exports, module2) {
     var BlockJumpGame2 = class {
-      constructor(callback) {
+      constructor() {
         this.character = document.getElementById("character");
         this.block = document.getElementById("block");
         this.jumpButton = document.getElementById("jump-button");
         this.startButton = document.getElementById("start-button");
-        this.jumpCounter = 0;
-        this.callback = callback;
-        this.checkIfDead();
-        this.jumpButton.addEventListener("click", this.jump);
         this.startButton.addEventListener("click", this.start);
+        this.jumpButton.addEventListener("click", this.jump);
+        this.jumpCounter = 0;
+        this.callback;
+        this.checkIfDead();
       }
+      run = (callback) => {
+        this.callback = callback;
+        document.getElementById("block_jump_game_container").style.display = "inline";
+      };
       start = () => {
-        block.style.animation = "block 1s infinite linear";
+        this.block.style.animation = "block 1s infinite linear";
       };
       checkIfDead = () => {
         setInterval(() => {
@@ -228,7 +232,7 @@ var require_cookieJar = __commonJS({
             state.status,
             "playing"
           );
-          const dumbMiniGame = new DumbMiniGame2();
+          const blockJumpGame = new BlockJumpGame2();
           const callbackFunction = (result) => {
             if (result === "Lost") {
               console.log("5555555555");
@@ -252,7 +256,7 @@ var require_cookieJar = __commonJS({
               console.log(`CookieJar: ${this}`);
             }
           };
-          dumbMiniGame.run(callbackFunction);
+          blockJumpGame.run(callbackFunction);
         }
         console.log(`collide() updatedState: ${this.updatedState}`);
         return this.updatedState;
