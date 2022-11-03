@@ -68,56 +68,7 @@ var require_player = __commonJS({
 
 // lib/blockJumpGame.js
 var require_blockJumpGame = __commonJS({
-  "lib/blockJumpGame.js"(exports, module2) {
-    var BlockJumpGame2 = class {
-      constructor(callback) {
-        this.character = document.getElementById("character");
-        this.block = document.getElementById("block");
-        this.jumpButton = document.getElementById("jump-button");
-        this.startButton = document.getElementById("start-button");
-        this.jumpCounter = 0;
-        this.callback = callback;
-        this.checkIfDead();
-        this.jumpButton.addEventListener("click", this.jump);
-        this.startButton.addEventListener("click", this.start);
-      }
-      start = () => {
-        block.style.animation = "block 1s infinite linear";
-      };
-      checkIfDead = () => {
-        setInterval(() => {
-          var characterTop = parseInt(
-            window.getComputedStyle(this.character).getPropertyValue("top")
-          );
-          var blockLeft = parseInt(
-            window.getComputedStyle(this.block).getPropertyValue("left")
-          );
-          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
-            block.style.animation = "none";
-            block.style.display = "none";
-            alert("You Lost.");
-            this.callback("Lost");
-          }
-        }, 10);
-      };
-      jump = () => {
-        this.jumpCounter += 1;
-        if (this.character.classList != "animate") {
-          this.character.classList.add("animate");
-          if (this.jumpCounter > 4) {
-            setTimeout(() => {
-              block.style.animation = "none";
-              alert("You Won!");
-              this.callback("Won");
-            }, 500);
-          }
-        }
-        setTimeout(function() {
-          this.character.classList.remove("animate");
-        }, 500);
-      };
-    };
-    module2.exports = BlockJumpGame2;
+  "lib/blockJumpGame.js"() {
   }
 });
 
@@ -148,13 +99,15 @@ var require_state = __commonJS({
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
+        const cookieJar = this.actors.find((actor) => actor.type == "cookieJar");
+        if (!this.overlap(cookieJar, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+          newState.miniGameStatus = null;
+        }
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
             newState = actor.collide(newState);
           }
         }
-        console.log(`State is: ${this}`);
-        console.log(`State.update: ${newState.miniGameStatus}`);
         return newState;
       };
       overlap = function(actor1, actor2) {
@@ -214,10 +167,7 @@ var require_cookieJar = __commonJS({
         return new CookieJar(this.pos, this.speed, this.updatedState);
       }
       collide(state) {
-        console.log("222222222");
-        console.log(`CookieJar.collide: ${state.miniGameStatus}`);
         if (state.miniGameStatus == null) {
-          console.log("333333333");
           this.updatedState = new State(
             state.level,
             state.actors,
@@ -225,9 +175,8 @@ var require_cookieJar = __commonJS({
             "playing"
           );
           const dumbMiniGame = new DumbMiniGame2();
-          const callbackFunction = (result) => {
+          dumbMiniGame.run((result) => {
             if (result === "Lost") {
-              console.log("5555555555");
               let newState = new State(
                 state.level,
                 state.actors,
@@ -235,9 +184,7 @@ var require_cookieJar = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
-              console.log(`CookieJar: ${this}`);
             } else if (result === "Won") {
-              console.log("5555555555");
               let newState = new State(
                 state.level,
                 state.actors,
@@ -245,12 +192,9 @@ var require_cookieJar = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
-              console.log(`CookieJar: ${this}`);
             }
-          };
-          dumbMiniGame.run(callbackFunction);
+          });
         }
-        console.log(`collide() updatedState: ${this.updatedState}`);
         return this.updatedState;
       }
     };

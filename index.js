@@ -8,7 +8,3 @@ const DumbMiniGame = require("./lib/dumbMiniGame");
 const level = new Level(levelPlans[0]);
 const game = new Game(level, DOMDisplay);
 game.run();
-
-// const dumbGame = new DumbMiniGame();
-// const callbackFunction = (message) => console.log(message);
-// dumbGame.run(callbackFunction);
