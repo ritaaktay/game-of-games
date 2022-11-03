@@ -242,7 +242,7 @@ var require_cookieJar = __commonJS({
               );
               this.updatedState = newState;
             } else if (result === "Won") {
-              console.log("4444444444");
+              console.log("5555555555");
               mainGameBackground.style.backgroundColor = "green";
               let newState = new State(
                 state.level,
