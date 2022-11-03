@@ -223,10 +223,11 @@ var require_DOMDisplay = __commonJS({
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
     var State = class {
-      constructor(level2, actors, status) {
+      constructor(level2, actors, status, miniGameStatus = null) {
         this.level = level2;
         this.actors = actors;
         this.status = status;
+        this.miniGameStatus = miniGameStatus;
       }
       static start(level2) {
         return new State(level2, level2.startActors, "playing");
@@ -376,7 +377,7 @@ var require_dumbMiniGame = __commonJS({
       };
       redButtonEventListener = () => {
         this.result = "won";
-        const newState = this.callback("lost");
+        this.callback("lost");
       };
       blueButtonEventListener = () => {
         this.result = "lost";
