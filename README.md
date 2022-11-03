@@ -32,10 +32,9 @@ npm run start
 
 - View app in browser
 
-```sh
-open index.html
 ```
-
+http://localhost:8080/
+```
 - Run tests
 
 ```sh
