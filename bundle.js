@@ -153,7 +153,7 @@ var require_state = __commonJS({
             newState = actor.collide(newState);
           }
         }
-        console.log(newState.miniGameStatus);
+        console.log(`State.update: ${newState.miniGameStatus}`);
         return newState;
       };
       overlap = function(actor1, actor2) {
@@ -214,13 +214,7 @@ var require_cookieJar = __commonJS({
       }
       collide(state) {
         console.log("222222222");
-        this.updatedState = new State(
-          state.level,
-          state.actors,
-          state.status,
-          state.miniGameStatus
-        );
-        console.log(state.miniGameStatus);
+        console.log(`CookieJar.collide: ${state.miniGameStatus}`);
         if (state.miniGameStatus == null) {
           console.log("333333333");
           this.updatedState = new State(
@@ -230,10 +224,9 @@ var require_cookieJar = __commonJS({
             "playing"
           );
           const dumbMiniGame = new DumbMiniGame2();
-          const callbackFunction2 = (result) => {
+          const callbackFunction = (result) => {
             if (result === "Lost") {
               console.log("5555555555");
-              mainGameBackground.style.backgroundColor = "red";
               let newState = new State(
                 state.level,
                 state.actors,
@@ -241,9 +234,9 @@ var require_cookieJar = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
+              console.log(this);
             } else if (result === "Won") {
               console.log("5555555555");
-              mainGameBackground.style.backgroundColor = "green";
               let newState = new State(
                 state.level,
                 state.actors,
@@ -251,10 +244,12 @@ var require_cookieJar = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
+              console.log(this);
             }
           };
-          dumbMiniGame.run(callbackFunction2);
+          dumbMiniGame.run(callbackFunction);
         }
+        console.log(this.updatedState);
         return this.updatedState;
       }
     };
@@ -475,6 +470,3 @@ var DumbMiniGame = require_dumbMiniGame();
 var level = new Level(levelPlans[0]);
 var game = new Game(level, DOMDisplay);
 game.run();
-var dumbGame = new DumbMiniGame();
-var callbackFunction = (message) => console.log(message);
-dumbGame.run(callbackFunction);
