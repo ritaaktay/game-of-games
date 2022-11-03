@@ -161,8 +161,6 @@ var require_state = __commonJS({
             newState = actor.collide(newState);
           }
         }
-        console.log(`State is: ${this}`);
-        console.log(`State.update: ${newState.miniGameStatus}`);
         return newState;
       };
       overlap = function(actor1, actor2) {
@@ -222,10 +220,7 @@ var require_cookieJar = __commonJS({
         return new CookieJar(this.pos, this.speed, this.updatedState);
       }
       collide(state) {
-        console.log("222222222");
-        console.log(`CookieJar.collide: ${state.miniGameStatus}`);
         if (state.miniGameStatus == null) {
-          console.log("333333333");
           this.updatedState = new State(
             state.level,
             state.actors,
@@ -235,7 +230,6 @@ var require_cookieJar = __commonJS({
           const blockJumpGame = new BlockJumpGame2();
           const callbackFunction = (result) => {
             if (result === "Lost") {
-              console.log("5555555555");
               let newState = new State(
                 state.level,
                 state.actors,
@@ -243,9 +237,7 @@ var require_cookieJar = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
-              console.log(`CookieJar: ${this}`);
             } else if (result === "Won") {
-              console.log("5555555555");
               let newState = new State(
                 state.level,
                 state.actors,
@@ -253,12 +245,10 @@ var require_cookieJar = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
-              console.log(`CookieJar: ${this}`);
             }
           };
           blockJumpGame.run(callbackFunction);
         }
-        console.log(`collide() updatedState: ${this.updatedState}`);
         return this.updatedState;
       }
     };
