@@ -153,6 +153,7 @@ var require_state = __commonJS({
             newState = actor.collide(newState);
           }
         }
+        console.log(`State is: ${this}`);
         console.log(`State.update: ${newState.miniGameStatus}`);
         return newState;
       };
@@ -198,10 +199,10 @@ var require_cookieJar = __commonJS({
     var State = require_state();
     var DumbMiniGame2 = require_dumbMiniGame();
     var CookieJar = class {
-      constructor(pos, speed) {
+      constructor(pos, speed, updatedState = null) {
         this.pos = pos;
         this.speed = speed;
-        this.updatedState = null;
+        this.updatedState = updatedState;
       }
       get type() {
         return "cookieJar";
@@ -210,7 +211,7 @@ var require_cookieJar = __commonJS({
         return new CookieJar(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new CookieJar(this.pos, this.speed);
+        return new CookieJar(this.pos, this.speed, this.updatedState);
       }
       collide(state) {
         console.log("222222222");
@@ -234,7 +235,7 @@ var require_cookieJar = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
-              console.log(this);
+              console.log(`CookieJar: ${this}`);
             } else if (result === "Won") {
               console.log("5555555555");
               let newState = new State(
@@ -244,12 +245,12 @@ var require_cookieJar = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
-              console.log(this);
+              console.log(`CookieJar: ${this}`);
             }
           };
           dumbMiniGame.run(callbackFunction);
         }
-        console.log(this.updatedState);
+        console.log(`collide() updatedState: ${this.updatedState}`);
         return this.updatedState;
       }
     };
