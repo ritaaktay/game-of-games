@@ -139,7 +139,12 @@ var require_state = __commonJS({
       }
       update = function(time, keys) {
         let actors = this.actors.map((actor) => actor.update(time, this, keys));
-        let newState = new State(this.level, actors, this.status);
+        let newState = new State(
+          this.level,
+          actors,
+          this.status,
+          this.miniGameStatus
+        );
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
@@ -208,13 +213,16 @@ var require_cookieJar = __commonJS({
         return new CookieJar(this.pos, this.speed);
       }
       collide(state) {
+        console.log("222222222");
         this.updatedState = new State(
           state.level,
           state.actors,
           state.status,
           state.miniGameStatus
         );
+        console.log(state.miniGameStatus);
         if (state.miniGameStatus == null) {
+          console.log("333333333");
           this.updatedState = new State(
             state.level,
             state.actors,
@@ -224,6 +232,7 @@ var require_cookieJar = __commonJS({
           const dumbMiniGame = new DumbMiniGame2();
           const callbackFunction2 = (result) => {
             if (result === "Lost") {
+              console.log("5555555555");
               mainGameBackground.style.backgroundColor = "red";
               let newState = new State(
                 state.level,
@@ -233,6 +242,7 @@ var require_cookieJar = __commonJS({
               );
               this.updatedState = newState;
             } else if (result === "Won") {
+              console.log("4444444444");
               mainGameBackground.style.backgroundColor = "green";
               let newState = new State(
                 state.level,
@@ -468,4 +478,3 @@ game.run();
 var dumbGame = new DumbMiniGame();
 var callbackFunction = (message) => console.log(message);
 dumbGame.run(callbackFunction);
-var blockJumpGame = new BlockJumpGame((message) => console.log(message));

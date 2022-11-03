@@ -14,4 +14,4 @@ const dumbGame = new DumbMiniGame();
 const callbackFunction = (message) => console.log(message);
 dumbGame.run(callbackFunction);
 
-const blockJumpGame = new BlockJumpGame((message) => console.log(message));
+// const blockJumpGame = new BlockJumpGame((message) => console.log(message));
