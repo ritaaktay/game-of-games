@@ -92,4 +92,62 @@ describe("State", () => {
     expect(newState.status).toEqual("playing");
     expect(newState.miniGameStatus).toEqual("playing");
   });
+
+  it("has an update method that returns an updated state with collision and mini game win", () => {
+    const level = new Level(mockLevelPlan);
+    const mockMiniGame = {
+      run: jest.fn().mockImplementation((callback) => {
+        this.callback = callback;
+      }),
+      win: () => {
+        this.callback("Won");
+      },
+      lose: () => {
+        this.callback("Lost");
+      },
+    };
+    const MockMiniGame = jest.fn().mockImplementation(() => {
+      return mockMiniGame;
+    });
+    level.startActors[1].miniGame = MockMiniGame;
+    const state = State.start(level, level.startActors, "playing", "null");
+    const newState = state.update(1, {
+      "ArrowRight": true,
+    });
+    mockMiniGame.win();
+    const newerState = newState.update(1, {});
+    expect(newerState.level).toEqual(level);
+    expect(newerState.player.pos).toEqual(new Vec(6, 8));
+    expect(newerState.status).toEqual("playing");
+    expect(newerState.miniGameStatus).toEqual("Won");
+  });
+
+  it("has an update method that returns an updated state with collision and mini game loss", () => {
+    const level = new Level(mockLevelPlan);
+    const mockMiniGame = {
+      run: jest.fn().mockImplementation((callback) => {
+        this.callback = callback;
+      }),
+      win: () => {
+        this.callback("Won");
+      },
+      lose: () => {
+        this.callback("Lost");
+      },
+    };
+    const MockMiniGame = jest.fn().mockImplementation(() => {
+      return mockMiniGame;
+    });
+    level.startActors[1].miniGame = MockMiniGame;
+    const state = State.start(level, level.startActors, "playing", "null");
+    const newState = state.update(1, {
+      "ArrowRight": true,
+    });
+    mockMiniGame.lose();
+    const newerState = newState.update(1, {});
+    expect(newerState.level).toEqual(level);
+    expect(newerState.player.pos).toEqual(new Vec(6, 8));
+    expect(newerState.status).toEqual("playing");
+    expect(newerState.miniGameStatus).toEqual("Lost");
+  });
 });
