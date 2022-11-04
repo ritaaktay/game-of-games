@@ -33,14 +33,8 @@ describe("Player", () => {
     expect(player.size).toEqual(new Vec(1, 1));
   });
 
-  it("has default size", () => {
-    const player = Player.create(new Vec(0, 0));
-    expect(player.size).toEqual(new Vec(1, 1));
-  });
-
   it("it moves the player right", () => {
     const player = Player.create(new Vec(0, 0));
-    console.log(player);
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
@@ -50,7 +44,6 @@ describe("Player", () => {
       "ArrowUp": false,
     };
     const newPlayer = player.update(2, state, keys);
-    console.log(newPlayer);
     expect(newPlayer.pos).toEqual(new Vec(12, 0));
     expect(newPlayer.speed).toEqual(new Vec(6, 0));
   });
@@ -87,7 +80,6 @@ describe("Player", () => {
 
   it("it moves the player down", () => {
     const player = Player.create(new Vec(0, 0));
-    console.log(player);
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
@@ -97,7 +89,6 @@ describe("Player", () => {
       "ArrowUp": false,
     };
     const newPlayer = player.update(1, state, keys);
-    console.log(newPlayer);
     expect(newPlayer.pos).toEqual(new Vec(0, 6));
     expect(newPlayer.speed).toEqual(new Vec(0, 6));
   });
