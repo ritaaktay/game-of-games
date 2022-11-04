@@ -38,10 +38,10 @@ describe("Player", () => {
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
-      "ArrowRight": true,
-      "ArrowLeft": false,
-      "ArrowDown": false,
-      "ArrowUp": false,
+      ArrowRight: true,
+      ArrowLeft: false,
+      ArrowDown: false,
+      ArrowUp: false,
     };
     const newPlayer = player.update(2, state, keys);
     expect(newPlayer.pos).toEqual(new Vec(12, 0));
@@ -53,10 +53,10 @@ describe("Player", () => {
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
-      "ArrowRight": false,
-      "ArrowLeft": true,
-      "ArrowDown": false,
-      "ArrowUp": false,
+      ArrowRight: false,
+      ArrowLeft: true,
+      ArrowDown: false,
+      ArrowUp: false,
     };
     const newPlayer = player.update(2, state, keys);
     expect(newPlayer.pos).toEqual(new Vec(6, 6));
@@ -68,10 +68,10 @@ describe("Player", () => {
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
-      "ArrowRight": false,
-      "ArrowLeft": false,
-      "ArrowDown": false,
-      "ArrowUp": true,
+      ArrowRight: false,
+      ArrowLeft: false,
+      ArrowDown: false,
+      ArrowUp: true,
     };
     const newPlayer = player.update(1, state, keys);
     expect(newPlayer.pos).toEqual(new Vec(12, 6));
@@ -83,10 +83,10 @@ describe("Player", () => {
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const keys = {
-      "ArrowRight": false,
-      "ArrowLeft": false,
-      "ArrowDown": true,
-      "ArrowUp": false,
+      ArrowRight: false,
+      ArrowLeft: false,
+      ArrowDown: true,
+      ArrowUp: false,
     };
     const newPlayer = player.update(1, state, keys);
     expect(newPlayer.pos).toEqual(new Vec(0, 6));
