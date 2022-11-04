@@ -69,7 +69,7 @@ var require_player = __commonJS({
 // lib/blockJumpGame.js
 var require_blockJumpGame = __commonJS({
   "lib/blockJumpGame.js"(exports, module2) {
-    var BlockJumpGame2 = class {
+    var BlockJumpGame = class {
       constructor() {
         this.character = document.getElementById("character");
         this.block = document.getElementById("block");
@@ -79,9 +79,9 @@ var require_blockJumpGame = __commonJS({
         this.jumpButton.addEventListener("click", this.jump);
         this.jumpCounter = 0;
         this.callback;
-        this.checkIfDead();
       }
       run = (callback) => {
+        this.checkIfDead();
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
       };
@@ -121,7 +121,7 @@ var require_blockJumpGame = __commonJS({
         }, 500);
       };
     };
-    module2.exports = BlockJumpGame2;
+    module2.exports = BlockJumpGame;
   }
 });
 
@@ -171,39 +171,12 @@ var require_state = __commonJS({
   }
 });
 
-// lib/dumbMiniGame.js
-var require_dumbMiniGame = __commonJS({
-  "lib/dumbMiniGame.js"(exports, module2) {
-    var DumbMiniGame2 = class {
-      constructor() {
-        this.redButton = document.getElementById("red-button");
-        this.blueButton = document.getElementById("blue-button");
-        this.callback;
-      }
-      run = (callback) => {
-        this.callback = callback;
-        document.getElementById("dumb-mini-game").style.display = "inline";
-        this.redButton.addEventListener("click", this.redButtonEventListener);
-        this.blueButton.addEventListener("click", this.blueButtonEventListener);
-      };
-      redButtonEventListener = () => {
-        this.callback("Lost");
-      };
-      blueButtonEventListener = () => {
-        this.callback("Won");
-      };
-    };
-    module2.exports = DumbMiniGame2;
-  }
-});
-
 // lib/cookieJar.js
 var require_cookieJar = __commonJS({
   "lib/cookieJar.js"(exports, module2) {
     var Vec = require_vector();
-    var BlockJumpGame2 = require_blockJumpGame();
+    var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
-    var DumbMiniGame2 = require_dumbMiniGame();
     var CookieJar = class {
       constructor(pos, speed, updatedState = null) {
         this.pos = pos;
@@ -227,7 +200,7 @@ var require_cookieJar = __commonJS({
             state.status,
             "playing"
           );
-          const blockJumpGame = new BlockJumpGame2();
+          const blockJumpGame = new BlockJumpGame();
           const callbackFunction = (result) => {
             if (result === "Lost") {
               let newState = new State(
@@ -464,8 +437,6 @@ var Level = require_level();
 var levelPlans = require_levelPlans();
 var DOMDisplay = require_DOMDisplay();
 var Game = require_game();
-var BlockJumpGame = require_blockJumpGame();
-var DumbMiniGame = require_dumbMiniGame();
 var level = new Level(levelPlans[0]);
 var game = new Game(level, DOMDisplay);
 game.run();
