@@ -2,6 +2,8 @@ const Vec = require("../../lib/vector");
 const levelPlans = require("../../lib/levelPlans");
 const Level = require("../../lib/level");
 
+// Future: use mocks to convert this to pure unit testing
+
 describe("Level", () => {
   it("creates an array of arrays representing a given level plan", () => {
     const level = new Level(levelPlans[0]);
@@ -10,51 +12,18 @@ describe("Level", () => {
     expect(level.width).toEqual(18);
     expect(level.startActors[0].type).toEqual("player");
     expect(level.startActors[1].type).toEqual("cookieJar");
-
-    expect(level.rows.length).toEqual(9);
     expect(level.rows.length).toEqual(9);
 
-    expect(level.rows[0].length).toEqual(18);
+    // Assert number of elements in each child array
+    for (let i = 0; i < level.rows.length; i++) {
+      expect(level.rows[i].length).toEqual(18);
+    }
 
-    // Future: do a new loop to test the full array of arrays in one go
-
-    // Expect each element in each row to be the string "empty"
-
-    // row 1
-    for (let i = 0; i < level.rows[0].length; i++) {
-      expect(level.rows[0][i]).toEqual("empty");
-    }
-    // row 2
-    for (let i = 0; i < level.rows[1].length; i++) {
-      expect(level.rows[1][i]).toEqual("empty");
-    }
-    // row 3
-    for (let i = 0; i < level.rows[2].length; i++) {
-      expect(level.rows[2][i]).toEqual("empty");
-    }
-    // row 4
-    for (let i = 0; i < level.rows[3].length; i++) {
-      expect(level.rows[3][i]).toEqual("empty");
-    }
-    // row 5
-    for (let i = 0; i < level.rows[4].length; i++) {
-      expect(level.rows[4][i]).toEqual("empty");
-    }
-    // row 6
-    for (let i = 0; i < level.rows[5].length; i++) {
-      expect(level.rows[5][i]).toEqual("empty");
-    }
-    // row 7
-    for (let i = 0; i < level.rows[6].length; i++) {
-      expect(level.rows[6][i]).toEqual("empty");
-    }
-    // row 8
-    for (let i = 0; i < level.rows[7].length; i++) {
-      expect(level.rows[7][i]).toEqual("empty");
-    }
-    // row 9
-    for (let i = 0; i < level.rows[8].length; i++) {
-      expect(level.rows[8][i]).toEqual("empty");
+    // Assert value of each element in each child array
+    for (let a = 0; a < level.rows.length; a++) {
+      for (let b = 0; b < level.rows[a].length; b++) {
+        expect(level.rows[a][b]).toEqual("empty");
+      }
     }
   });
 
@@ -76,7 +45,7 @@ describe("Level", () => {
       pos: new Vec(-5, -5),
       size: new Vec(1, 1),
     };
-    // Assert an actor is touching the level plan's boundary
+    // Assert an actor is touching (or is inside) the level plan's boundary
     const result2 = level.touchesElement(actor2.pos, actor2.size, "wall");
     expect(result2).toEqual(true);
   });
