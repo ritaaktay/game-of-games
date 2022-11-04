@@ -18,7 +18,7 @@ describe("Level", () => {
 
     // Future: do a new loop to test the full array of arrays in one go
 
-    // Expect each element in a row to be the string "empty"
+    // Expect each element in each row to be the string "empty"
 
     // row 1
     for (let i = 0; i < level.rows[0].length; i++) {
