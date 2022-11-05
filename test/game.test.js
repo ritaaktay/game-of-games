@@ -28,20 +28,19 @@ describe("Game", () => {
     spy.mockClear();
   });
 
-  it("runs the game", () => {
+  it("runs the game with recursive calls to requestAnimationFrame", () => {
     const level = new Level(levelPlans[0]);
     const game = new Game(level, DOMDisplay);
-    const spy = jest.spyOn(window, "requestAnimationFrame");
-    const frame = function (time) {
-      if (lastTime != null) {
-        let timeStep = Math.min(time - lastTime, 100) / 1000;
-        if (updateFrameFunction(timeStep) === false) return;
-      }
-      lastTime = time;
-      requestAnimationFrame(frame);
-    };
+    const mockRequestAnimationFrame = jest.spyOn(
+      window,
+      "requestAnimationFrame"
+    );
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
     game.run();
-    expect(spy).toHaveBeenCalledWith(frame);
+    game.state.status = "won";
+    expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(2);
   });
 
   // how to mock keydown and keyup events to test trackKeys functionality?
