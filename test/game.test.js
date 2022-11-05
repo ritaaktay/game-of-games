@@ -66,8 +66,36 @@ describe("Game", () => {
     expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(5);
     mockRequestAnimationFrame.mockClear();
   });
-  // how to mock keydown and keyup events to test trackKeys functionality?
 
-  // how to mock requestAnimationFrame() being called by the browser to mock recursion?
-  // (also change state.status to not "playing" so recursion stops)
+  it("runs the game with recursive calls to requestAnimationFrame and updates state", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const mockRequestAnimationFrame = jest.spyOn(
+      window,
+      "requestAnimationFrame"
+    );
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    game.run();
+    expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(5);
+    mockRequestAnimationFrame.mockClear();
+  });
+
+  // 46-47: if last time is not null
+  // need to add Date.now() into the callback() in mockRequestAnimationFrame
+  // so lastTime is not null inside runAnimation
+  // 27-34: updateFrame
+
+  // 58-60: track(event) callback to keydown & keyup
+  // need to mock keydown & keyup events on arrow keys
 });
