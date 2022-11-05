@@ -150,4 +150,48 @@ describe("State", () => {
     expect(newerState.status).toEqual("playing");
     expect(newerState.miniGameStatus).toEqual("Lost");
   });
+
+  it("when player moves away from cookieJar after mini game miniGameStatus will be null", () => {
+    const level = new Level(mockLevelPlan);
+    const mockMiniGame = {
+      run: jest.fn().mockImplementation((callback) => {
+        this.callback = callback;
+      }),
+      win: () => {
+        this.callback("Won");
+      },
+      lose: () => {
+        this.callback("Lost");
+      },
+    };
+    const MockMiniGame = jest.fn().mockImplementation(() => {
+      return mockMiniGame;
+    });
+    level.startActors[1].miniGame = MockMiniGame;
+    const state = State.start(level, level.startActors, "playing", "null");
+    const newState = state.update(1, {
+      "ArrowRight": true,
+    });
+    mockMiniGame.win();
+    const newerState = newState.update(1, {});
+    const finalState = newerState.update(1, {
+      "ArrowLeft": true,
+    });
+    expect(finalState.level).toEqual(level);
+    expect(finalState.player.pos).toEqual(new Vec(0, 8));
+    expect(finalState.status).toEqual("playing");
+    expect(finalState.miniGameStatus).toEqual(null);
+  });
+
+  it("returns unmodified state if game has been won or lost ", () => {
+    const level = new Level(levelPlans[0]);
+    const state = State.start(level);
+    const newState = state.update(1, {});
+    newState.status = "won";
+    const newerState = newState.update(1, {});
+    expect(newerState.level).toEqual(level);
+    expect(newerState.actors).toEqual(level.startActors);
+    expect(newerState.status).toEqual("won");
+    expect(newerState.miniGameStatus).toEqual(null);
+  });
 });
