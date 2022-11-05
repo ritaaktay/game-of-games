@@ -91,10 +91,27 @@ describe("Game", () => {
     mockRequestAnimationFrame.mockClear();
   });
 
-  // 46-47: if last time is not null
-  // need to add Date.now() into the callback() in mockRequestAnimationFrame
-  // so lastTime is not null inside runAnimation
-  // 27-34: updateFrame
+  it.only("clears display when game is won or lost", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const mockRequestAnimationFrame = jest.spyOn(
+      window,
+      "requestAnimationFrame"
+    );
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      callback(Date.now());
+    });
+    const spy = jest.spyOn(game.display, "clear");
+    game.state.status = "Won";
+    console.log(game.state.status);
+    game.run();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  // 32-34: state.status is not "playing"
 
   // 58-60: track(event) callback to keydown & keyup
   // need to mock keydown & keyup events on arrow keys
