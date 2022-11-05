@@ -178,10 +178,11 @@ var require_cookieJar = __commonJS({
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar = class {
-      constructor(pos, speed, updatedState = null) {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
+        this.miniGame = miniGame;
       }
       get type() {
         return "cookieJar";
@@ -190,7 +191,12 @@ var require_cookieJar = __commonJS({
         return new CookieJar(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new CookieJar(this.pos, this.speed, this.updatedState);
+        return new CookieJar(
+          this.pos,
+          this.speed,
+          this.updatedState,
+          this.miniGame
+        );
       }
       collide(state) {
         if (state.miniGameStatus == null) {
@@ -200,7 +206,7 @@ var require_cookieJar = __commonJS({
             state.status,
             "playing"
           );
-          const blockJumpGame = new BlockJumpGame();
+          const miniGame = new this.miniGame();
           const callbackFunction = (result) => {
             if (result === "Lost") {
               let newState = new State(
@@ -220,7 +226,7 @@ var require_cookieJar = __commonJS({
               this.updatedState = newState;
             }
           };
-          blockJumpGame.run(callbackFunction);
+          miniGame.run(callbackFunction);
         }
         return this.updatedState;
       }
