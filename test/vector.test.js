@@ -1,4 +1,4 @@
-const Vec = require("../../lib/vector");
+const Vec = require("../lib/vector");
 
 describe("Vec", () => {
   it("stores the x and y coordinates of a game actor / object", () => {

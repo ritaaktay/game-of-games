@@ -2,13 +2,13 @@
  * @jest-environment jsdom
  */
 
-const Level = require("../../lib/level");
-const State = require("../../lib/state");
-const Player = require("../../lib/player");
-const Vec = require("../../lib/vector");
-const levelPlans = require("../../lib/levelPlans");
-const mockLevelPlan = require("../mockLevelPlan1");
-jest.mock("../../lib/blockJumpGame");
+const Level = require("../lib/level");
+const State = require("../lib/state");
+const Player = require("../lib/player");
+const Vec = require("../lib/vector");
+const levelPlans = require("../lib/levelPlans");
+const mockLevelPlan = require("./mockLevelPlan1");
+jest.mock("../lib/blockJumpGame");
 
 describe("State", () => {
   it("has a level, actors, status and miniGameStatus", () => {

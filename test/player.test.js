@@ -1,8 +1,8 @@
-const Player = require("../../lib/player");
-const Vec = require("../../lib/vector");
-const State = require("../../lib/state");
-const Level = require("../../lib/level");
-const levelPlans = require("../../lib/levelPlans");
+const Player = require("../lib/player");
+const Vec = require("../lib/vector");
+const State = require("../lib/state");
+const Level = require("../lib/level");
+const levelPlans = require("../lib/levelPlans");
 
 describe("Player", () => {
   it("has a position vector, speed vector, and a speed amount", () => {
