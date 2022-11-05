@@ -48,7 +48,7 @@ describe("Player", () => {
     expect(newPlayer.speed).toEqual(new Vec(6, 0));
   });
 
-  it("it does not move further than level boundary", () => {
+  it("it does not move further than level boundary on X-axis", () => {
     const player = Player.create(new Vec(6, 6));
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
@@ -61,6 +61,21 @@ describe("Player", () => {
     const newPlayer = player.update(2, state, keys);
     expect(newPlayer.pos).toEqual(new Vec(6, 6));
     expect(newPlayer.speed).toEqual(new Vec(-6, 0));
+  });
+
+  it("it does not move further than level boundary on Y-axis", () => {
+    const player = Player.create(new Vec(6, 6));
+    const level = new Level(levelPlans[0]);
+    const state = new State(level, [], "playing");
+    const keys = {
+      ArrowRight: false,
+      ArrowLeft: false,
+      ArrowDown: true,
+      ArrowUp: false,
+    };
+    const newPlayer = player.update(2, state, keys);
+    expect(newPlayer.pos).toEqual(new Vec(6, 6));
+    expect(newPlayer.speed).toEqual(new Vec(0, 6));
   });
 
   it("it moves the player up", () => {
