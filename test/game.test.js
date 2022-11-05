@@ -19,4 +19,12 @@ describe("Game", () => {
     expect(game.state.level).toEqual(level);
     expect(game.arrowKeysTracker).toEqual({});
   });
+
+  it("runs the game", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const spy = jest.spyOn(window, "requestAnimationFrame");
+    game.run();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
