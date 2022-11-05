@@ -6,6 +6,7 @@ const DOMDisplay = require("../lib/DOMDisplay");
 const Level = require("../lib/level");
 const State = require("../lib/state");
 const levelPlans = require("../lib/levelPlans");
+const fs = require("fs");
 jest.mock("../lib/DOMDisplay.js");
 
 describe("Game", () => {
@@ -91,7 +92,7 @@ describe("Game", () => {
     mockRequestAnimationFrame.mockClear();
   });
 
-  it.only("clears display when game is won or lost", () => {
+  it("clears display when game is won or lost", () => {
     const level = new Level(levelPlans[0]);
     const game = new Game(level, DOMDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
@@ -106,13 +107,41 @@ describe("Game", () => {
     });
     const spy = jest.spyOn(game.display, "clear");
     game.state.status = "Won";
-    console.log(game.state.status);
     game.run();
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  // 32-34: state.status is not "playing"
+  it("tracks keyup and keydown events for arrow keys", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const mockRequestAnimationFrame = jest.spyOn(
+      window,
+      "requestAnimationFrame"
+    );
+    const event = new KeyboardEvent("keydown", { "key": "ArrowDown" });
+    const spy = jest.spyOn(event, "preventDefault");
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      window.dispatchEvent(event);
+      callback(Date.now());
+    });
+    game.run();
+    expect(spy).toHaveBeenCalled();
+  });
 
-  // 58-60: track(event) callback to keydown & keyup
-  // need to mock keydown & keyup events on arrow keys
+  it("coverse else for line 58", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const mockRequestAnimationFrame = jest.spyOn(
+      window,
+      "requestAnimationFrame"
+    );
+    const event = new KeyboardEvent("keydown", { "key": "Esc" });
+    const spy = jest.spyOn(event, "preventDefault");
+    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
+      window.dispatchEvent(event);
+      callback(Date.now());
+    });
+    game.run();
+    expect(spy).toHaveBeenCalled();
+  });
 });
