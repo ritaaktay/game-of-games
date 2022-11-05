@@ -6,7 +6,6 @@ const DOMDisplay = require("../lib/DOMDisplay");
 const Level = require("../lib/level");
 const State = require("../lib/state");
 const levelPlans = require("../lib/levelPlans");
-const { default: JSDOMEnvironment } = require("jest-environment-jsdom");
 jest.mock("../lib/DOMDisplay.js");
 
 describe("Game", () => {
@@ -26,5 +25,27 @@ describe("Game", () => {
     const spy = jest.spyOn(window, "requestAnimationFrame");
     game.run();
     expect(spy).toHaveBeenCalledTimes(1);
+    spy.mockClear();
   });
+
+  it("runs the game", () => {
+    const level = new Level(levelPlans[0]);
+    const game = new Game(level, DOMDisplay);
+    const spy = jest.spyOn(window, "requestAnimationFrame");
+    const frame = function (time) {
+      if (lastTime != null) {
+        let timeStep = Math.min(time - lastTime, 100) / 1000;
+        if (updateFrameFunction(timeStep) === false) return;
+      }
+      lastTime = time;
+      requestAnimationFrame(frame);
+    };
+    game.run();
+    expect(spy).toHaveBeenCalledWith(frame);
+  });
+
+  // how to mock keydown and keyup events to test trackKeys functionality?
+
+  // how to mock requestAnimationFrame() being called by the browser to mock recursion?
+  // (also change state.status to not "playing" so recursion stops)
 });
