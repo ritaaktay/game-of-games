@@ -49,7 +49,6 @@
 #character {
   width: 20px;
   height: 50px;
-  background-color: red;
   position: relative;
   top: 310px;
 }
@@ -76,7 +75,6 @@
 #block {
   width: 20px;
   height: 20px;
-  background-color: blue;
   position: relative;
   top: 290px;
   left: 700px;
