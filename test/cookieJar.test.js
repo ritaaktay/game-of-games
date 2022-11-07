@@ -1,8 +1,8 @@
-const CookieJar = require("../../lib/cookieJar");
-const Vec = require("../../lib/vector");
-const State = require("../../lib/state");
-const Level = require("../../lib/level");
-const levelPlans = require("../../lib/levelPlans");
+const CookieJar = require("../lib/cookieJar");
+const Vec = require("../lib/vector");
+const State = require("../lib/state");
+const Level = require("../lib/level");
+const levelPlans = require("../lib/levelPlans");
 
 describe("CookieJar", () => {
   it("has a position vector, a speed vector and a default null updatedState", () => {
