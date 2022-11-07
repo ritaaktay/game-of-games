@@ -142,6 +142,6 @@ describe("Game", () => {
       callback(Date.now());
     });
     game.run();
-    expect(spy).toHaveBeenCalled();
+    expect(spy).not.toHaveBeenCalled();
   });
 });
