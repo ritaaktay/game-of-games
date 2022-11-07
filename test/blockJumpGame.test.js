@@ -76,4 +76,12 @@ describe("BlockJumpGame", () => {
     const container = document.getElementById("block_jump_game_container");
     expect(container.style.display).toEqual("inline");
   });
+
+  it("run method calls checkIfDead()", () => {
+    const game = new BlockJumpGame();
+    const mockCallback = jest.fn().mockImplementation((callback) => {});
+    const spy = jest.spyOn(game, "checkIfDead");
+    game.run(mockCallback);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
