@@ -68,4 +68,12 @@ describe("BlockJumpGame", () => {
     game.run(mockCallback);
     expect(game.callback).toEqual(mockCallback);
   });
+
+  it("run method displays game", () => {
+    const game = new BlockJumpGame();
+    const mockCallback = jest.fn().mockImplementation((callback) => {});
+    game.run(mockCallback);
+    const container = document.getElementById("block_jump_game_container");
+    expect(container.style.display).toEqual("inline");
+  });
 });
