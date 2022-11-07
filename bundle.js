@@ -349,13 +349,8 @@ var require_canvasDisplay = __commonJS({
         for (let x = xStart; x < xEnd; x++) {
           let tile = level2.rows[y][x];
           if (tile == "empty") {
-            this.cx.drawImage(
-              otherSprites,
-              x * this.scale,
-              y * this.scale,
-              this.scale,
-              this.scale
-            );
+            this.cx.fillStyle = "rgb(200, 200, 200)";
+            this.cx.fillRect(x, y, x * this.scale, y * this.scale);
           }
         }
       }
