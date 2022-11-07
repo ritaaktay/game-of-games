@@ -61,4 +61,11 @@ describe("BlockJumpGame", () => {
       done();
     }, 600);
   });
+
+  it("takes a callback", () => {
+    const game = new BlockJumpGame();
+    const mockCallback = jest.fn().mockImplementation((callback) => {});
+    game.run(mockCallback);
+    expect(game.callback).toEqual(mockCallback);
+  });
 });
