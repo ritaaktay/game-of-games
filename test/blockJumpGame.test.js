@@ -35,4 +35,19 @@ describe("BlockJumpGame", () => {
     const character = document.getElementById("character");
     expect(character.classList[0]).toEqual("animate");
   });
+
+  it("jump button increments jump counter", () => {
+    const game = new BlockJumpGame();
+    document.getElementById("jump-button").click();
+    expect(game.jumpCounter).toEqual(1);
+  });
+
+  it("jump button increments jump counter", () => {
+    const game = new BlockJumpGame();
+    document.getElementById("jump-button").click();
+    document.getElementById("jump-button").click();
+    document.getElementById("jump-button").click();
+    document.getElementById("jump-button").click();
+    expect(game.jumpCounter).toEqual(4);
+  });
 });
