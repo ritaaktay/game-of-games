@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1667671024773" clover="3.2.0">
-  <project timestamp="1667671024773" name="All files">
-    <metrics statements="194" coveredstatements="135" conditionals="65" coveredconditionals="53" methods="45" coveredmethods="31" elements="304" coveredelements="219" complexity="0" loc="194" ncloc="194" packages="2" files="11" classes="11"/>
+<coverage generated="1667833412394" clover="3.2.0">
+  <project timestamp="1667833412394" name="All files">
+    <metrics statements="195" coveredstatements="170" conditionals="65" coveredconditionals="62" methods="45" coveredmethods="39" elements="305" coveredelements="271" complexity="0" loc="195" ncloc="195" packages="2" files="11" classes="11"/>
     <package name="lib">
-      <metrics statements="192" coveredstatements="133" conditionals="65" coveredconditionals="53" methods="45" coveredmethods="31"/>
+      <metrics statements="193" coveredstatements="168" conditionals="65" coveredconditionals="62" methods="45" coveredmethods="39"/>
       <file name="DOMDisplay.js" path="/Users/ritaaktay/Projects/squid-game/lib/DOMDisplay.js">
         <metrics statements="26" coveredstatements="1" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="3" count="0" type="stmt"/>
@@ -34,42 +34,43 @@
         <line num="70" count="1" type="stmt"/>
       </file>
       <file name="blockJumpGame.js" path="/Users/ritaaktay/Projects/squid-game/lib/blockJumpGame.js">
-        <metrics statements="35" coveredstatements="1" conditionals="9" coveredconditionals="0" methods="8" coveredmethods="0"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="32" count="0" type="cond" truecount="0" falsecount="5"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="45" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="54" count="0" type="stmt"/>
-        <line num="59" count="5" type="stmt"/>
+        <metrics statements="36" coveredstatements="36" conditionals="9" coveredconditionals="9" methods="8" coveredmethods="8"/>
+        <line num="3" count="11" type="stmt"/>
+        <line num="4" count="11" type="stmt"/>
+        <line num="5" count="11" type="stmt"/>
+        <line num="6" count="11" type="stmt"/>
+        <line num="7" count="11" type="stmt"/>
+        <line num="8" count="11" type="stmt"/>
+        <line num="9" count="11" type="stmt"/>
+        <line num="10" count="11" type="stmt"/>
+        <line num="13" count="11" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="20" count="11" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="24" count="11" type="stmt"/>
+        <line num="25" count="5" type="stmt"/>
+        <line num="26" count="1092" type="stmt"/>
+        <line num="29" count="1092" type="stmt"/>
+        <line num="32" count="1092" type="stmt"/>
+        <line num="33" count="1092" type="cond" truecount="5" falsecount="0"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
+        <line num="37" count="5" type="stmt"/>
+        <line num="42" count="11" type="stmt"/>
+        <line num="43" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="12" type="stmt"/>
+        <line num="45" count="12" type="stmt"/>
+        <line num="46" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="54" count="19" type="stmt"/>
+        <line num="55" count="18" type="stmt"/>
+        <line num="60" count="6" type="stmt"/>
       </file>
       <file name="cookieJar.js" path="/Users/ritaaktay/Projects/squid-game/lib/cookieJar.js">
         <metrics statements="24" coveredstatements="24" conditionals="8" coveredconditionals="7" methods="6" coveredmethods="6"/>

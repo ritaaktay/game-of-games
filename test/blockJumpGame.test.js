@@ -98,12 +98,34 @@ describe("BlockJumpGame", () => {
       done();
     });
     game.run(mockCallback);
+    let counter = 0;
     const jumpLater = () => {
       setTimeout(() => {
         game.jump();
+        if (counter > 5) return;
         jumpLater();
       }, 550);
     };
     jumpLater();
+  });
+
+  it("game is lost on contact with block", (done) => {
+    const game = new BlockJumpGame();
+    const mockCallback = jest.fn().mockImplementation((message) => {
+      expect(message).toEqual("Lost");
+      done();
+    });
+    Object.defineProperty(window, "getComputedStyle", {
+      value: () => ({
+        getPropertyValue: (property) => {
+          if (property == "top") return 300;
+          if (property == "left") return 15;
+        },
+      }),
+    });
+    const block = document.getElementById("block");
+    console.log(window.getComputedStyle(block));
+    game.run(mockCallback);
+    game.start();
   });
 });
