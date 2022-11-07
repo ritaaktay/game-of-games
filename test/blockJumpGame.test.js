@@ -50,4 +50,15 @@ describe("BlockJumpGame", () => {
     document.getElementById("jump-button").click();
     expect(game.jumpCounter).toEqual(4);
   });
+
+  it("animation is removed 500 ms after jump button is clicked", (done) => {
+    const game = new BlockJumpGame();
+    document.getElementById("jump-button").click();
+    const character = document.getElementById("character");
+    expect(character.classList[0]).toEqual("animate");
+    setTimeout(() => {
+      expect(character.classList.keys.length).toEqual(0);
+      done();
+    }, 600);
+  });
 });
