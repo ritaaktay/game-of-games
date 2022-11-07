@@ -24,9 +24,15 @@ describe("BlockJumpGame", () => {
 
   it("start button animates the block", () => {
     const game = new BlockJumpGame();
-    const spy = jest.spyOn(game, "start");
     document.getElementById("start-button").click();
     const block = document.getElementById("block");
     expect(block.style.animation).toEqual("block 1s infinite linear");
+  });
+
+  it("jump button makes character jump", () => {
+    const game = new BlockJumpGame();
+    document.getElementById("jump-button").click();
+    const character = document.getElementById("character");
+    expect(character.classList[0]).toEqual("animate");
   });
 });
