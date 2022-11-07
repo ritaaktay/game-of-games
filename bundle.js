@@ -308,74 +308,65 @@ var require_levelPlans = __commonJS({
   }
 });
 
-// lib/DOMDisplay.js
-var require_DOMDisplay = __commonJS({
-  "lib/DOMDisplay.js"(exports, module2) {
-    var DOMDisplay2 = class {
+// lib/canvasDisplay.js
+var require_canvasDisplay = __commonJS({
+  "lib/canvasDisplay.js"(exports, module2) {
+    var CanvasDisplay2 = class {
       constructor(parent, level2) {
         this.scale = 40;
-        this.dom = this.#createElements(
-          "div",
-          { class: "game" },
-          this.#drawGrid(level2)
-        );
-        this.actorLayer = null;
-        parent.appendChild(this.dom);
+        this.canvas = document.createElement("canvas");
+        this.canvas.className = "game";
+        this.canvas.width = Math.min(600, level2.width * this.scale);
+        this.canvas.height = Math.min(450, level2.height * this.scale);
+        parent.appendChild(this.canvas);
+        this.cx = this.canvas.getContext("2d");
+        this.viewport = {
+          left: 0,
+          top: 0,
+          width: this.canvas.width / this.scale,
+          height: this.canvas.height / this.scale
+        };
       }
       clear() {
-        this.dom.remove();
-      }
-      syncState(state) {
-        if (this.actorLayer)
-          this.actorLayer.remove();
-        this.actorLayer = this.#drawActors(state.actors);
-        this.dom.appendChild(this.actorLayer);
-        this.dom.className = `game ${state.status}`;
-      }
-      #drawGrid(level2) {
-        return this.#createElements(
-          "table",
-          {
-            class: "background",
-            style: `width: ${level2.width * this.scale}px`
-          },
-          ...level2.rows.map(
-            (row) => this.#createElements(
-              "tr",
-              { style: `height: ${this.scale}px` },
-              ...row.map((type) => this.#createElements("td", { class: type }))
-            )
-          )
-        );
-      }
-      #drawActors(actors) {
-        return this.#createElements(
-          "div",
-          {},
-          ...actors.map((actor) => {
-            let rect = this.#createElements("div", {
-              class: `actor ${actor.type}`
-            });
-            rect.style.width = `${actor.size.x * this.scale}px`;
-            rect.style.height = `${actor.size.y * this.scale}px`;
-            rect.style.left = `${actor.pos.x * this.scale}px`;
-            rect.style.top = `${actor.pos.y * this.scale}px`;
-            return rect;
-          })
-        );
-      }
-      #createElements(name, attrs, ...children) {
-        let dom = document.createElement(name);
-        for (let attr of Object.keys(attrs)) {
-          dom.setAttribute(attr, attrs[attr]);
-        }
-        for (let child of children) {
-          dom.appendChild(child);
-        }
-        return dom;
+        this.canvas.remove();
       }
     };
-    module2.exports = DOMDisplay2;
+    CanvasDisplay2.prototype.syncState = function(state) {
+      this.drawBackground(state.level);
+      this.drawActors(state.actors);
+    };
+    CanvasDisplay2.prototype.clearDisplay = function(status) {
+    };
+    var otherSprites = document.createElement("img");
+    otherSprites.src = "../img/sprites.png";
+    CanvasDisplay2.prototype.drawBackground = function(level2) {
+      let { left, top, width, height } = this.viewport;
+      let xStart = Math.floor(left);
+      let xEnd = Math.ceil(left + width);
+      let yStart = Math.floor(top);
+      let yEnd = Math.ceil(top + height);
+      for (let y = yStart; y < yEnd; y++) {
+        for (let x = xStart; x < xEnd; x++) {
+          let tile = level2.rows[y][x];
+          if (tile == "empty") {
+            this.cx.drawImage(
+              otherSprites,
+              x * this.scale,
+              y * this.scale,
+              this.scale,
+              this.scale
+            );
+          }
+        }
+      }
+    };
+    var playerSprites = document.createElement("img");
+    playerSprites.src = "../img/player.png";
+    CanvasDisplay2.prototype.drawActors = function(actors) {
+      CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
+      };
+    };
+    module2.exports = CanvasDisplay2;
   }
 });
 
@@ -441,8 +432,8 @@ var require_game = __commonJS({
 // index.js
 var Level = require_level();
 var levelPlans = require_levelPlans();
-var DOMDisplay = require_DOMDisplay();
+var CanvasDisplay = require_canvasDisplay();
 var Game = require_game();
 var level = new Level(levelPlans[0]);
-var game = new Game(level, DOMDisplay);
+var game = new Game(level, CanvasDisplay);
 game.run();
