@@ -374,18 +374,6 @@ var require_DOMDisplay = __commonJS({
         }
         return dom;
       }
-      trackKeys(keys) {
-        let down = /* @__PURE__ */ Object.create(null);
-        function track(event) {
-          if (keys.includes(event.key)) {
-            down[event.key] = event.type == "keydown";
-            event.preventDefault();
-          }
-        }
-        window.addEventListener("keydown", track);
-        window.addEventListener("keyup", track);
-        return down;
-      }
     };
     module2.exports = DOMDisplay2;
   }
@@ -400,7 +388,7 @@ var require_game = __commonJS({
         this.level = level2;
         this.display = new Display(document.body, level2);
         this.state = State.start(level2);
-        this.arrowKeysTracker = this.display.trackKeys([
+        this.arrowKeysTracker = this.#trackKeys([
           "ArrowLeft",
           "ArrowRight",
           "ArrowUp",
@@ -416,22 +404,34 @@ var require_game = __commonJS({
         if (this.state.status == "playing") {
           return true;
         } else {
-          display.clear();
+          this.display.clear();
           return false;
         }
       };
-      #runAnimation(updateFrameFunction) {
+      #runAnimation(updateFrame) {
         let lastTime = null;
         function frame(time) {
           if (lastTime != null) {
             let timeStep = Math.min(time - lastTime, 100) / 1e3;
-            if (updateFrameFunction(timeStep) === false)
+            if (updateFrame(timeStep) === false)
               return;
           }
           lastTime = time;
           requestAnimationFrame(frame);
         }
         requestAnimationFrame(frame);
+      }
+      #trackKeys(keys) {
+        let down = /* @__PURE__ */ Object.create(null);
+        function track(event) {
+          if (keys.includes(event.key)) {
+            down[event.key] = event.type == "keydown";
+            event.preventDefault();
+          }
+        }
+        window.addEventListener("keydown", track);
+        window.addEventListener("keyup", track);
+        return down;
       }
     };
     module2.exports = Game2;
