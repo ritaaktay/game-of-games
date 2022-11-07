@@ -42,13 +42,28 @@ describe("BlockJumpGame", () => {
     expect(game.jumpCounter).toEqual(1);
   });
 
-  it("jump button increments jump counter", () => {
+  it.only("jump button increments jump counter", (done) => {
     const game = new BlockJumpGame();
-    document.getElementById("jump-button").click();
-    document.getElementById("jump-button").click();
-    document.getElementById("jump-button").click();
-    document.getElementById("jump-button").click();
-    expect(game.jumpCounter).toEqual(4);
+    setTimeout(() => {
+      console.log("JUMPED");
+      document.getElementById("jump-button").click();
+    }, 600);
+    setTimeout(() => {
+      console.log("JUMPED");
+      document.getElementById("jump-button").click();
+    }, 600);
+    setTimeout(() => {
+      console.log("JUMPED");
+      document.getElementById("jump-button").click();
+    }, 600);
+    setTimeout(() => {
+      console.log("JUMPED");
+      document.getElementById("jump-button").click();
+    }, 600);
+    setTimeout(() => {
+      expect(game.jumpCounter).toEqual(4);
+      done();
+    }, 2600);
   });
 
   it("animation is removed 500 ms after jump button is clicked", (done) => {
@@ -83,5 +98,22 @@ describe("BlockJumpGame", () => {
     const spy = jest.spyOn(game, "checkIfDead");
     game.run(mockCallback);
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("game is won 500ms after 5 jumps", () => {
+    const game = new BlockJumpGame();
+    const mockCallback = jest.fn().mockImplementation((callback) => {});
+    game.run(mockCallback);
+    const spy = jest.spyOn(game, "callback");
+    for (let i = 1; i <= 5; i++) {
+      setTimeout(() => {
+        document.getElementById("jump-button").click();
+      }, 550);
+    }
+    console.log(game.jumpCounter);
+    // setTimeout(() => {
+    //   expect(spy).toHaveBeenCalledWith("Won");
+    //   done();
+    // }, 550);
   });
 });
