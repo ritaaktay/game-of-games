@@ -4,9 +4,12 @@
 
 const BlockJumpGame = require("../lib/blockJumpGame");
 const fs = require("fs");
+const path = require("path");
 
 beforeEach(() => {
-  const document = fs.readFileSync(path.join(__dirname, "..", "index.html"));
+  document.body.innerHTML = fs.readFileSync(
+    path.join(__dirname, "..", "index.html")
+  );
 });
 
 describe("BlockJumpGame", () => {
