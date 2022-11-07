@@ -90,29 +90,12 @@ describe("BlockJumpGame", () => {
     game.run(mockCallback);
     expect(spy).toHaveBeenCalledTimes(1);
   });
-
-  it("game is won 500ms after 5 jumps", (done) => {
-    const game = new BlockJumpGame();
-    const mockCallback = jest.fn().mockImplementation((message) => {
-      expect(message).toEqual("Won");
-      done();
-    });
-    game.run(mockCallback);
-    let counter = 0;
-    const jumpLater = () => {
-      setTimeout(() => {
-        game.jump();
-        if (counter > 5) return;
-        jumpLater();
-      }, 550);
-    };
-    jumpLater();
-  });
-
   it("game is lost on contact with block", (done) => {
     const game = new BlockJumpGame();
-    const mockCallback = jest.fn().mockImplementation((message) => {
+    const originalGetComputedStyle = window.getComputedStyle;
+    const mockLoseCallback = jest.fn().mockImplementation((message) => {
       expect(message).toEqual("Lost");
+      window.getComputedStyle = originalGetComputedStyle;
       done();
     });
     Object.defineProperty(window, "getComputedStyle", {
@@ -123,9 +106,25 @@ describe("BlockJumpGame", () => {
         },
       }),
     });
-    const block = document.getElementById("block");
-    console.log(window.getComputedStyle(block));
-    game.run(mockCallback);
+    game.run(mockLoseCallback);
     game.start();
+  });
+
+  it("game is won 500ms after 5 jumps", (done) => {
+    const game = new BlockJumpGame();
+    const mockWinCallback = jest.fn().mockImplementation((message) => {
+      expect(message).toEqual("Won");
+      done();
+    });
+    game.run(mockWinCallback);
+    let counter = 0;
+    const jumpLater = () => {
+      setTimeout(() => {
+        game.jump();
+        if (counter > 4) return;
+        jumpLater();
+      }, 550);
+    };
+    jumpLater();
   });
 });
