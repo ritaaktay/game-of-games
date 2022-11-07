@@ -298,12 +298,12 @@ var require_levelPlans = __commonJS({
 ..................
 ..................
 ..................
+.....@..!.........
 ..................
 ..................
 ..................
 ..................
-..................
-@...!.............`;
+..................`;
     module2.exports = [mvpLevelPlan];
   }
 });
@@ -335,10 +335,6 @@ var require_canvasDisplay = __commonJS({
       this.drawBackground(state.level);
       this.drawActors(state.actors);
     };
-    CanvasDisplay2.prototype.clearDisplay = function(status) {
-    };
-    var otherSprites = document.createElement("img");
-    otherSprites.src = "../img/sprites.png";
     CanvasDisplay2.prototype.drawBackground = function(level2) {
       let { left, top, width, height } = this.viewport;
       let xStart = Math.floor(left);
@@ -357,9 +353,23 @@ var require_canvasDisplay = __commonJS({
     };
     var playerSprites = document.createElement("img");
     playerSprites.src = "../img/player.png";
+    CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
+      this.cx.drawImage(playerSprites, x, y, width, height);
+    };
+    var cookieJarSprite = document.createElement("img");
+    cookieJarSprite.src = "../img/cookieJar.png";
     CanvasDisplay2.prototype.drawActors = function(actors) {
-      CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
-      };
+      for (let actor of actors) {
+        let width = actor.size.x * this.scale;
+        let height = actor.size.y * this.scale;
+        let x = actor.pos.x * this.scale;
+        let y = actor.pos.y * this.scale;
+        if (actor.type == "player") {
+          this.drawPlayer(actor, x, y, width, height);
+        } else if (actor.type == "cookieJar") {
+          this.cx.drawImage(cookieJarSprite, x, y, this.scale, this.scale);
+        }
+      }
     };
     module2.exports = CanvasDisplay2;
   }
