@@ -90,6 +90,7 @@ describe("BlockJumpGame", () => {
     game.run(mockCallback);
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
   it("game is lost on contact with block", (done) => {
     const game = new BlockJumpGame();
     const originalGetComputedStyle = window.getComputedStyle;
