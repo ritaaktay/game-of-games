@@ -21,4 +21,12 @@ describe("BlockJumpGame", () => {
     expect(game.startButton).toEqual(document.getElementById("start-button"));
     expect(game.jumpCounter).toEqual(0);
   });
+
+  it("start button animates the block", () => {
+    const game = new BlockJumpGame();
+    const spy = jest.spyOn(game, "start");
+    document.getElementById("start-button").click();
+    const block = document.getElementById("block");
+    expect(block.style.animation).toEqual("block 1s infinite linear");
+  });
 });
