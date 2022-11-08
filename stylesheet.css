@@ -37,6 +37,10 @@
   left: 200px;
 }
 
+#text {
+  font-family: "Lucida Console", Monospace;
+}
+
 /* mini-game: block-jump */
 
 #block_jump_game_container {
@@ -49,13 +53,12 @@
 #block_jump_game {
   width: 720px;
   height: 360px;
-  border: 1px solid black;
+  background-color: aqua;
 }
 
 #character {
   width: 20px;
   height: 50px;
-  background-color: red;
   position: relative;
   top: 310px;
 }
