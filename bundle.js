@@ -315,17 +315,16 @@ var require_canvasDisplay = __commonJS({
       constructor(parent, level2) {
         this.scale = 40;
         this.canvas = document.createElement("canvas");
-        this.canvas.className = "game";
-        this.canvas.width = Math.min(600, level2.width * this.scale);
-        this.canvas.height = Math.min(450, level2.height * this.scale);
+        this.canvas.className = "main-game";
+        this.canvas.width = level2.width * this.scale;
+        this.canvas.height = level2.height * this.scale;
         parent.appendChild(this.canvas);
         this.cx = this.canvas.getContext("2d");
-        this.viewport = {
-          left: 0,
-          top: 0,
-          width: this.canvas.width / this.scale,
-          height: this.canvas.height / this.scale
-        };
+        this.cookieJarSprite = document.createElement("img");
+        this.cookieJarSprite.src = "../img/cookieJar.png";
+        this.playerSprites = document.createElement("img");
+        this.playerSprites.src = "../img/player.png";
+        this.drawBackground(level2);
       }
       clear() {
         this.canvas.remove();
@@ -336,28 +335,21 @@ var require_canvasDisplay = __commonJS({
       this.drawActors(state.actors);
     };
     CanvasDisplay2.prototype.drawBackground = function(level2) {
-      let { left, top, width, height } = this.viewport;
-      let xStart = Math.floor(left);
-      let xEnd = Math.ceil(left + width);
-      let yStart = Math.floor(top);
-      let yEnd = Math.ceil(top + height);
-      for (let y = yStart; y < yEnd; y++) {
-        for (let x = xStart; x < xEnd; x++) {
+      for (let y = 0; y < level2.height; y++) {
+        for (let x = 0; x < level2.width; x++) {
           let tile = level2.rows[y][x];
           if (tile == "empty") {
             this.cx.fillStyle = "rgb(200, 200, 200)";
-            this.cx.fillRect(x, y, x * this.scale, y * this.scale);
+            this.cx.fillRect(
+              x * this.scale,
+              y * this.scale,
+              this.scale,
+              this.scale
+            );
           }
         }
       }
     };
-    var playerSprites = document.createElement("img");
-    playerSprites.src = "../img/player.png";
-    CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
-      this.cx.drawImage(playerSprites, x, y, width, height);
-    };
-    var cookieJarSprite = document.createElement("img");
-    cookieJarSprite.src = "../img/cookieJar.png";
     CanvasDisplay2.prototype.drawActors = function(actors) {
       for (let actor of actors) {
         let width = actor.size.x * this.scale;
@@ -367,9 +359,12 @@ var require_canvasDisplay = __commonJS({
         if (actor.type == "player") {
           this.drawPlayer(actor, x, y, width, height);
         } else if (actor.type == "cookieJar") {
-          this.cx.drawImage(cookieJarSprite, x, y, this.scale, this.scale);
+          this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
         }
       }
+    };
+    CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
+      this.cx.drawImage(this.playerSprites, x, y, width, height);
     };
     module2.exports = CanvasDisplay2;
   }
