@@ -17,15 +17,15 @@
 .cookieJar {
   background: rgb(238, 235, 42);
 }
-#main-game-container {
-  height: 800px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#main-game {
+  position: fixed;
+  top: 200px;
+  left: 200px;
 }
-#dumb-mini-game {
+
+/* #dumb-mini-game {
   display: none;
-}
+} */
 
 /* mini-game: block-jump */
 

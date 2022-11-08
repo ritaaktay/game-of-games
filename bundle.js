@@ -334,11 +334,10 @@ var require_canvasDisplay = __commonJS({
       }
       addCanvas(level2) {
         this.canvas = document.createElement("canvas");
-        this.canvas.className = "maingame";
-        this.canvas.id = "maingame";
+        this.canvas.id = "main-game";
         this.canvas.width = level2.width * this.scale;
         this.canvas.height = level2.height * this.scale;
-        document.getElementById("main-game-container").appendChild(this.canvas);
+        this.parent.appendChild(this.canvas);
         this.cx = this.canvas.getContext("2d");
         console.log(this.canvas);
       }
