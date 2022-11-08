@@ -336,6 +336,8 @@ var require_canvasDisplay = __commonJS({
         this.wallSprite.src = "img/wall.png";
         this.cookieMonsterSprite = document.createElement("img");
         this.cookieMonsterSprite.src = "img/cookieMonster.png";
+        this.backgroundSprite = document.createElement("img");
+        this.backgroundSprite.src = "img/background-tile.jpeg";
         this.drawBackground(level2);
       }
       addCanvas(level2) {
@@ -362,6 +364,8 @@ var require_canvasDisplay = __commonJS({
       }
       clearDisplay = function(status) {
         this.cx.fillStyle = "rgb(119, 255, 61)";
+        const pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
+        this.cx.fillStyle = pattern;
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       };
       drawBackground = function(level2) {
