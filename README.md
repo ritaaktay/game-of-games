@@ -41,7 +41,3 @@ http://localhost:8080/
 ```sh
 npm test
 ```
-
-### Assets
-
-- [Monsters](https://dribbble.com/shots/4871276-Free-Monster-2D-Game-Objects-Pack-2)
