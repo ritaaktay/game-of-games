@@ -341,7 +341,7 @@ var require_canvasDisplay = __commonJS({
         this.drawActors(state.actors);
       };
       clearDisplay = function(status) {
-        this.cx.fillStyle = "rgb(255, 249, 82)";
+        this.cx.fillStyle = "rgb(119, 255, 61)";
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       };
       drawBackground = function(level2) {
