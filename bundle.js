@@ -243,6 +243,8 @@ var require_levelCharTypes = __commonJS({
     var CookieJar = require_cookieJar();
     var levelCharTypes = {
       ".": "empty",
+      "#": "wall",
+      "M": "CM",
       "@": Player,
       "!": CookieJar
     };
@@ -296,14 +298,14 @@ var require_levelPlans = __commonJS({
   "lib/levelPlans.js"(exports, module2) {
     var mvpLevelPlan = `
 ..................
-..................
-..................
-.....@..!.........
-..................
-..................
-..................
-..................
-..................`;
+..............####
+..########....#...
+..#......#....#...
+..#......#....#...
+..#...#..#........
+..#...#..#....M..
+..#...#...........
+.@#..!#.......#...`;
     module2.exports = [mvpLevelPlan];
   }
 });
@@ -324,47 +326,66 @@ var require_canvasDisplay = __commonJS({
         this.cookieJarSprite.src = "../img/cookieJar.png";
         this.playerSprites = document.createElement("img");
         this.playerSprites.src = "../img/player.png";
+        this.wallSprite = document.createElement("img");
+        this.wallSprite.src = "img/wall.png";
+        this.cookieMonsterSprite = document.createElement("img");
+        this.cookieMonsterSprite.src = "img/cookieMonster.png";
         this.drawBackground(level2);
       }
       clear() {
         this.canvas.remove();
       }
-    };
-    CanvasDisplay2.prototype.syncState = function(state) {
-      this.drawBackground(state.level);
-      this.drawActors(state.actors);
-    };
-    CanvasDisplay2.prototype.drawBackground = function(level2) {
-      for (let y = 0; y < level2.height; y++) {
-        for (let x = 0; x < level2.width; x++) {
-          let tile = level2.rows[y][x];
-          if (tile == "empty") {
-            this.cx.fillStyle = "rgb(200, 200, 200)";
-            this.cx.fillRect(
-              x * this.scale,
-              y * this.scale,
-              this.scale,
-              this.scale
-            );
+      syncState = function(state) {
+        this.clearDisplay(state.status);
+        this.drawBackground(state.level);
+        this.drawActors(state.actors);
+      };
+      clearDisplay = function(status) {
+        this.cx.fillStyle = "rgb(255, 249, 82)";
+        this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      };
+      drawBackground = function(level2) {
+        for (let y = 0; y < level2.height; y++) {
+          for (let x = 0; x < level2.width; x++) {
+            let tile = level2.rows[y][x];
+            if (tile == "empty") {
+              continue;
+            } else if (tile == "wall") {
+              this.cx.drawImage(
+                this.wallSprite,
+                x * this.scale,
+                y * this.scale,
+                this.scale,
+                this.scale
+              );
+            } else if (tile == "CM") {
+              this.cx.drawImage(
+                this.cookieMonsterSprite,
+                x * this.scale,
+                y * this.scale,
+                this.scale,
+                this.scale
+              );
+            }
           }
         }
-      }
-    };
-    CanvasDisplay2.prototype.drawActors = function(actors) {
-      for (let actor of actors) {
-        let width = actor.size.x * this.scale;
-        let height = actor.size.y * this.scale;
-        let x = actor.pos.x * this.scale;
-        let y = actor.pos.y * this.scale;
-        if (actor.type == "player") {
-          this.drawPlayer(actor, x, y, width, height);
-        } else if (actor.type == "cookieJar") {
-          this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+      };
+      drawActors = function(actors) {
+        for (let actor of actors) {
+          let width = actor.size.x * this.scale;
+          let height = actor.size.y * this.scale;
+          let x = actor.pos.x * this.scale;
+          let y = actor.pos.y * this.scale;
+          if (actor.type == "player") {
+            this.drawPlayer(actor, x, y, width, height);
+          } else if (actor.type == "cookieJar") {
+            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          }
         }
-      }
-    };
-    CanvasDisplay2.prototype.drawPlayer = function(player, x, y, width, height) {
-      this.cx.drawImage(this.playerSprites, x, y, width, height);
+      };
+      drawPlayer = function(player, x, y, width, height) {
+        this.cx.drawImage(this.playerSprites, x, y, width, height);
+      };
     };
     module2.exports = CanvasDisplay2;
   }
