@@ -162,8 +162,12 @@ var require_state = __commonJS({
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
-        const cookieJar = this.actors.find((actor) => actor.type == "cookieJar");
-        if (!this.overlap(cookieJar, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+        const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
+        if (!this.overlap(cookieJar1, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+          newState.miniGameStatus = null;
+        }
+        const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
+        if (!this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
           newState.miniGameStatus = null;
         }
         for (let actor of actors) {
@@ -181,13 +185,13 @@ var require_state = __commonJS({
   }
 });
 
-// lib/cookieJar.js
-var require_cookieJar = __commonJS({
-  "lib/cookieJar.js"(exports, module2) {
+// lib/cookieJar1.js
+var require_cookieJar1 = __commonJS({
+  "lib/cookieJar1.js"(exports, module2) {
     var Vec = require_vector();
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
-    var CookieJar = class {
+    var CookieJar1 = class {
       constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
@@ -195,13 +199,13 @@ var require_cookieJar = __commonJS({
         this.miniGame = miniGame;
       }
       get type() {
-        return "cookieJar";
+        return "cookieJar1";
       }
       static create(pos) {
-        return new CookieJar(pos, new Vec(0, 0));
+        return new CookieJar1(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new CookieJar(
+        return new CookieJar1(
           this.pos,
           this.speed,
           this.updatedState,
@@ -241,8 +245,73 @@ var require_cookieJar = __commonJS({
         return this.updatedState;
       }
     };
-    CookieJar.prototype.size = new Vec(1, 1);
-    module2.exports = CookieJar;
+    CookieJar1.prototype.size = new Vec(1, 1);
+    module2.exports = CookieJar1;
+  }
+});
+
+// lib/cookieJar2.js
+var require_cookieJar2 = __commonJS({
+  "lib/cookieJar2.js"(exports, module2) {
+    var Vec = require_vector();
+    var BlockJumpGame = require_blockJumpGame();
+    var State = require_state();
+    var CookieJar2 = class {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
+        this.pos = pos;
+        this.speed = speed;
+        this.updatedState = updatedState;
+        this.miniGame = miniGame;
+      }
+      get type() {
+        return "cookieJar2";
+      }
+      static create(pos) {
+        return new CookieJar2(pos, new Vec(0, 0));
+      }
+      update(time, state, keys) {
+        return new CookieJar2(
+          this.pos,
+          this.speed,
+          this.updatedState,
+          this.miniGame
+        );
+      }
+      collide(state) {
+        if (state.miniGameStatus == null) {
+          this.updatedState = new State(
+            state.level,
+            state.actors,
+            state.status,
+            "playing"
+          );
+          const miniGame = new this.miniGame();
+          const callbackFunction = (result) => {
+            if (result === "Lost") {
+              let newState = new State(
+                state.level,
+                state.actors,
+                state.status,
+                "Lost"
+              );
+              this.updatedState = newState;
+            } else if (result === "Won") {
+              let newState = new State(
+                state.level,
+                state.actors,
+                state.status,
+                "Won"
+              );
+              this.updatedState = newState;
+            }
+          };
+          miniGame.run(callbackFunction);
+        }
+        return this.updatedState;
+      }
+    };
+    CookieJar2.prototype.size = new Vec(1, 1);
+    module2.exports = CookieJar2;
   }
 });
 
@@ -250,13 +319,15 @@ var require_cookieJar = __commonJS({
 var require_levelCharTypes = __commonJS({
   "lib/levelCharTypes.js"(exports, module2) {
     var Player = require_player();
-    var CookieJar = require_cookieJar();
+    var CookieJar1 = require_cookieJar1();
+    var CookieJar2 = require_cookieJar2();
     var levelCharTypes = {
       ".": "empty",
       "#": "wall",
       "M": "CM",
       "@": Player,
-      "!": CookieJar
+      "1": CookieJar1,
+      "2": CookieJar2
     };
     module2.exports = levelCharTypes;
   }
@@ -314,8 +385,9 @@ var require_levelPlans = __commonJS({
 ..#......#....#...
 ..#...#..#........
 ..#...#..#....M..
-......#...........
-.@...!#.......#...`;
+..#...#...........
+.@#1.2#.......#...`;
+
     module2.exports = [mvpLevelPlan];
   }
 });
@@ -326,6 +398,10 @@ var require_canvasDisplay = __commonJS({
     var CanvasDisplay2 = class {
       constructor(parent, level2) {
         this.scale = 40;
+        this.cookieJar1Sprite = document.createElement("img");
+        this.cookieJar1Sprite.src = "../img/cookieJar1.png";
+        this.cookieJar2Sprite = document.createElement("img");
+        this.cookieJar2Sprite.src = "../img/cookieJar2.png";
         this.parent = parent;
         this.addCanvas(level2);
         this.cookieJarSprite = document.createElement("img");
@@ -402,8 +478,10 @@ var require_canvasDisplay = __commonJS({
           let y = actor.pos.y * this.scale;
           if (actor.type == "player") {
             this.drawPlayer(actor, x, y, width, height);
-          } else if (actor.type == "cookieJar") {
-            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "cookieJar1") {
+            this.cx.drawImage(this.cookieJar1Sprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "cookieJar2") {
+            this.cx.drawImage(this.cookieJar2Sprite, x, y, this.scale, this.scale);
           }
         }
       };
