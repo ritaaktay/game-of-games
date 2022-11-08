@@ -14,12 +14,21 @@
     </div> -->
     <div id="block_jump_game_container">
       <div id="block_jump_game">
-        <div id="character"></div>
-        <div id="block"></div>
+        <!-- make sure you wrap images in divs or behaviour is buggy -->
+        <div id="character">
+          <img src="img/dinosaur.png" />
+        </div>
+        <div id="block">
+          <img src="img/asteroid.png" />
+        </div>
       </div>
       <button id="start-button">START</button>
       <button id="jump-button">JUMP</button>
     </div>
+    <div id="text-container">
+      <p id="text">You've got to find your way out of this place!</p>
+    </div>
+    </body>
     <script src="bundle.js"></script>
   </body>
 </html>
