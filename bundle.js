@@ -82,11 +82,18 @@ var require_blockJumpGame = __commonJS({
       }
       run = (callback) => {
         this.checkIfDead();
+        this.displayMessage("Jump over the meteorites!");
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
       };
       start = () => {
         this.block.style.animation = "block 1s infinite linear";
+      };
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
+      };
+      clear = () => {
+        document.getElementById("block_jump_game_container").style.display = "none";
       };
       checkIfDead = () => {
         setInterval(() => {
@@ -98,8 +105,8 @@ var require_blockJumpGame = __commonJS({
           );
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             block.style.animation = "none";
-            block.style.display = "none";
-            console.log("You lost!");
+            this.clear();
+            this.displayMessage("You lost!");
             this.callback("Lost");
           }
         }, 10);
@@ -111,7 +118,10 @@ var require_blockJumpGame = __commonJS({
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               block.style.animation = "none";
-              console.log("You won!");
+              this.clear();
+              this.displayMessage("You won!");
+              this.jumpCounter = 0;
+              this.clear();
               this.callback("Won");
             }, 500);
           }
@@ -304,8 +314,8 @@ var require_levelPlans = __commonJS({
 ..#......#....#...
 ..#...#..#........
 ..#...#..#....M..
-..#...#...........
-.@#..!#.......#...`;
+......#...........
+.@...!#.......#...`;
     module2.exports = [mvpLevelPlan];
   }
 });
@@ -316,12 +326,8 @@ var require_canvasDisplay = __commonJS({
     var CanvasDisplay2 = class {
       constructor(parent, level2) {
         this.scale = 40;
-        this.canvas = document.createElement("canvas");
-        this.canvas.className = "main-game";
-        this.canvas.width = level2.width * this.scale;
-        this.canvas.height = level2.height * this.scale;
-        parent.appendChild(this.canvas);
-        this.cx = this.canvas.getContext("2d");
+        this.parent = parent;
+        this.addCanvas(level2);
         this.cookieJarSprite = document.createElement("img");
         this.cookieJarSprite.src = "../img/cookieJar.png";
         this.playerSprites = document.createElement("img");
@@ -329,19 +335,37 @@ var require_canvasDisplay = __commonJS({
         this.wallSprite = document.createElement("img");
         this.wallSprite.src = "img/wall.png";
         this.cookieMonsterSprite = document.createElement("img");
-        this.cookieMonsterSprite.src = "img/cookieMonster.png";
+        this.cookieMonsterSprite.src = "img/cookieMonster2.png";
+        this.backgroundSprite = document.createElement("img");
+        this.backgroundSprite.src = "img/background-tile.jpeg";
         this.drawBackground(level2);
+      }
+      addCanvas(level2) {
+        this.canvas = document.createElement("canvas");
+        this.canvas.id = "main-game";
+        this.canvas.width = level2.width * this.scale;
+        this.canvas.height = level2.height * this.scale;
+        this.parent.appendChild(this.canvas);
+        this.cx = this.canvas.getContext("2d");
+        console.log(this.canvas);
       }
       clear() {
         this.canvas.remove();
       }
-      syncState = function(state) {
-        this.clearDisplay(state.status);
-        this.drawBackground(state.level);
-        this.drawActors(state.actors);
-      };
+      syncState(state) {
+        if (state.miniGameStatus == "playing") {
+          this.canvas.style.display = "none";
+        } else {
+          this.canvas.style.display = "inline";
+          this.clearDisplay(state.status);
+          this.drawBackground(state.level);
+          this.drawActors(state.actors);
+        }
+      }
       clearDisplay = function(status) {
         this.cx.fillStyle = "rgb(119, 255, 61)";
+        const pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
+        this.cx.fillStyle = pattern;
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       };
       drawBackground = function(level2) {
