@@ -152,8 +152,8 @@ var require_state = __commonJS({
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
-        const cookieJar = this.actors.find((actor) => actor.type == "cookieJar");
-        if (!this.overlap(cookieJar, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+        const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
+        if (!this.overlap(cookieJar1, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
           newState.miniGameStatus = null;
         }
         for (let actor of actors) {
@@ -171,13 +171,13 @@ var require_state = __commonJS({
   }
 });
 
-// lib/cookieJar.js
-var require_cookieJar = __commonJS({
-  "lib/cookieJar.js"(exports, module2) {
+// lib/cookieJar1.js
+var require_cookieJar1 = __commonJS({
+  "lib/cookieJar1.js"(exports, module2) {
     var Vec = require_vector();
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
-    var CookieJar = class {
+    var CookieJar1 = class {
       constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
@@ -185,13 +185,13 @@ var require_cookieJar = __commonJS({
         this.miniGame = miniGame;
       }
       get type() {
-        return "cookieJar";
+        return "cookieJar1";
       }
       static create(pos) {
-        return new CookieJar(pos, new Vec(0, 0));
+        return new CookieJar1(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new CookieJar(
+        return new CookieJar1(
           this.pos,
           this.speed,
           this.updatedState,
@@ -231,8 +231,8 @@ var require_cookieJar = __commonJS({
         return this.updatedState;
       }
     };
-    CookieJar.prototype.size = new Vec(1, 1);
-    module2.exports = CookieJar;
+    CookieJar1.prototype.size = new Vec(1, 1);
+    module2.exports = CookieJar1;
   }
 });
 
@@ -240,13 +240,13 @@ var require_cookieJar = __commonJS({
 var require_levelCharTypes = __commonJS({
   "lib/levelCharTypes.js"(exports, module2) {
     var Player = require_player();
-    var CookieJar = require_cookieJar();
+    var CookieJar1 = require_cookieJar1();
     var levelCharTypes = {
       ".": "empty",
       "#": "wall",
       "M": "CM",
       "@": Player,
-      "!": CookieJar
+      "1": CookieJar1
     };
     module2.exports = levelCharTypes;
   }
@@ -305,7 +305,7 @@ var require_levelPlans = __commonJS({
 ..#...#..#........
 ..#...#..#....M..
 ..#...#...........
-.@#..!#.......#...`;
+.@#1..#.......#...`;
     module2.exports = [mvpLevelPlan];
   }
 });
@@ -322,8 +322,8 @@ var require_canvasDisplay = __commonJS({
         this.canvas.height = level2.height * this.scale;
         parent.appendChild(this.canvas);
         this.cx = this.canvas.getContext("2d");
-        this.cookieJarSprite = document.createElement("img");
-        this.cookieJarSprite.src = "../img/cookieJar.png";
+        this.cookieJar1Sprite = document.createElement("img");
+        this.cookieJar1Sprite.src = "../img/cookieJar1.png";
         this.playerSprites = document.createElement("img");
         this.playerSprites.src = "../img/player.png";
         this.wallSprite = document.createElement("img");
@@ -335,11 +335,11 @@ var require_canvasDisplay = __commonJS({
       clear() {
         this.canvas.remove();
       }
-      syncState = function(state) {
+      syncState(state) {
         this.clearDisplay(state.status);
         this.drawBackground(state.level);
         this.drawActors(state.actors);
-      };
+      }
       clearDisplay = function(status) {
         this.cx.fillStyle = "rgb(119, 255, 61)";
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -378,8 +378,8 @@ var require_canvasDisplay = __commonJS({
           let y = actor.pos.y * this.scale;
           if (actor.type == "player") {
             this.drawPlayer(actor, x, y, width, height);
-          } else if (actor.type == "cookieJar") {
-            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "cookieJar1") {
+            this.cx.drawImage(this.cookieJar1Sprite, x, y, this.scale, this.scale);
           }
         }
       };
