@@ -41,8 +41,9 @@
 }
 
 #block_jump_game_container {
-  /* top: 400px; */
   position: fixed;
+  top: 200px;
+  left: 200px;
   display: none;
 }
 
@@ -88,6 +89,6 @@
     left: 720px;
   }
   100% {
-    left: -40px;
+    left: -10px;
   }
 }
