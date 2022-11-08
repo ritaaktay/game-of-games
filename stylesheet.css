@@ -17,11 +17,11 @@
 .cookieJar {
   background: rgb(238, 235, 42);
 }
-.game {
-  /* overflow: hidden; */
-  max-width: 600px;
-  max-height: 450px;
-  position: relative;
+#main-game-container {
+  height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #dumb-mini-game {
   display: none;
@@ -41,7 +41,7 @@
 }
 
 #block_jump_game_container {
-  top: 400px;
+  /* top: 400px; */
   position: fixed;
   display: none;
 }

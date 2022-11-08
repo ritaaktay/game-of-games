@@ -88,6 +88,9 @@ var require_blockJumpGame = __commonJS({
       start = () => {
         this.block.style.animation = "block 1s infinite linear";
       };
+      clear = () => {
+        document.getElementById("block_jump_game_container").style.display = "none";
+      };
       checkIfDead = () => {
         setInterval(() => {
           var characterTop = parseInt(
@@ -98,7 +101,7 @@ var require_blockJumpGame = __commonJS({
           );
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             block.style.animation = "none";
-            block.style.display = "none";
+            this.clear();
             console.log("You lost!");
             this.callback("Lost");
           }
@@ -111,6 +114,7 @@ var require_blockJumpGame = __commonJS({
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               block.style.animation = "none";
+              this.clear();
               console.log("You won!");
               this.callback("Won");
             }, 500);
@@ -316,12 +320,8 @@ var require_canvasDisplay = __commonJS({
     var CanvasDisplay2 = class {
       constructor(parent, level2) {
         this.scale = 40;
-        this.canvas = document.createElement("canvas");
-        this.canvas.className = "main-game";
-        this.canvas.width = level2.width * this.scale;
-        this.canvas.height = level2.height * this.scale;
-        parent.appendChild(this.canvas);
-        this.cx = this.canvas.getContext("2d");
+        this.parent = parent;
+        this.addCanvas(level2);
         this.cookieJarSprite = document.createElement("img");
         this.cookieJarSprite.src = "../img/cookieJar.png";
         this.playerSprites = document.createElement("img");
@@ -332,14 +332,29 @@ var require_canvasDisplay = __commonJS({
         this.cookieMonsterSprite.src = "img/cookieMonster.png";
         this.drawBackground(level2);
       }
+      addCanvas(level2) {
+        this.canvas = document.createElement("canvas");
+        this.canvas.className = "maingame";
+        this.canvas.id = "maingame";
+        this.canvas.width = level2.width * this.scale;
+        this.canvas.height = level2.height * this.scale;
+        document.getElementById("main-game-container").appendChild(this.canvas);
+        this.cx = this.canvas.getContext("2d");
+        console.log(this.canvas);
+      }
       clear() {
         this.canvas.remove();
       }
-      syncState = function(state) {
-        this.clearDisplay(state.status);
-        this.drawBackground(state.level);
-        this.drawActors(state.actors);
-      };
+      syncState(state) {
+        if (state.miniGameStatus == "playing") {
+          this.canvas.style.display = "none";
+        } else {
+          this.canvas.style.display = "inline";
+          this.clearDisplay(state.status);
+          this.drawBackground(state.level);
+          this.drawActors(state.actors);
+        }
+      }
       clearDisplay = function(status) {
         this.cx.fillStyle = "rgb(119, 255, 61)";
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
