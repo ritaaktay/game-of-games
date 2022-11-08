@@ -335,7 +335,7 @@ var require_canvasDisplay = __commonJS({
         this.wallSprite = document.createElement("img");
         this.wallSprite.src = "img/wall.png";
         this.cookieMonsterSprite = document.createElement("img");
-        this.cookieMonsterSprite.src = "img/cookieMonster.png";
+        this.cookieMonsterSprite.src = "img/cookieMonster2.png";
         this.backgroundSprite = document.createElement("img");
         this.backgroundSprite.src = "img/background-tile.jpeg";
         this.drawBackground(level2);
