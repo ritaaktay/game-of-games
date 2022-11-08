@@ -139,4 +139,30 @@ describe("CookieJar", () => {
     const newerState = cookieJar.collide(newState);
     expect(newerState.miniGameStatus).toEqual("Lost");
   });
+
+  it("covers when mini game status is neither won or lost", () => {
+    const mockMiniGame = {
+      run: jest.fn().mockImplementation((callback) => {
+        this.callback = callback;
+      }),
+      neither: () => {
+        this.callback("Neither");
+      },
+    };
+    const MockMiniGame = jest.fn().mockImplementation(() => {
+      return mockMiniGame;
+    });
+    const level = new Level(levelPlans[0]);
+    const state = new State(level, [], "playing");
+    const cookieJar = new CookieJar(
+      new Vec(0, 0),
+      new Vec(0, 0),
+      null,
+      MockMiniGame
+    );
+    const newState = cookieJar.collide(state);
+    mockMiniGame.neither();
+    const newerState = cookieJar.collide(newState);
+    expect(newerState.miniGameStatus).toEqual("playing");
+  });
 });

@@ -6,7 +6,6 @@ const DOMDisplay = require("../lib/DOMDisplay");
 const Level = require("../lib/level");
 const State = require("../lib/state");
 const levelPlans = require("../lib/levelPlans");
-const fs = require("fs");
 jest.mock("../lib/DOMDisplay.js");
 
 describe("Game", () => {

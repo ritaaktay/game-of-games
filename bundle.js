@@ -99,19 +99,19 @@ var require_blockJumpGame = __commonJS({
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             block.style.animation = "none";
             block.style.display = "none";
-            alert("You Lost.");
+            console.log("You lost!");
             this.callback("Lost");
           }
         }, 10);
       };
       jump = () => {
-        this.jumpCounter += 1;
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
+          this.jumpCounter += 1;
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               block.style.animation = "none";
-              alert("You Won!");
+              console.log("You won!");
               this.callback("Won");
             }, 500);
           }
