@@ -82,15 +82,15 @@ var require_blockJumpGame = __commonJS({
       }
       run = (callback) => {
         this.checkIfDead();
-        this.displayStartMessage();
+        this.displayMessage("Jump over the blocks to get a cookie...");
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
       };
       start = () => {
         this.block.style.animation = "block 1s infinite linear";
       };
-      displayStartMessage = () => {
-        document.getElementById("text").textContent = "Jump over the blocks to get a cookie...";
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
       };
       clear = () => {
         document.getElementById("block_jump_game_container").style.display = "none";
@@ -106,7 +106,7 @@ var require_blockJumpGame = __commonJS({
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             block.style.animation = "none";
             this.clear();
-            console.log("You lost!");
+            this.displayMessage("You lost!");
             this.callback("Lost");
           }
         }, 10);
@@ -119,7 +119,7 @@ var require_blockJumpGame = __commonJS({
             setTimeout(() => {
               block.style.animation = "none";
               this.clear();
-              console.log("You won!");
+              this.displayMessage("You won!");
               this.callback("Won");
             }, 500);
           }
