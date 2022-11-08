@@ -55,6 +55,7 @@
 #character {
   width: 20px;
   height: 50px;
+  background-color: red;
   position: relative;
   top: 310px;
 }
