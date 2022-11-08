@@ -243,6 +243,8 @@ var require_levelCharTypes = __commonJS({
     var CookieJar = require_cookieJar();
     var levelCharTypes = {
       ".": "empty",
+      "#": "wall",
+      "M": "CM",
       "@": Player,
       "!": CookieJar
     };
@@ -296,86 +298,96 @@ var require_levelPlans = __commonJS({
   "lib/levelPlans.js"(exports, module2) {
     var mvpLevelPlan = `
 ..................
-..................
-..................
-..................
-..................
-..................
-..................
-..................
-@...!.............`;
+..............####
+..########....#...
+..#......#....#...
+..#......#....#...
+..#...#..#........
+..#...#..#....M..
+..#...#...........
+.@#..!#.......#...`;
     module2.exports = [mvpLevelPlan];
   }
 });
 
-// lib/DOMDisplay.js
-var require_DOMDisplay = __commonJS({
-  "lib/DOMDisplay.js"(exports, module2) {
-    var DOMDisplay2 = class {
+// lib/canvasDisplay.js
+var require_canvasDisplay = __commonJS({
+  "lib/canvasDisplay.js"(exports, module2) {
+    var CanvasDisplay2 = class {
       constructor(parent, level2) {
         this.scale = 40;
-        this.dom = this.#createElements(
-          "div",
-          { class: "game" },
-          this.#drawGrid(level2)
-        );
-        this.actorLayer = null;
-        parent.appendChild(this.dom);
+        this.canvas = document.createElement("canvas");
+        this.canvas.className = "main-game";
+        this.canvas.width = level2.width * this.scale;
+        this.canvas.height = level2.height * this.scale;
+        parent.appendChild(this.canvas);
+        this.cx = this.canvas.getContext("2d");
+        this.cookieJarSprite = document.createElement("img");
+        this.cookieJarSprite.src = "../img/cookieJar.png";
+        this.playerSprites = document.createElement("img");
+        this.playerSprites.src = "../img/player.png";
+        this.wallSprite = document.createElement("img");
+        this.wallSprite.src = "img/wall.png";
+        this.cookieMonsterSprite = document.createElement("img");
+        this.cookieMonsterSprite.src = "img/cookieMonster.png";
+        this.drawBackground(level2);
       }
       clear() {
-        this.dom.remove();
+        this.canvas.remove();
       }
-      syncState(state) {
-        if (this.actorLayer)
-          this.actorLayer.remove();
-        this.actorLayer = this.#drawActors(state.actors);
-        this.dom.appendChild(this.actorLayer);
-        this.dom.className = `game ${state.status}`;
-      }
-      #drawGrid(level2) {
-        return this.#createElements(
-          "table",
-          {
-            class: "background",
-            style: `width: ${level2.width * this.scale}px`
-          },
-          ...level2.rows.map(
-            (row) => this.#createElements(
-              "tr",
-              { style: `height: ${this.scale}px` },
-              ...row.map((type) => this.#createElements("td", { class: type }))
-            )
-          )
-        );
-      }
-      #drawActors(actors) {
-        return this.#createElements(
-          "div",
-          {},
-          ...actors.map((actor) => {
-            let rect = this.#createElements("div", {
-              class: `actor ${actor.type}`
-            });
-            rect.style.width = `${actor.size.x * this.scale}px`;
-            rect.style.height = `${actor.size.y * this.scale}px`;
-            rect.style.left = `${actor.pos.x * this.scale}px`;
-            rect.style.top = `${actor.pos.y * this.scale}px`;
-            return rect;
-          })
-        );
-      }
-      #createElements(name, attrs, ...children) {
-        let dom = document.createElement(name);
-        for (let attr of Object.keys(attrs)) {
-          dom.setAttribute(attr, attrs[attr]);
+      syncState = function(state) {
+        this.clearDisplay(state.status);
+        this.drawBackground(state.level);
+        this.drawActors(state.actors);
+      };
+      clearDisplay = function(status) {
+        this.cx.fillStyle = "rgb(119, 255, 61)";
+        this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      };
+      drawBackground = function(level2) {
+        for (let y = 0; y < level2.height; y++) {
+          for (let x = 0; x < level2.width; x++) {
+            let tile = level2.rows[y][x];
+            if (tile == "empty") {
+              continue;
+            } else if (tile == "wall") {
+              this.cx.drawImage(
+                this.wallSprite,
+                x * this.scale,
+                y * this.scale,
+                this.scale,
+                this.scale
+              );
+            } else if (tile == "CM") {
+              this.cx.drawImage(
+                this.cookieMonsterSprite,
+                x * this.scale,
+                y * this.scale,
+                this.scale,
+                this.scale
+              );
+            }
+          }
         }
-        for (let child of children) {
-          dom.appendChild(child);
+      };
+      drawActors = function(actors) {
+        for (let actor of actors) {
+          let width = actor.size.x * this.scale;
+          let height = actor.size.y * this.scale;
+          let x = actor.pos.x * this.scale;
+          let y = actor.pos.y * this.scale;
+          if (actor.type == "player") {
+            this.drawPlayer(actor, x, y, width, height);
+          } else if (actor.type == "cookieJar") {
+            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          }
         }
-        return dom;
-      }
+      };
+      drawPlayer = function(player, x, y, width, height) {
+        this.cx.drawImage(this.playerSprites, x, y, width, height);
+      };
     };
-    module2.exports = DOMDisplay2;
+    module2.exports = CanvasDisplay2;
   }
 });
 
@@ -441,8 +453,8 @@ var require_game = __commonJS({
 // index.js
 var Level = require_level();
 var levelPlans = require_levelPlans();
-var DOMDisplay = require_DOMDisplay();
+var CanvasDisplay = require_canvasDisplay();
 var Game = require_game();
 var level = new Level(levelPlans[0]);
-var game = new Game(level, DOMDisplay);
+var game = new Game(level, CanvasDisplay);
 game.run();
