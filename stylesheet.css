@@ -39,6 +39,7 @@
 
 #text {
   font-family: "Lucida Console", Monospace;
+  color: darkblue;
 }
 
 /* mini-game: block-jump */
@@ -53,7 +54,8 @@
 #block_jump_game {
   width: 720px;
   height: 360px;
-  background-color: aqua;
+  background-image: url("./img/background.png");
+  /* background-color: aqua; */
 }
 
 #character {
@@ -66,7 +68,6 @@
 #block {
   width: 20px;
   height: 20px;
-  background-color: blue;
   position: relative;
   top: 290px;
   left: 700px;
