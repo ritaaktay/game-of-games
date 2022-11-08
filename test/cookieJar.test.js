@@ -140,7 +140,7 @@ describe("CookieJar", () => {
     expect(newerState.miniGameStatus).toEqual("Lost");
   });
 
-  it.only("covers when mini game status is neither won or lost", () => {
+  it("covers when mini game status is neither won or lost", () => {
     const mockMiniGame = {
       run: jest.fn().mockImplementation((callback) => {
         this.callback = callback;
