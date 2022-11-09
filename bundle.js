@@ -51,11 +51,11 @@ var require_player = __commonJS({
           ySpeed += this.xySpeed;
         let pos = this.pos;
         let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesElement(movedX, this.size, "wall")) {
+        if (!state.level.touchesElement(movedX, this.size, "wall") && !state.level.touchesElement(movedX, this.size, "monster")) {
           pos = movedX;
         }
         let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesElement(movedY, this.size, "wall")) {
+        if (!state.level.touchesElement(movedY, this.size, "wall") && !state.level.touchesElement(movedX, this.size, "monster")) {
           pos = movedY;
         }
         return new Player(pos, new Vec(xSpeed, ySpeed));
@@ -140,16 +140,8 @@ var require_cookieMonster = __commonJS({
         console.log("COOKIE MONSTER COLLIDE");
         console.log(state.cookieJar1Cookie);
         console.log(state.cookieJar2Cookie);
-        const newState = new State(
-          state.level,
-          state.actors,
-          state.status,
-          state.miniGameStatus,
-          state.cookieJar1Cookie,
-          state.cookieJar2Cookie
-        );
         document.getElementById("text").textContent = "Give me cookies!";
-        return newState;
+        return state;
       }
     };
     CookieMonster.prototype.size = new Vec(1, 1);
@@ -409,7 +401,11 @@ var require_level = __commonJS({
             if (typeof type == "string")
               return type;
             this.startActors.push(type.create(new Vec(x, y)));
-            return "empty";
+            if (ch == "M") {
+              return "monster";
+            } else {
+              return "empty";
+            }
           });
         });
       }
@@ -482,7 +478,6 @@ var require_canvasDisplay = __commonJS({
         this.canvas.remove();
       }
       syncState(state) {
-        console.log(state);
         if (state.miniGameStatus == "playing") {
           this.canvas.style.display = "none";
         } else {
