@@ -99,11 +99,15 @@ var require_blockJumpGame = __commonJS({
       displayMessage = (message) => {
         document.getElementById("text").textContent = message;
       };
-      clear = () => {
+      end = () => {
         document.getElementById("block_jump_game_container").style.display = "none";
+        this.jumpCounter = 0;
+        clearInterval(this.setInterval);
+        this.startButton.removeEventListener("click", this.start);
+        this.jumpButton.removeEventListener("click", this.jump);
       };
       checkIfDead = () => {
-        setInterval(() => {
+        this.setInterval = setInterval(() => {
           var characterTop = parseInt(
             window.getComputedStyle(this.character).getPropertyValue("top")
           );
@@ -111,8 +115,7 @@ var require_blockJumpGame = __commonJS({
             window.getComputedStyle(this.block).getPropertyValue("left")
           );
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
-            block.style.animation = "none";
-            this.clear();
+            this.end();
             this.displayMessage("You lost!");
             console.log(
               "COOKIE JAR ID MINI-GAME CALLBACK IS REPORTING BACK TO:",
@@ -129,10 +132,8 @@ var require_blockJumpGame = __commonJS({
           this.jumpCounter += 1;
           if (this.jumpCounter > 4) {
             setTimeout(() => {
-              block.style.animation = "none";
-              this.clear();
+              this.end();
               this.displayMessage("You won!");
-              this.jumpCounter = 0;
               console.log(
                 "COOKIE JAR ID MINI-GAME CALLBACK IS REPORTING BACK TO:",
                 this.cookieJar.getObjectId(this.cookieJar)
