@@ -152,6 +152,13 @@ var require_state = __commonJS({
         return this.actors.find((a) => a.type == "player");
       }
       update = function(time, keys) {
+        const cookieJar = this.actors.find((actor) => actor.type == "cookieJar1");
+        if (cookieJar.updatedState != null) {
+          console.log(
+            "UPDATED STATE OF COOKIE JAR 1 BEFORE ACTOR UPDATES:",
+            cookieJar.updatedState.miniGameStatus
+          );
+        }
         let actors = this.actors.map((actor) => actor.update(time, this, keys));
         let newState = new State(
           this.level,
@@ -163,15 +170,6 @@ var require_state = __commonJS({
         if (newState.status != "playing")
           return newState;
         let player = newState.player;
-        const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
-        const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
-        if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
-          newState.miniGameStatus = null;
-          console.log(
-            "BACK TO NULL AFTER GAMEPLAY IF NO OVERLAP WITH EITHER COOKIE JAR:",
-            newState.miniGameStatus
-          );
-        }
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
             newState = actor.collide(newState);
@@ -180,6 +178,15 @@ var require_state = __commonJS({
               newState.miniGameStatus
             );
           }
+        }
+        const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
+        const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
+        if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+          newState.miniGameStatus = null;
+          console.log(
+            "BACK TO NULL AFTER GAMEPLAY IF NO OVERLAP WITH EITHER COOKIE JAR:",
+            newState.miniGameStatus
+          );
         }
         console.log("STATE UPDATE RETURNING NEW STATE:", newState.miniGameStatus);
         return newState;
@@ -199,11 +206,16 @@ var require_cookieJar1 = __commonJS({
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar1 = class {
-      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame, objectId = {
+        map: /* @__PURE__ */ new WeakMap(),
+        count: 0
+      }) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
         this.miniGame = miniGame;
+        this.objectId = objectId;
+        this.getObjectId(this);
       }
       get type() {
         return "cookieJar1";
@@ -211,16 +223,33 @@ var require_cookieJar1 = __commonJS({
       static create(pos) {
         return new CookieJar1(pos, new Vec(0, 0));
       }
+      getObjectId(object) {
+        if (!this.objectId.map.has(object)) {
+          this.objectId.map.set(object, ++this.objectId.count);
+        }
+        console.log(this.objectId.map.get(object));
+      }
       update(time, state, keys) {
+        console.log(
+          "COOKIE JAR 1 state.miniGameStatus of state passed to update():",
+          state.miniGameStatus
+        );
         return new CookieJar1(
           this.pos,
           this.speed,
           this.updatedState,
-          this.miniGame
+          this.miniGame,
+          this.objectId
         );
       }
       collide(state) {
         console.log("COOKIE JAR 1 COLLIDE STATE ARGUMENT", state.miniGameStatus);
+        if (this.updatedState != null) {
+          console.log(
+            `COOKIE JAR 1 COLLIDE UPDATED STATE AT BEGINNING OF COLLIDE`,
+            this.updatedState.miniGameStatus
+          );
+        }
         if (state.miniGameStatus == null) {
           console.log("COOKIE JAR 1 IS MAKING A NEW MINI GAME");
           this.updatedState = new State(
@@ -247,16 +276,21 @@ var require_cookieJar1 = __commonJS({
                 state.status,
                 "Won"
               );
-              console.log("COOKIE JAR 1 WON CALLBACK");
               this.updatedState = newState;
+              console.log(
+                "COOKIE JAR 1 WON CALLBACK:",
+                this.updatedState.miniGameStatus
+              );
             }
           };
           miniGame.run(callbackFunction);
         }
-        console.log(
-          `COOKIE JAR 1 RETURNING COLLIDE`,
-          this.updatedState.miniGameStatus
-        );
+        if (this.updatedState != null) {
+          console.log(
+            `COOKIE JAR 1 RETURNING COLLIDE`,
+            this.updatedState.miniGameStatus
+          );
+        }
         return this.updatedState;
       }
     };
@@ -265,40 +299,14 @@ var require_cookieJar1 = __commonJS({
   }
 });
 
-// lib/dumbMiniGame.js
-var require_dumbMiniGame = __commonJS({
-  "lib/dumbMiniGame.js"(exports, module2) {
-    var DumbMiniGame = class {
-      constructor() {
-        this.redButton = document.getElementById("red-button");
-        this.blueButton = document.getElementById("blue-button");
-        this.callback;
-      }
-      run = (callback) => {
-        this.callback = callback;
-        document.getElementById("dumb-mini-game").style.display = "inline";
-        this.redButton.addEventListener("click", this.redButtonEventListener);
-        this.blueButton.addEventListener("click", this.blueButtonEventListener);
-      };
-      redButtonEventListener = () => {
-        this.callback("Lost");
-      };
-      blueButtonEventListener = () => {
-        this.callback("Won");
-      };
-    };
-    module2.exports = DumbMiniGame;
-  }
-});
-
 // lib/cookieJar2.js
 var require_cookieJar2 = __commonJS({
   "lib/cookieJar2.js"(exports, module2) {
     var Vec = require_vector();
-    var DumbMiniGame = require_dumbMiniGame();
+    var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar2 = class {
-      constructor(pos, speed, updatedState = null, miniGame = DumbMiniGame) {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
