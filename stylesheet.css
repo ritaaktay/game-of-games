@@ -27,7 +27,7 @@
 
 #main-game {
   position: fixed;
-  top: 200px;
+  top: 50px;
   left: 200px;
 }
 
@@ -46,7 +46,7 @@
 
 #block_jump_game_container {
   position: fixed;
-  top: 200px;
+  top: 350px;
   left: 200px;
   display: none;
 }
