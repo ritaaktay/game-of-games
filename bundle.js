@@ -40,7 +40,7 @@ var require_state = __commonJS({
       get player() {
         return this.actors.find((a) => a.type == "player");
       }
-      update = function(time, keys) {
+      update = function(time, keys, levelConstructor) {
         let actors = this.actors.map((actor) => actor.update(time, this, keys));
         let newState = new State(
           this.level,
@@ -55,7 +55,7 @@ var require_state = __commonJS({
         let player = newState.player;
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
-            newState = actor.collide(newState);
+            newState = actor.collide(newState, levelConstructor);
           }
         }
         const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
@@ -66,7 +66,8 @@ var require_state = __commonJS({
         return newState;
       };
       overlap = function(actor1, actor2) {
-        return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
+        const result = actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
+        return result;
       };
     };
     module2.exports = State;
@@ -82,9 +83,9 @@ var require_levelPlans = __commonJS({
 ..............####
 ..########....#...
 ..#......#....#...
-..#......#........
-..#...#..#....M...
-..#...#...........
+..#......#......#.
+..#...#..#....M.#.
+..#...#.........#.
 .@#..1#.......#...`;
     var winLevelPlan = `
 ..................
@@ -105,7 +106,6 @@ var require_cookieMonster = __commonJS({
   "lib/cookieMonster.js"(exports, module2) {
     var Vec = require_vector();
     var State = require_state();
-    var Level2 = require_level();
     var levelPlans2 = require_levelPlans();
     var CookieMonster = class {
       constructor(pos, speed) {
@@ -121,7 +121,7 @@ var require_cookieMonster = __commonJS({
       update(time, state, keys) {
         return new CookieMonster(this.pos, this.speed);
       }
-      collide(state) {
+      collide(state, levelConstructor) {
         const newState = new State(
           state.level,
           state.actors,
@@ -130,13 +130,11 @@ var require_cookieMonster = __commonJS({
           state.cookieJar1Cookie,
           state.cookieJar2Cookie
         );
-        console.log(state.cookieJar1Cookie);
-        console.log(state.cookieJar2Cookie);
-        if (state.cookieJar1Cookie < 1 && state.cookieJar2Cookie < 1) {
+        if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
           document.getElementById("text").textContent = "Give me cookies!";
-        } else {
+        } else if (state.cookieJar1Cookie >= 1 && state.cookieJar2Cookie >= 1) {
           document.getElementById("text").textContent = "So, long!";
-          newState.level = new Level2(levelPlans2[1]);
+          newState.level = new levelConstructor(levelPlans2[1]);
         }
         return newState;
       }
@@ -176,11 +174,11 @@ var require_player = __commonJS({
           ySpeed += this.xySpeed;
         let pos = this.pos;
         let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesElement(movedX, this.size, "wall") && !state.level.touchesElement(movedX, this.size, CookieMonster)) {
+        if (!state.level.touchesElement(movedX, this.size, "wall")) {
           pos = movedX;
         }
         let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesElement(movedY, this.size, "wall") && !state.level.touchesElement(movedX, this.size, CookieMonster)) {
+        if (!state.level.touchesElement(movedY, this.size, "wall")) {
           pos = movedY;
         }
         return new Player(pos, new Vec(xSpeed, ySpeed));
@@ -568,7 +566,7 @@ var require_game = __commonJS({
   "lib/game.js"(exports, module2) {
     var State = require_state();
     var Game2 = class {
-      constructor(level2, Display) {
+      constructor(level2, Display, Level2) {
         this.level = level2;
         this.display = new Display(document.body, level2);
         this.state = State.start(level2);
@@ -578,12 +576,17 @@ var require_game = __commonJS({
           "ArrowUp",
           "ArrowDown"
         ]);
+        this.levelConstructor = Level2;
       }
       run() {
         this.#runAnimation(this.#updateFrame);
       }
       #updateFrame = (time) => {
-        this.state = this.state.update(time, this.arrowKeysTracker);
+        this.state = this.state.update(
+          time,
+          this.arrowKeysTracker,
+          this.levelConstructor
+        );
         this.display.syncState(this.state);
         if (this.state.status == "playing") {
           return true;
@@ -628,5 +631,5 @@ var levelPlans = require_levelPlans();
 var CanvasDisplay = require_canvasDisplay();
 var Game = require_game();
 var level = new Level(levelPlans[0]);
-var game = new Game(level, CanvasDisplay);
+var game = new Game(level, CanvasDisplay, Level);
 game.run();
