@@ -413,25 +413,25 @@ var require_cookieJar2 = __commonJS({
   }
 });
 
-// lib/exitStar.js
-var require_exitStar = __commonJS({
-  "lib/exitStar.js"(exports, module2) {
+// lib/exit.js
+var require_exit = __commonJS({
+  "lib/exit.js"(exports, module2) {
     var Vec = require_vector();
     var State = require_state();
     var levelPlans2 = require_levelPlans();
-    var ExitStar = class {
+    var Exit = class {
       constructor(pos, speed) {
         this.pos = pos;
         this.speed = speed;
       }
       get type() {
-        return "exitStar";
+        return "exit";
       }
       static create(pos) {
-        return new ExitStar(pos, new Vec(0, 0));
+        return new Exit(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new ExitStar(this.pos, this.speed);
+        return new Exit(this.pos, this.speed);
       }
       collide(state, levelConstructor) {
         const newState = new State(
@@ -449,8 +449,8 @@ var require_exitStar = __commonJS({
         return newState;
       }
     };
-    ExitStar.prototype.size = new Vec(1, 1);
-    module2.exports = ExitStar;
+    Exit.prototype.size = new Vec(1, 1);
+    module2.exports = Exit;
   }
 });
 
@@ -461,7 +461,7 @@ var require_levelCharTypes = __commonJS({
     var CookieMonster = require_cookieMonster();
     var CookieJar1 = require_cookieJar1();
     var CookieJar2 = require_cookieJar2();
-    var ExitStar = require_exitStar();
+    var Exit = require_exit();
     var levelCharTypes = {
       ".": "empty",
       "#": "wall",
@@ -470,7 +470,7 @@ var require_levelCharTypes = __commonJS({
       "!": CookieJar1,
       "1": CookieJar1,
       "2": CookieJar2,
-      "*": ExitStar
+      "*": Exit
     };
     module2.exports = levelCharTypes;
   }
@@ -535,8 +535,8 @@ var require_canvasDisplay = __commonJS({
         this.cookieMonsterSprite.src = "img/cookieMonster2.png";
         this.backgroundSprite = document.createElement("img");
         this.backgroundSprite.src = "img/background-tile.jpeg";
-        this.exitStarSprite = document.createElement("img");
-        this.exitStarSprite.src = "img/diamond.png";
+        this.exitSprite = document.createElement("img");
+        this.exitSprite.src = "img/diamond.png";
         this.winBackgroundSprite = document.createElement("img");
         this.winBackgroundSprite.src = "img/clouds.jpeg";
         this.drawBackground(level2);
@@ -602,8 +602,8 @@ var require_canvasDisplay = __commonJS({
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
           } else if (actor.type == "cookieJar2") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
-          } else if (actor.type == "exitStar") {
-            this.cx.drawImage(this.exitStarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "exit") {
+            this.cx.drawImage(this.exitSprite, x, y, this.scale, this.scale);
           } else if (actor.type == "cookieMonster") {
             this.cx.drawImage(
               this.cookieMonsterSprite,
