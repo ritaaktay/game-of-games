@@ -164,18 +164,11 @@ var require_state = __commonJS({
           return newState;
         let player = newState.player;
         const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
-        if (!this.overlap(cookieJar1, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
-          newState.miniGameStatus = null;
-          console.log(
-            "BACK TO NULL AFTER GAMEPLAY IF NO OVERLAP WITH COOKIE JAR 1:",
-            newState.miniGameStatus
-          );
-        }
         const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
-        if (!this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+        if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
           newState.miniGameStatus = null;
           console.log(
-            "BACK TO NULL AFTER GAMEPLAY IF NO OVERLAP WITH COOKIE JAR 2:",
+            "BACK TO NULL AFTER GAMEPLAY IF NO OVERLAP WITH EITHER COOKIE JAR:",
             newState.miniGameStatus
           );
         }
