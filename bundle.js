@@ -81,13 +81,7 @@ var require_blockJumpGame = __commonJS({
         this.callback;
         this.cookieJarId = cookieJarId;
       }
-      run = (callback, cookieJar) => {
-        console.log(
-          "THE ID OF THE COOKIE JAR THAT CREATED THIS MINI-GAME:",
-          cookieJar.getObjectId(cookieJar)
-        );
-        console.log("COOKIE JAR ID AT RUN():", this.cookieJarId);
-        this.cookieJar = cookieJar;
+      run = (callback) => {
         this.checkIfDead();
         this.displayMessage("Jump over the meteorites!");
         this.callback = callback;
@@ -118,11 +112,6 @@ var require_blockJumpGame = __commonJS({
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             this.end();
             this.displayMessage("You lost!");
-            console.log(
-              "COOKIE JAR ID MINI-GAME CALLBACK IS REPORTING BACK TO:",
-              this.cookieJar.getObjectId(this.cookieJar)
-            );
-            console.log("COOKIE JAR ID AT CHECKIFDEAD():", this.cookieJarId);
             this.callback("Lost");
           }
         }, 10);
@@ -135,11 +124,6 @@ var require_blockJumpGame = __commonJS({
             setTimeout(() => {
               this.end();
               this.displayMessage("You won!");
-              console.log(
-                "COOKIE JAR ID MINI-GAME CALLBACK IS REPORTING BACK TO:",
-                this.cookieJar.getObjectId(this.cookieJar)
-              );
-              console.log("COOKIE JAR ID AT JUMP():", this.cookieJarId);
               this.callback("Won");
             }, 500);
           }
@@ -190,11 +174,6 @@ var require_state = __commonJS({
         if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
           newState.miniGameStatus = null;
         }
-        console.log(
-          "COOKIE JAR ID AT STATE UPDATE:",
-          cookieJar1.getObjectId(cookieJar1)
-        );
-        console.log("STATE UPDATE RETURNING NEW STATE:", newState.miniGameStatus);
         return newState;
       };
       overlap = function(actor1, actor2) {
@@ -212,16 +191,11 @@ var require_cookieJar1 = __commonJS({
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar1 = class {
-      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame, objectId = {
-        map: /* @__PURE__ */ new WeakMap(),
-        count: 0
-      }) {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
         this.miniGame = miniGame;
-        this.objectId = objectId;
-        this.getObjectId(this);
       }
       get type() {
         return "cookieJar1";
@@ -229,36 +203,23 @@ var require_cookieJar1 = __commonJS({
       static create(pos) {
         return new CookieJar1(pos, new Vec(0, 0));
       }
-      getObjectId(object) {
-        if (!this.objectId.map.has(object)) {
-          this.objectId.map.set(object, ++this.objectId.count);
-        }
-        return this.objectId.map.get(object);
-      }
       update(time, state, keys) {
         return new CookieJar1(
           this.pos,
           this.speed,
           this.updatedState,
-          this.miniGame,
-          this.objectId
+          this.miniGame
         );
       }
       collide(state) {
-        console.log("COOKIE JAR COLLIDE STATE ARGUMENT", state.miniGameStatus);
         if (state.miniGameStatus == null) {
-          console.log("COOKIE JAR 1 IS MAKING A NEW MINI GAME");
           this.updatedState = new State(
             state.level,
             state.actors,
             state.status,
             "playing"
           );
-          const miniGame = new this.miniGame(this.getObjectId(this));
-          console.log(
-            "COOKIE JAR ID FOR CALLBACK AT MINI GAME INITIALIZATION",
-            this.getObjectId(this)
-          );
+          const miniGame = new this.miniGame();
           const callbackFunction = (result) => {
             if (result === "Lost") {
               let newState = new State(
@@ -268,10 +229,6 @@ var require_cookieJar1 = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
-              console.log(
-                "COOKIE JAR ID FOR CALLBACK AT EXECUTION",
-                this.getObjectId(this)
-              );
             } else if (result === "Won") {
               let newState = new State(
                 state.level,
@@ -280,19 +237,9 @@ var require_cookieJar1 = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
-              console.log(
-                "COOKIE JAR ID FOR CALLBACK AT EXECUTION",
-                this.getObjectId(this)
-              );
             }
           };
           miniGame.run(callbackFunction, this);
-        }
-        if (this.updatedState != null) {
-          console.log(
-            `COOKIE JAR RETURNING COLLIDE`,
-            this.updatedState.miniGameStatus
-          );
         }
         return this.updatedState;
       }
@@ -309,16 +256,11 @@ var require_cookieJar2 = __commonJS({
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar2 = class {
-      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame, objectId = {
-        map: /* @__PURE__ */ new WeakMap(),
-        count: 0
-      }) {
+      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
         this.miniGame = miniGame;
-        this.objectId = objectId;
-        this.getObjectId(this);
       }
       get type() {
         return "cookieJar2";
@@ -326,36 +268,23 @@ var require_cookieJar2 = __commonJS({
       static create(pos) {
         return new CookieJar2(pos, new Vec(0, 0));
       }
-      getObjectId(object) {
-        if (!this.objectId.map.has(object)) {
-          this.objectId.map.set(object, ++this.objectId.count);
-        }
-        return this.objectId.map.get(object);
-      }
       update(time, state, keys) {
         return new CookieJar2(
           this.pos,
           this.speed,
           this.updatedState,
-          this.miniGame,
-          this.objectId
+          this.miniGame
         );
       }
       collide(state) {
-        console.log("COOKIE JAR COLLIDE STATE ARGUMENT", state.miniGameStatus);
         if (state.miniGameStatus == null) {
-          console.log("COOKIE JAR 1 IS MAKING A NEW MINI GAME");
           this.updatedState = new State(
             state.level,
             state.actors,
             state.status,
             "playing"
           );
-          const miniGame = new this.miniGame(this.getObjectId(this));
-          console.log(
-            "COOKIE JAR ID FOR CALLBACK AT MINI GAME INITIALIZATION",
-            this.getObjectId(this)
-          );
+          const miniGame = new this.miniGame();
           const callbackFunction = (result) => {
             if (result === "Lost") {
               let newState = new State(
@@ -365,10 +294,6 @@ var require_cookieJar2 = __commonJS({
                 "Lost"
               );
               this.updatedState = newState;
-              console.log(
-                "COOKIE JAR ID FOR CALLBACK AT EXECUTION",
-                this.getObjectId(this)
-              );
             } else if (result === "Won") {
               let newState = new State(
                 state.level,
@@ -377,19 +302,9 @@ var require_cookieJar2 = __commonJS({
                 "Won"
               );
               this.updatedState = newState;
-              console.log(
-                "COOKIE JAR ID FOR CALLBACK AT EXECUTION",
-                this.getObjectId(this)
-              );
             }
           };
           miniGame.run(callbackFunction, this);
-        }
-        if (this.updatedState != null) {
-          console.log(
-            `COOKIE JAR RETURNING COLLIDE`,
-            this.updatedState.miniGameStatus
-          );
         }
         return this.updatedState;
       }
