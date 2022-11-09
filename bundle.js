@@ -105,6 +105,7 @@ var require_blockJumpGame = __commonJS({
         clearInterval(this.setInterval);
         this.startButton.removeEventListener("click", this.start);
         this.jumpButton.removeEventListener("click", this.jump);
+        this.block.style.animation = "none";
       };
       checkIfDead = () => {
         this.setInterval = setInterval(() => {
