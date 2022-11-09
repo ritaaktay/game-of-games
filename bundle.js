@@ -475,7 +475,7 @@ var require_canvasDisplay = __commonJS({
           let y = actor.pos.y * this.scale;
           if (actor.type == "player") {
             this.drawPlayer(actor, x, y, width, height);
-          } else if (actor.type == "cookieJar") {
+          } else if (actor.type == "cookieJar1") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
           }
         }
