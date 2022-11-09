@@ -477,6 +477,8 @@ var require_canvasDisplay = __commonJS({
             this.drawPlayer(actor, x, y, width, height);
           } else if (actor.type == "cookieJar1") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "cookieJar2") {
+            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
           }
         }
       };
