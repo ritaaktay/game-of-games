@@ -1,5 +1,5 @@
 const Vec = require("../lib/vector");
-const mockLevelPlan = require("./mockLevelPlan1");
+const mockLevelPlan = require("./mockLevelPlan");
 const Level = require("../lib/level");
 
 // Future: use mocks to convert this to pure unit testing

@@ -325,6 +325,7 @@ var require_levelCharTypes = __commonJS({
       "#": "wall",
       "M": "CM",
       "@": Player,
+      "!": CookieJar1,
       "1": CookieJar1,
       "2": CookieJar2
     };
