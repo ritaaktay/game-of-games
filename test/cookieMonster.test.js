@@ -14,51 +14,44 @@ beforeEach(() => {
   document.body.innerHTML = fs.readFileSync(
     path.join(__dirname, "..", "index.html")
   );
+  cookieMonster = new CookieMonster(new Vec(0, 0), new Vec(0, 0));
 });
 
 describe("CookieMonster", () => {
-  it("has a position vector, a speed vector and a default null updatedState", () => {
-    const cookieMonster = new CookieMonster(new Vec(0, 0), new Vec(0, 0));
+  it("has a position vector, a speed vector", () => {
     expect(cookieMonster.pos.x).toEqual(0);
     expect(cookieMonster.pos.y).toEqual(0);
     expect(cookieMonster.speed.x).toEqual(0);
     expect(cookieMonster.speed.y).toEqual(0);
-    expect(cookieMonster.updatedState).toEqual(null);
   });
 
   it("has a getter for type", () => {
-    const cookieMonster = new CookieMonster(new Vec(0, 0), new Vec(0, 0));
     expect(cookieMonster.type).toEqual("cookieMonster");
   });
 
   it("has a create method", () => {
-    const cookieMonster = CookieMonster.create(new Vec(0, 0));
     expect(cookieMonster.pos.x).toEqual(0);
     expect(cookieMonster.pos.y).toEqual(0);
     expect(cookieMonster.speed.x).toEqual(0);
     expect(cookieMonster.speed.y).toEqual(0);
-    expect(cookieMonster.updatedState).toEqual(null);
   });
 
   it("has default size", () => {
-    const cookieMonster = CookieMonster.create(new Vec(0, 0));
-    expect(cookieMonster.size).toEqual(new Vec(1, 1));
+    // Using CookieMonster.prototype.size
+    const cookieMonster1 = CookieMonster.create(new Vec(0, 0));
+    expect(cookieMonster1.size).toEqual(new Vec(1, 1));
   });
 
   it("has an updated method that returns a new and identical CookieMonster", () => {
-    const cookieMonster = CookieMonster.create(new Vec(0, 0));
     const level = new Level(levelPlans[0]);
     const state = new State(level, [], "playing");
     const newCookieMonster = cookieMonster.update();
     expect(newCookieMonster.pos).toEqual(new Vec(0, 0));
     expect(newCookieMonster.speed).toEqual(new Vec(0, 0));
-    expect(newCookieMonster.updatedState).toEqual(null);
   });
 
-  it.only(".collide() displays message to user based on number of cookies obtained by player", () => {
+  it(".collide() displays message to user based on number of cookies obtained by player", () => {
     const level = new Level(levelPlans[0]);
-
-    const cookieMonster = new CookieMonster(new Vec(0, 0), new Vec(0, 0), null);
 
     // cookieJar1Cookie = 0; cookieJar2Cookie = 0
     const state1 = new State(level, [], "playing", null, 0, 0);
