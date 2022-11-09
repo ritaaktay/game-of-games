@@ -246,15 +246,47 @@ var require_cookieJar = __commonJS({
   }
 });
 
+// lib/cookieMonster.js
+var require_cookieMonster = __commonJS({
+  "lib/cookieMonster.js"(exports, module2) {
+    var Vec = require_vector();
+    var State = require_state();
+    var CookieMonster = class {
+      constructor(pos, speed, updatedState = null) {
+        this.pos = pos;
+        this.speed = speed;
+        this.updatedState = updatedState;
+      }
+      get type() {
+        return "cookieMonster";
+      }
+      static create(pos) {
+        return new CookieMonster(pos, new Vec(0, 0));
+      }
+      update(time, state, keys) {
+        return new CookieMonster(this.pos, this.speed, this.updatedState);
+      }
+      collide(state) {
+        this.updatedState = new State(state.level, state.actors, state.status);
+        document.getElementById("text").textContent = "I am the Cookie Monster! Cookie from first jar, please!";
+        return this.updatedState;
+      }
+    };
+    CookieMonster.prototype.size = new Vec(1, 1);
+    module2.exports = CookieMonster;
+  }
+});
+
 // lib/levelCharTypes.js
 var require_levelCharTypes = __commonJS({
   "lib/levelCharTypes.js"(exports, module2) {
     var Player = require_player();
     var CookieJar = require_cookieJar();
+    var CookieMonster = require_cookieMonster();
     var levelCharTypes = {
       ".": "empty",
       "#": "wall",
-      "M": "CM",
+      "M": CookieMonster,
       "@": Player,
       "!": CookieJar
     };
@@ -347,7 +379,6 @@ var require_canvasDisplay = __commonJS({
         this.canvas.height = level2.height * this.scale;
         this.parent.appendChild(this.canvas);
         this.cx = this.canvas.getContext("2d");
-        console.log(this.canvas);
       }
       clear() {
         this.canvas.remove();
@@ -382,14 +413,6 @@ var require_canvasDisplay = __commonJS({
                 this.scale,
                 this.scale
               );
-            } else if (tile == "CM") {
-              this.cx.drawImage(
-                this.cookieMonsterSprite,
-                x * this.scale,
-                y * this.scale,
-                this.scale,
-                this.scale
-              );
             }
           }
         }
@@ -404,6 +427,14 @@ var require_canvasDisplay = __commonJS({
             this.drawPlayer(actor, x, y, width, height);
           } else if (actor.type == "cookieJar") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "cookieMonster") {
+            this.cx.drawImage(
+              this.cookieMonsterSprite,
+              x,
+              y,
+              this.scale,
+              this.scale
+            );
           }
         }
       };
