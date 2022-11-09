@@ -2,7 +2,7 @@ const Player = require("../lib/player");
 const Vec = require("../lib/vector");
 const State = require("../lib/state");
 const Level = require("../lib/level");
-const levelPlans = require("../lib/levelPlans");
+const mockLevelPlan = require("./mockLevelPlan");
 
 describe("Player", () => {
   it("has a position vector, speed vector, and a speed amount", () => {
@@ -35,7 +35,7 @@ describe("Player", () => {
 
   it("it moves the player right", () => {
     const player = Player.create(new Vec(0, 0));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const keys = {
       ArrowRight: true,
@@ -50,7 +50,7 @@ describe("Player", () => {
 
   it("it does not move further than level boundary on X-axis", () => {
     const player = Player.create(new Vec(6, 6));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const keys = {
       ArrowRight: false,
@@ -65,7 +65,7 @@ describe("Player", () => {
 
   it("it does not move further than level boundary on Y-axis", () => {
     const player = Player.create(new Vec(6, 6));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const keys = {
       ArrowRight: false,
@@ -80,7 +80,7 @@ describe("Player", () => {
 
   it("it moves the player up", () => {
     const player = Player.create(new Vec(12, 12));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const keys = {
       ArrowRight: false,
@@ -95,7 +95,7 @@ describe("Player", () => {
 
   it("it moves the player down", () => {
     const player = Player.create(new Vec(0, 0));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const keys = {
       ArrowRight: false,

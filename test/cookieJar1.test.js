@@ -1,46 +1,46 @@
-const CookieJar = require("../lib/cookieJar");
+const CookieJar1 = require("../lib/cookieJar1");
 const Vec = require("../lib/vector");
 const State = require("../lib/state");
 const Level = require("../lib/level");
-const levelPlans = require("../lib/levelPlans");
+const mockLevelPlan = require("./mockLevelPlan");
 
-describe("CookieJar", () => {
+describe("CookieJar1", () => {
   it("has a position vector, a speed vector and a default null updatedState", () => {
-    const cookieJar = new CookieJar(new Vec(0, 0), new Vec(0, 0));
-    expect(cookieJar.pos.x).toEqual(0);
-    expect(cookieJar.pos.y).toEqual(0);
-    expect(cookieJar.speed.x).toEqual(0);
-    expect(cookieJar.speed.y).toEqual(0);
-    expect(cookieJar.updatedState).toEqual(null);
+    const cookieJar1 = new CookieJar1(new Vec(0, 0), new Vec(0, 0));
+    expect(cookieJar1.pos.x).toEqual(0);
+    expect(cookieJar1.pos.y).toEqual(0);
+    expect(cookieJar1.speed.x).toEqual(0);
+    expect(cookieJar1.speed.y).toEqual(0);
+    expect(cookieJar1.updatedState).toEqual(null);
   });
 
   it("has a getter for type", () => {
-    const cookieJar = new CookieJar(new Vec(0, 0), new Vec(0, 0));
-    expect(cookieJar.type).toEqual("cookieJar");
+    const cookieJar1 = new CookieJar1(new Vec(0, 0), new Vec(0, 0));
+    expect(cookieJar1.type).toEqual("cookieJar1");
   });
 
   it("has a create method", () => {
-    const cookieJar = CookieJar.create(new Vec(0, 0));
-    expect(cookieJar.pos.x).toEqual(0);
-    expect(cookieJar.pos.y).toEqual(0);
-    expect(cookieJar.speed.x).toEqual(0);
-    expect(cookieJar.speed.y).toEqual(0);
-    expect(cookieJar.updatedState).toEqual(null);
+    const cookieJar1 = CookieJar1.create(new Vec(0, 0));
+    expect(cookieJar1.pos.x).toEqual(0);
+    expect(cookieJar1.pos.y).toEqual(0);
+    expect(cookieJar1.speed.x).toEqual(0);
+    expect(cookieJar1.speed.y).toEqual(0);
+    expect(cookieJar1.updatedState).toEqual(null);
   });
 
   it("has default size", () => {
-    const cookieJar = CookieJar.create(new Vec(0, 0));
-    expect(cookieJar.size).toEqual(new Vec(1, 1));
+    const cookieJar1 = CookieJar1.create(new Vec(0, 0));
+    expect(cookieJar1.size).toEqual(new Vec(1, 1));
   });
 
-  it("has an updated method that returns a new and identical CookieJar", () => {
-    const cookieJar = CookieJar.create(new Vec(0, 0));
-    const level = new Level(levelPlans[0]);
+  it("has an updated method that returns a new and identical CookieJar1", () => {
+    const cookieJar1 = CookieJar1.create(new Vec(0, 0));
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const newCookieJar = cookieJar.update();
-    expect(newCookieJar.pos).toEqual(new Vec(0, 0));
-    expect(newCookieJar.speed).toEqual(new Vec(0, 0));
-    expect(newCookieJar.updatedState).toEqual(null);
+    const newCookieJar1 = cookieJar1.update();
+    expect(newCookieJar1.pos).toEqual(new Vec(0, 0));
+    expect(newCookieJar1.speed).toEqual(new Vec(0, 0));
+    expect(newCookieJar1.updatedState).toEqual(null);
   });
 
   it(".collide makes new miniGame on first call and updates state.miniGameStatus as playing", () => {
@@ -50,15 +50,15 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const cookieJar = new CookieJar(
+    const cookieJar1 = new CookieJar1(
       new Vec(0, 0),
       new Vec(0, 0),
       null,
       MockMiniGame
     );
-    const newState = cookieJar.collide(state);
+    const newState = cookieJar1.collide(state);
     expect(newState.miniGameStatus).toEqual("playing");
   });
 
@@ -69,16 +69,16 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const cookieJar = new CookieJar(
+    const cookieJar1 = new CookieJar1(
       new Vec(0, 0),
       new Vec(0, 0),
       null,
       MockMiniGame
     );
-    const newState = cookieJar.collide(state);
-    const newerState = cookieJar.collide(newState);
+    const newState = cookieJar1.collide(state);
+    const newerState = cookieJar1.collide(newState);
     expect(newerState.miniGameStatus).toEqual("playing");
   });
 
@@ -97,17 +97,17 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const cookieJar = new CookieJar(
+    const cookieJar1 = new CookieJar1(
       new Vec(0, 0),
       new Vec(0, 0),
       null,
       MockMiniGame
     );
-    const newState = cookieJar.collide(state);
+    const newState = cookieJar1.collide(state);
     mockMiniGame.win();
-    const newerState = cookieJar.collide(newState);
+    const newerState = cookieJar1.collide(newState);
     expect(newerState.miniGameStatus).toEqual("Won");
   });
 
@@ -126,17 +126,17 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const cookieJar = new CookieJar(
+    const cookieJar1 = new CookieJar1(
       new Vec(0, 0),
       new Vec(0, 0),
       null,
       MockMiniGame
     );
-    const newState = cookieJar.collide(state);
+    const newState = cookieJar1.collide(state);
     mockMiniGame.lose();
-    const newerState = cookieJar.collide(newState);
+    const newerState = cookieJar1.collide(newState);
     expect(newerState.miniGameStatus).toEqual("Lost");
   });
 
@@ -152,17 +152,17 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan[0]);
     const state = new State(level, [], "playing");
-    const cookieJar = new CookieJar(
+    const cookieJar1 = new CookieJar1(
       new Vec(0, 0),
       new Vec(0, 0),
       null,
       MockMiniGame
     );
-    const newState = cookieJar.collide(state);
+    const newState = cookieJar1.collide(state);
     mockMiniGame.neither();
-    const newerState = cookieJar.collide(newState);
+    const newerState = cookieJar1.collide(newState);
     expect(newerState.miniGameStatus).toEqual("playing");
   });
 });

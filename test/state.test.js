@@ -6,7 +6,7 @@ const Level = require("../lib/level");
 const State = require("../lib/state");
 const Player = require("../lib/player");
 const Vec = require("../lib/vector");
-const mockLevelPlan = require("./mockLevelPlan1");
+const mockLevelPlan = require("./mockLevelPlan");
 jest.mock("../lib/blockJumpGame");
 
 describe("State", () => {

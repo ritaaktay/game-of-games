@@ -1,5 +1,5 @@
 const Vec = require("../lib/vector");
-const mockLevelPlan = require("./mockLevelPlan1");
+const mockLevelPlan = require("./mockLevelPlan");
 const Level = require("../lib/level");
 
 // Future: use mocks to convert this to pure unit testing
@@ -11,7 +11,7 @@ describe("Level", () => {
     expect(level.height).toEqual(9);
     expect(level.width).toEqual(18);
     expect(level.startActors[0].type).toEqual("player");
-    expect(level.startActors[1].type).toEqual("cookieJar");
+    expect(level.startActors[1].type).toEqual("cookieJar1");
     expect(level.rows.length).toEqual(9);
 
     // Assert number of elements in each child array
