@@ -424,10 +424,14 @@ var require_canvasDisplay = __commonJS({
         this.canvas.remove();
       }
       syncState(state) {
-        this.canvas.style.display = "inline";
-        this.clearDisplay(state.status);
-        this.drawBackground(state.level);
-        this.drawActors(state.actors);
+        if (state.miniGameStatus == "playing") {
+          this.canvas.style.display = "none";
+        } else {
+          this.canvas.style.display = "inline";
+          this.clearDisplay(state.status);
+          this.drawBackground(state.level);
+          this.drawActors(state.actors);
+        }
       }
       clearDisplay = function(status) {
         this.cx.fillStyle = "rgb(119, 255, 61)";
