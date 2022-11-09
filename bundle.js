@@ -26,7 +26,7 @@ var require_vector = __commonJS({
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
     var State = class {
-      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 0, cookieJar2Cookie = 0) {
+      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 1, cookieJar2Cookie = 1) {
         this.level = level2;
         this.actors = actors;
         this.status = status;
@@ -50,8 +50,6 @@ var require_state = __commonJS({
           this.cookieJar1Cookie,
           this.cookieJar2Cookie
         );
-        if (newState.status != "playing")
-          return newState;
         let player = newState.player;
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
@@ -60,14 +58,15 @@ var require_state = __commonJS({
         }
         const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
         const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
-        if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
-          newState.miniGameStatus = null;
+        if (cookieJar1 != void 0 && cookieJar2 != void 0) {
+          if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
+            newState.miniGameStatus = null;
+          }
         }
         return newState;
       };
       overlap = function(actor1, actor2) {
-        const result = actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
-        return result;
+        return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
       };
     };
     module2.exports = State;
@@ -81,13 +80,13 @@ var require_levelPlans = __commonJS({
 ..................
 .................2
 ..............####
-..########....#...
+..########....#..*
 ..#......#....#...
 ..#......#......#.
 ..#...#..#....M.#.
 ..#...#.........#.
 .@#..1#.......#...`;
-    var winLevelPlan = `
+    var noMonsterLevelPlan = `
 ..................
 .................2
 ..............####
@@ -97,7 +96,17 @@ var require_levelPlans = __commonJS({
 ..#...#..#........
 ..#...#...........
 .@#..1#.......#...`;
-    module2.exports = [mvpLevelPlan, winLevelPlan];
+    var winLevelPlan = `
+..................
+..................
+..................
+.................@
+..................
+..................
+..................
+..................
+..................`;
+    module2.exports = [mvpLevelPlan, noMonsterLevelPlan, winLevelPlan];
   }
 });
 
@@ -404,6 +413,47 @@ var require_cookieJar2 = __commonJS({
   }
 });
 
+// lib/exitStar.js
+var require_exitStar = __commonJS({
+  "lib/exitStar.js"(exports, module2) {
+    var Vec = require_vector();
+    var State = require_state();
+    var levelPlans2 = require_levelPlans();
+    var ExitStar = class {
+      constructor(pos, speed) {
+        this.pos = pos;
+        this.speed = speed;
+      }
+      get type() {
+        return "exitStar";
+      }
+      static create(pos) {
+        return new ExitStar(pos, new Vec(0, 0));
+      }
+      update(time, state, keys) {
+        return new ExitStar(this.pos, this.speed);
+      }
+      collide(state, levelConstructor) {
+        const newState = new State(
+          state.level,
+          state.actors,
+          state.status,
+          state.miniGameStatus,
+          state.cookieJar1Cookie,
+          state.cookieJar2Cookie
+        );
+        document.getElementById("text").textContent = "You escaped!";
+        newState.level = new levelConstructor(levelPlans2[2]);
+        newState.actors = newState.level.startActors;
+        newState.status = "Won";
+        return newState;
+      }
+    };
+    ExitStar.prototype.size = new Vec(1, 1);
+    module2.exports = ExitStar;
+  }
+});
+
 // lib/levelCharTypes.js
 var require_levelCharTypes = __commonJS({
   "lib/levelCharTypes.js"(exports, module2) {
@@ -411,6 +461,7 @@ var require_levelCharTypes = __commonJS({
     var CookieMonster = require_cookieMonster();
     var CookieJar1 = require_cookieJar1();
     var CookieJar2 = require_cookieJar2();
+    var ExitStar = require_exitStar();
     var levelCharTypes = {
       ".": "empty",
       "#": "wall",
@@ -418,7 +469,8 @@ var require_levelCharTypes = __commonJS({
       "@": Player,
       "!": CookieJar1,
       "1": CookieJar1,
-      "2": CookieJar2
+      "2": CookieJar2,
+      "*": ExitStar
     };
     module2.exports = levelCharTypes;
   }
@@ -483,6 +535,10 @@ var require_canvasDisplay = __commonJS({
         this.cookieMonsterSprite.src = "img/cookieMonster2.png";
         this.backgroundSprite = document.createElement("img");
         this.backgroundSprite.src = "img/background-tile.jpeg";
+        this.exitStarSprite = document.createElement("img");
+        this.exitStarSprite.src = "img/diamond.png";
+        this.winBackgroundSprite = document.createElement("img");
+        this.winBackgroundSprite.src = "img/clouds.jpeg";
         this.drawBackground(level2);
       }
       addCanvas(level2) {
@@ -507,8 +563,12 @@ var require_canvasDisplay = __commonJS({
         }
       }
       clearDisplay = function(status) {
-        this.cx.fillStyle = "rgb(119, 255, 61)";
-        const pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
+        let pattern;
+        if (status == "playing") {
+          pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
+        } else if (status == "Won") {
+          pattern = this.cx.createPattern(this.winBackgroundSprite, "repeat");
+        }
         this.cx.fillStyle = pattern;
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       };
@@ -542,6 +602,8 @@ var require_canvasDisplay = __commonJS({
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
           } else if (actor.type == "cookieJar2") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
+          } else if (actor.type == "exitStar") {
+            this.cx.drawImage(this.exitStarSprite, x, y, this.scale, this.scale);
           } else if (actor.type == "cookieMonster") {
             this.cx.drawImage(
               this.cookieMonsterSprite,
@@ -588,20 +650,13 @@ var require_game = __commonJS({
           this.levelConstructor
         );
         this.display.syncState(this.state);
-        if (this.state.status == "playing") {
-          return true;
-        } else {
-          this.display.clear();
-          return false;
-        }
       };
       #runAnimation(updateFrame) {
         let lastTime = null;
         function frame(time) {
           if (lastTime != null) {
             let timeStep = Math.min(time - lastTime, 100) / 1e3;
-            if (updateFrame(timeStep) === false)
-              return;
+            updateFrame(timeStep);
           }
           lastTime = time;
           requestAnimationFrame(frame);
