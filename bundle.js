@@ -169,18 +169,14 @@ var require_state = __commonJS({
             newState = actor.collide(newState);
           }
         }
-        console.log(actors);
         const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
-        console.log(cookieJar1);
         const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
-        console.log(cookieJar2);
         if (!this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (newState.miniGameStatus == "Won" || newState.miniGameStatus == "Lost")) {
           newState.miniGameStatus = null;
         }
         return newState;
       };
       overlap = function(actor1, actor2) {
-        console.log(actor1, actor2);
         return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
       };
     };
