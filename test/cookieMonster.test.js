@@ -73,5 +73,12 @@ describe("CookieMonster", () => {
     expect(document.getElementById("text").textContent).toEqual(
       "Thanks! Now, escape before it's too late!"
     );
+
+    // cookieJar1Cookie = 44; cookieJar2Cookie = 88
+    const state4 = new State(level, [], "playing", null, 44, 88);
+    cookieMonster.collide(state4, Level);
+    expect(document.getElementById("text").textContent).toEqual(
+      "Thanks! Now, escape before it's too late!"
+    );
   });
 });

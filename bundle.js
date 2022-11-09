@@ -141,7 +141,7 @@ var require_cookieMonster = __commonJS({
         );
         if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
           document.getElementById("text").textContent = "Give me cookies!";
-        } else if (state.cookieJar1Cookie >= 1 && state.cookieJar2Cookie >= 1) {
+        } else {
           document.getElementById("text").textContent = "Thanks! Now, escape before it's too late!";
           newState.level = new levelConstructor(levelPlans2[1]);
         }
