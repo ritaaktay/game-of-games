@@ -70,11 +70,13 @@ var require_player = __commonJS({
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
     var State = class {
-      constructor(level2, actors, status, miniGameStatus = null) {
+      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 0, cookieJar2Cookie = 0) {
         this.level = level2;
         this.actors = actors;
         this.status = status;
         this.miniGameStatus = miniGameStatus;
+        this.cookieJar1Cookie = cookieJar1Cookie;
+        this.cookieJar2Cookie = cookieJar2Cookie;
       }
       static start(level2) {
         return new State(level2, level2.startActors, "playing");
@@ -88,7 +90,9 @@ var require_state = __commonJS({
           this.level,
           actors,
           this.status,
-          this.miniGameStatus
+          this.miniGameStatus,
+          this.cookieJar1Cookie,
+          this.cookieJar2Cookie
         );
         if (newState.status != "playing")
           return newState;
@@ -119,10 +123,9 @@ var require_cookieMonster = __commonJS({
     var Vec = require_vector();
     var State = require_state();
     var CookieMonster = class {
-      constructor(pos, speed, updatedState = null) {
+      constructor(pos, speed) {
         this.pos = pos;
         this.speed = speed;
-        this.updatedState = updatedState;
       }
       get type() {
         return "cookieMonster";
@@ -131,12 +134,22 @@ var require_cookieMonster = __commonJS({
         return new CookieMonster(pos, new Vec(0, 0));
       }
       update(time, state, keys) {
-        return new CookieMonster(this.pos, this.speed, this.updatedState);
+        return new CookieMonster(this.pos, this.speed);
       }
       collide(state) {
-        this.updatedState = new State(state.level, state.actors, state.status);
-        document.getElementById("text").textContent = "I am the Cookie Monster! Cookie from first jar, please!";
-        return this.updatedState;
+        console.log("COOKIE MONSTER COLLIDE");
+        console.log(state.cookieJar1Cookie);
+        console.log(state.cookieJar2Cookie);
+        const newState = new State(
+          state.level,
+          state.actors,
+          state.status,
+          state.miniGameStatus,
+          state.cookieJar1Cookie,
+          state.cookieJar2Cookie
+        );
+        document.getElementById("text").textContent = "Give me cookies!";
+        return newState;
       }
     };
     CookieMonster.prototype.size = new Vec(1, 1);
@@ -248,7 +261,9 @@ var require_cookieJar1 = __commonJS({
             state.level,
             state.actors,
             state.status,
-            "playing"
+            "playing",
+            state.cookieJar1Cookie,
+            state.cookieJar2Cookie
           );
           const miniGame = new this.miniGame();
           const callbackFunction = (result) => {
@@ -257,7 +272,9 @@ var require_cookieJar1 = __commonJS({
                 state.level,
                 state.actors,
                 state.status,
-                "Lost"
+                "Lost",
+                state.cookieJar1Cookie,
+                state.cookieJar2Cookie
               );
               this.updatedState = newState;
             } else if (result === "Won") {
@@ -265,8 +282,11 @@ var require_cookieJar1 = __commonJS({
                 state.level,
                 state.actors,
                 state.status,
-                "Won"
+                "Won",
+                state.cookieJar1Cookie,
+                state.cookieJar2Cookie
               );
+              newState.cookieJar1Cookie += 1;
               this.updatedState = newState;
             }
           };
@@ -313,7 +333,9 @@ var require_cookieJar2 = __commonJS({
             state.level,
             state.actors,
             state.status,
-            "playing"
+            "playing",
+            state.cookieJar1Cookie,
+            state.cookieJar2Cookie
           );
           const miniGame = new this.miniGame();
           const callbackFunction = (result) => {
@@ -322,7 +344,9 @@ var require_cookieJar2 = __commonJS({
                 state.level,
                 state.actors,
                 state.status,
-                "Lost"
+                "Lost",
+                state.cookieJar1Cookie,
+                state.cookieJar2Cookie
               );
               this.updatedState = newState;
             } else if (result === "Won") {
@@ -330,8 +354,11 @@ var require_cookieJar2 = __commonJS({
                 state.level,
                 state.actors,
                 state.status,
-                "Won"
+                "Won",
+                state.cookieJar1Cookie,
+                state.cookieJar2Cookie
               );
+              newState.cookieJar2Cookie += 1;
               this.updatedState = newState;
             }
           };
@@ -455,6 +482,7 @@ var require_canvasDisplay = __commonJS({
         this.canvas.remove();
       }
       syncState(state) {
+        console.log(state);
         if (state.miniGameStatus == "playing") {
           this.canvas.style.display = "none";
         } else {
