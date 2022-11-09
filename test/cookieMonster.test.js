@@ -55,14 +55,44 @@ describe("CookieMonster", () => {
     expect(newCookieMonster.updatedState).toEqual(null);
   });
 
-  // Revisit this when we want to make this behaviour different depending on state.miniGameStatus
-  it(".collide() displays message to user ", () => {
+  it.only(".collide() displays message to user based on number of cookies obtained by player", () => {
     const level = new Level(levelPlans[0]);
-    const state = new State(level, [], "playing");
-    const cookieMonster = new CookieMonster(new Vec(0, 0), new Vec(0, 0), null);
-    const newState = cookieMonster.collide(state);
+
+    const cookieMonster1 = new CookieMonster(
+      new Vec(0, 0),
+      new Vec(0, 0),
+      null
+    );
+    const cookieMonster2 = new CookieMonster(
+      new Vec(0, 0),
+      new Vec(0, 0),
+      null
+    );
+    const cookieMonster3 = new CookieMonster(
+      new Vec(0, 0),
+      new Vec(0, 0),
+      null
+    );
+
+    // cookieJar1Cookie = 0; cookieJar2Cookie = 0
+    const state1 = new State(level, [], "playing", null, 0, 0);
+    cookieMonster1.collide(state1);
     expect(document.getElementById("text").textContent).toEqual(
-      "I am the Cookie Monster! Cookie from first jar, please!"
+      "Give me cookies!"
+    );
+
+    // cookieJar1Cookie = 1; cookieJar2Cookie = 0
+    const state2 = new State(level, [], "playing", null, 1, 0);
+    cookieMonster2.collide(state2);
+    expect(document.getElementById("text").textContent).toEqual(
+      "Give me cookies!"
+    );
+
+    // cookieJar1Cookie = 1; cookieJar2Cookie = 1
+    const state3 = new State(level, [], "playing", null, 1, 1);
+    cookieMonster3.collide(state3, Level);
+    expect(document.getElementById("text").textContent).toEqual(
+      "Thanks! Now, escape before it's too late!"
     );
   });
 });

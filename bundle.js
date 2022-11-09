@@ -26,7 +26,7 @@ var require_vector = __commonJS({
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
     var State = class {
-      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 1, cookieJar2Cookie = 1) {
+      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 0, cookieJar2Cookie = 0) {
         this.level = level2;
         this.actors = actors;
         this.status = status;
@@ -142,7 +142,7 @@ var require_cookieMonster = __commonJS({
         if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
           document.getElementById("text").textContent = "Give me cookies!";
         } else if (state.cookieJar1Cookie >= 1 && state.cookieJar2Cookie >= 1) {
-          document.getElementById("text").textContent = "So, long!";
+          document.getElementById("text").textContent = "Thanks! Now, escape before it's too late!";
           newState.level = new levelConstructor(levelPlans2[1]);
         }
         return newState;
