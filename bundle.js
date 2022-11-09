@@ -22,50 +22,6 @@ var require_vector = __commonJS({
   }
 });
 
-// lib/player.js
-var require_player = __commonJS({
-  "lib/player.js"(exports, module2) {
-    var Vec = require_vector();
-    var Player = class {
-      constructor(pos, speed) {
-        this.pos = pos;
-        this.speed = speed;
-        this.xySpeed = 6;
-      }
-      get type() {
-        return "player";
-      }
-      static create(pos) {
-        return new Player(pos, new Vec(0, 0));
-      }
-      update(time, state, keys) {
-        let xSpeed = 0;
-        if (keys.ArrowLeft)
-          xSpeed -= this.xySpeed;
-        if (keys.ArrowRight)
-          xSpeed += this.xySpeed;
-        let ySpeed = 0;
-        if (keys.ArrowUp)
-          ySpeed -= this.xySpeed;
-        if (keys.ArrowDown)
-          ySpeed += this.xySpeed;
-        let pos = this.pos;
-        let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesElement(movedX, this.size, "wall") && !state.level.touchesElement(movedX, this.size, "monster")) {
-          pos = movedX;
-        }
-        let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesElement(movedY, this.size, "wall") && !state.level.touchesElement(movedX, this.size, "monster")) {
-          pos = movedY;
-        }
-        return new Player(pos, new Vec(xSpeed, ySpeed));
-      }
-    };
-    Player.prototype.size = new Vec(1, 1);
-    module2.exports = Player;
-  }
-});
-
 // lib/state.js
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
@@ -117,11 +73,40 @@ var require_state = __commonJS({
   }
 });
 
+// lib/levelPlans.js
+var require_levelPlans = __commonJS({
+  "lib/levelPlans.js"(exports, module2) {
+    var mvpLevelPlan = `
+..................
+.................2
+..............####
+..########....#...
+..#......#....#...
+..#......#........
+..#...#..#....M...
+..#...#...........
+.@#..1#.......#...`;
+    var winLevelPlan = `
+..................
+.................2
+..............####
+..########....#...
+..#......#....#...
+..#......#........
+..#...#..#........
+..#...#...........
+.@#..1#.......#...`;
+    module2.exports = [mvpLevelPlan, winLevelPlan];
+  }
+});
+
 // lib/cookieMonster.js
 var require_cookieMonster = __commonJS({
   "lib/cookieMonster.js"(exports, module2) {
     var Vec = require_vector();
     var State = require_state();
+    var Level2 = require_level();
+    var levelPlans2 = require_levelPlans();
     var CookieMonster = class {
       constructor(pos, speed) {
         this.pos = pos;
@@ -137,15 +122,72 @@ var require_cookieMonster = __commonJS({
         return new CookieMonster(this.pos, this.speed);
       }
       collide(state) {
-        console.log("COOKIE MONSTER COLLIDE");
+        const newState = new State(
+          state.level,
+          state.actors,
+          state.status,
+          state.miniGameStatus,
+          state.cookieJar1Cookie,
+          state.cookieJar2Cookie
+        );
         console.log(state.cookieJar1Cookie);
         console.log(state.cookieJar2Cookie);
-        document.getElementById("text").textContent = "Give me cookies!";
-        return state;
+        if (state.cookieJar1Cookie < 1 && state.cookieJar2Cookie < 1) {
+          document.getElementById("text").textContent = "Give me cookies!";
+        } else {
+          document.getElementById("text").textContent = "So, long!";
+          newState.level = new Level2(levelPlans2[1]);
+        }
+        return newState;
       }
     };
     CookieMonster.prototype.size = new Vec(1, 1);
     module2.exports = CookieMonster;
+  }
+});
+
+// lib/player.js
+var require_player = __commonJS({
+  "lib/player.js"(exports, module2) {
+    var CookieMonster = require_cookieMonster();
+    var Vec = require_vector();
+    var Player = class {
+      constructor(pos, speed) {
+        this.pos = pos;
+        this.speed = speed;
+        this.xySpeed = 6;
+      }
+      get type() {
+        return "player";
+      }
+      static create(pos) {
+        return new Player(pos, new Vec(0, 0));
+      }
+      update(time, state, keys) {
+        let xSpeed = 0;
+        if (keys.ArrowLeft)
+          xSpeed -= this.xySpeed;
+        if (keys.ArrowRight)
+          xSpeed += this.xySpeed;
+        let ySpeed = 0;
+        if (keys.ArrowUp)
+          ySpeed -= this.xySpeed;
+        if (keys.ArrowDown)
+          ySpeed += this.xySpeed;
+        let pos = this.pos;
+        let movedX = pos.plus(new Vec(xSpeed * time, 0));
+        if (!state.level.touchesElement(movedX, this.size, "wall") && !state.level.touchesElement(movedX, this.size, CookieMonster)) {
+          pos = movedX;
+        }
+        let movedY = pos.plus(new Vec(0, ySpeed * time));
+        if (!state.level.touchesElement(movedY, this.size, "wall") && !state.level.touchesElement(movedX, this.size, CookieMonster)) {
+          pos = movedY;
+        }
+        return new Player(pos, new Vec(xSpeed, ySpeed));
+      }
+    };
+    Player.prototype.size = new Vec(1, 1);
+    module2.exports = Player;
   }
 });
 
@@ -401,11 +443,7 @@ var require_level = __commonJS({
             if (typeof type == "string")
               return type;
             this.startActors.push(type.create(new Vec(x, y)));
-            if (ch == "M") {
-              return "monster";
-            } else {
-              return "empty";
-            }
+            return "empty";
           });
         });
       }
@@ -426,23 +464,6 @@ var require_level = __commonJS({
       };
     };
     module2.exports = Level2;
-  }
-});
-
-// lib/levelPlans.js
-var require_levelPlans = __commonJS({
-  "lib/levelPlans.js"(exports, module2) {
-    var mvpLevelPlan = `
-..................
-.................2
-..............####
-..########....#...
-..#......#....#...
-..#......#........
-..#...#..#....M..
-..#...#...........
-.@#..1#.......#...`;
-    module2.exports = [mvpLevelPlan];
   }
 });
 
