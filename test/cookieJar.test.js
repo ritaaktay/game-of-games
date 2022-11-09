@@ -2,7 +2,8 @@ const CookieJar = require("../lib/cookieJar");
 const Vec = require("../lib/vector");
 const State = require("../lib/state");
 const Level = require("../lib/level");
-const levelPlans = require("../lib/levelPlans");
+const levelPlan = require("./mockLevelPlan");
+const mockLevelPlan = require("./mockLevelPlan");
 
 describe("CookieJar", () => {
   it("has a position vector, a speed vector and a default null updatedState", () => {
@@ -35,7 +36,7 @@ describe("CookieJar", () => {
 
   it("has an updated method that returns a new and identical CookieJar", () => {
     const cookieJar = CookieJar.create(new Vec(0, 0));
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const newCookieJar = cookieJar.update();
     expect(newCookieJar.pos).toEqual(new Vec(0, 0));
@@ -50,7 +51,7 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const cookieJar = new CookieJar(
       new Vec(0, 0),
@@ -69,7 +70,7 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const cookieJar = new CookieJar(
       new Vec(0, 0),
@@ -97,7 +98,7 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const cookieJar = new CookieJar(
       new Vec(0, 0),
@@ -126,7 +127,7 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const cookieJar = new CookieJar(
       new Vec(0, 0),
@@ -152,7 +153,7 @@ describe("CookieJar", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    const level = new Level(levelPlans[0]);
+    const level = new Level(mockLevelPlan);
     const state = new State(level, [], "playing");
     const cookieJar = new CookieJar(
       new Vec(0, 0),
