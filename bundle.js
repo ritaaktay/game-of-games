@@ -213,7 +213,9 @@ var require_blockJumpGame = __commonJS({
       run = (callback) => {
         window.addEventListener("keydown", this.keysEventListener);
         this.checkIfDead();
-        this.displayMessage("Jump over the meteorites!");
+        this.displayMessage(
+          "Jump over the meteorites! Press [Enter] to start and [Space Bar] to jump"
+        );
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
       };
