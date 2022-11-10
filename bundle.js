@@ -360,14 +360,50 @@ var require_cookieJar1 = __commonJS({
   }
 });
 
+// lib/matrixGame.js
+var require_matrixGame = __commonJS({
+  "lib/matrixGame.js"(exports, module2) {
+    var MatrixGame = class {
+      constructor() {
+        this.callback;
+        this.image = document.getElementById("matrix");
+      }
+      run = (callback) => {
+        this.callback = callback;
+        this.displayMessage(
+          "Make your choice. Press [R] for the red pill, [B] for the blue pill."
+        );
+        this.image.style.display = "inline";
+        window.addEventListener("keydown", this.keyHandlerFunction);
+      };
+      end = () => {
+        window.removeEventListener("keydown", this.keyHandlerFunction);
+        this.image.style.display = "none";
+      };
+      keyHandlerFunction = (event) => {
+        if (event.key == "r") {
+          console.log("RED");
+        }
+        if (event.key == "b") {
+          console.log("BLUE");
+        }
+      };
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
+      };
+    };
+    module2.exports = MatrixGame;
+  }
+});
+
 // lib/cookieJar2.js
 var require_cookieJar2 = __commonJS({
   "lib/cookieJar2.js"(exports, module2) {
     var Vec = require_vector();
-    var BlockJumpGame = require_blockJumpGame();
+    var MatrixGame = require_matrixGame();
     var State = require_state();
     var CookieJar2 = class {
-      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
+      constructor(pos, speed, updatedState = null, miniGame = MatrixGame) {
         this.pos = pos;
         this.speed = speed;
         this.updatedState = updatedState;
