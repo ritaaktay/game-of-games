@@ -131,7 +131,6 @@ var require_cookieMonster = __commonJS({
         return new CookieMonster(this.pos, this.speed);
       }
       collide(state, levelConstructor) {
-        console.log(state);
         const newState = new State(
           state.level,
           state.actors,
