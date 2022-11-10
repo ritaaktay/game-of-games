@@ -382,10 +382,14 @@ var require_matrixGame = __commonJS({
       };
       keyHandlerFunction = (event) => {
         if (event.key == "r") {
-          console.log("RED");
+          this.end();
+          this.displayMessage("You won! \u{1F36A}");
+          this.callback("Won");
         }
         if (event.key == "b") {
-          console.log("BLUE");
+          this.end();
+          this.displayMessage("You lost!");
+          this.callback("Lost");
         }
       };
       displayMessage = (message) => {
