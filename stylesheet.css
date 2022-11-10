@@ -5,6 +5,10 @@
   margin: 0;
 }
 
+body {
+  background: rgb(1, 1, 1);
+}
+
 .background {
   background: rgb(73, 35, 160);
   table-layout: fixed;
@@ -33,13 +37,13 @@
 
 #text-container {
   position: fixed;
-  top: 175px;
+  top: 170px;
   left: 200px;
 }
 
 #text {
   font-family: "Lucida Console", Monospace;
-  color: darkblue;
+  color: rgb(255, 255, 255);
 }
 
 /* mini-game: block-jump */
