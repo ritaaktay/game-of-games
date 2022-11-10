@@ -205,33 +205,44 @@ var require_blockJumpGame = __commonJS({
       constructor(cookieJarId) {
         this.character = document.getElementById("character");
         this.block = document.getElementById("block");
-        this.jumpButton = document.getElementById("jump-button");
-        this.startButton = document.getElementById("start-button");
-        this.startButton.addEventListener("click", this.start);
-        this.jumpButton.addEventListener("click", this.jump);
         this.jumpCounter = 0;
         this.callback;
         this.cookieJarId = cookieJarId;
+        this.started = false;
       }
       run = (callback) => {
+        window.addEventListener("keydown", this.keysEventListener);
         this.checkIfDead();
-        this.displayMessage("Jump over the meteorites!");
+        this.displayMessage(
+          "Jump over the meteorites! Press [Enter] to start and [Space Bar] to jump"
+        );
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
+      };
+      end = () => {
+        document.getElementById("block_jump_game_container").style.display = "none";
+        this.jumpCounter = 0;
+        clearInterval(this.setInterval);
+        console.log(window);
+        window.removeEventListener("keydown", this.keysEventListener);
+        this.block.style.animation = "none";
+      };
+      keysEventListener = (event) => {
+        console.log(event.key);
+        if (event.key === "Enter") {
+          event.preventDefault();
+          this.started = true;
+          this.start();
+        }
+        if (event.key === " ") {
+          this.jump();
+        }
       };
       start = () => {
         this.block.style.animation = "block 1s infinite linear";
       };
       displayMessage = (message) => {
         document.getElementById("text").textContent = message;
-      };
-      end = () => {
-        document.getElementById("block_jump_game_container").style.display = "none";
-        this.jumpCounter = 0;
-        clearInterval(this.setInterval);
-        this.startButton.removeEventListener("click", this.start);
-        this.jumpButton.removeEventListener("click", this.jump);
-        this.block.style.animation = "none";
       };
       checkIfDead = () => {
         this.setInterval = setInterval(() => {
@@ -251,7 +262,10 @@ var require_blockJumpGame = __commonJS({
       jump = () => {
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
-          this.jumpCounter += 1;
+          if (this.started) {
+            this.jumpCounter += 1;
+            this.displayMessage(`Almost there... ${this.jumpCounter}`);
+          }
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               this.end();
