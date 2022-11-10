@@ -64,7 +64,7 @@ describe("CookieMonster", () => {
     const state2 = new State(level, [], "playing", null, 1, 0);
     cookieMonster.collide(state2);
     expect(document.getElementById("text").textContent).toEqual(
-      "Give me cookies!"
+      "Give me more cookies! You have: 🍪"
     );
 
     // cookieJar1Cookie = 1; cookieJar2Cookie = 1

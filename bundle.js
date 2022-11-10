@@ -214,7 +214,6 @@ var require_blockJumpGame = __commonJS({
         this.block = document.getElementById("block");
         this.jumpCounter = 0;
         this.callback;
-        this.cookieJarId = cookieJarId;
         this.started = false;
       }
       run = (callback) => {
@@ -236,7 +235,6 @@ var require_blockJumpGame = __commonJS({
       keysEventListener = (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
-          this.started = true;
           this.start();
         }
         if (event.key === " ") {
@@ -244,6 +242,7 @@ var require_blockJumpGame = __commonJS({
         }
       };
       start = () => {
+        this.started = true;
         this.block.style.animation = "block 1s infinite linear";
       };
       displayMessage = (message) => {
