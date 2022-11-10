@@ -91,25 +91,6 @@ describe("Game", () => {
     mockRequestAnimationFrame.mockClear();
   });
 
-  it("clears display when game is won or lost", () => {
-    const level = new Level(mockLevelPlan);
-    const game = new Game(level, CanvasDisplay);
-    const mockRequestAnimationFrame = jest.spyOn(
-      window,
-      "requestAnimationFrame"
-    );
-    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
-      callback(Date.now());
-    });
-    mockRequestAnimationFrame.mockImplementationOnce((callback) => {
-      callback(Date.now());
-    });
-    const spy = jest.spyOn(game.display, "clear");
-    game.state.status = "Won";
-    game.run();
-    expect(spy).toHaveBeenCalledTimes(1);
-  });
-
   it("tracks keyup and keydown events for arrow keys", () => {
     const level = new Level(mockLevelPlan);
     const game = new Game(level, CanvasDisplay);

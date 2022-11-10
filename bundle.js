@@ -349,7 +349,7 @@ var require_cookieJar1 = __commonJS({
               this.updatedState = newState;
             }
           };
-          miniGame.run(callbackFunction, this);
+          miniGame.run(callbackFunction);
         }
         return this.updatedState;
       }
@@ -528,7 +528,6 @@ var require_levelCharTypes = __commonJS({
       "#": "wall",
       "M": CookieMonster,
       "@": Player,
-      "!": CookieJar1,
       "1": CookieJar1,
       "2": CookieJar2,
       "*": Exit
