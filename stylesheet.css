@@ -47,13 +47,13 @@ body {
 }
 
 /* matrix-game */
-.matrix {
+#matrix {
   position: fixed;
   top: 200px;
   left: 200px;
   width: 720px;
   height: 360px;
-  display: "none";
+  display: none;
 }
 
 /* mini-game: block-jump */
