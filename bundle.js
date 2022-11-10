@@ -275,7 +275,7 @@ var require_blockJumpGame = __commonJS({
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               this.end();
-              this.displayMessage("You won!");
+              this.displayMessage("You won! \u{1F36A}");
               this.callback("Won");
             }, 500);
           }
