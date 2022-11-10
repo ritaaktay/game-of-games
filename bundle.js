@@ -262,8 +262,10 @@ var require_blockJumpGame = __commonJS({
       jump = () => {
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
-          if (this.started)
+          if (this.started) {
             this.jumpCounter += 1;
+            this.displayMessage(`Almost there... ${this.jumpCounter}`);
+          }
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               this.end();
