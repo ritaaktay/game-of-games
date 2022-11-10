@@ -139,8 +139,15 @@ var require_cookieMonster = __commonJS({
           state.cookieJar1Cookie,
           state.cookieJar2Cookie
         );
-        if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
+        if (state.cookieJar1Cookie == 0 && state.cookieJar2Cookie == 0) {
           document.getElementById("text").textContent = "Give me cookies!";
+        } else if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
+          const cookieCount = state.cookieJar1Cookie + state.cookieJar2Cookie;
+          document.getElementById(
+            "text"
+          ).textContent = `Give me more cookies! You have: ${"\u{1F36A}".repeat(
+            cookieCount
+          )}`;
         } else {
           document.getElementById("text").textContent = "Thanks! Now, escape before it's too late!";
           newState.level = new levelConstructor(levelPlans2[1]);
@@ -223,12 +230,10 @@ var require_blockJumpGame = __commonJS({
         document.getElementById("block_jump_game_container").style.display = "none";
         this.jumpCounter = 0;
         clearInterval(this.setInterval);
-        console.log(window);
         window.removeEventListener("keydown", this.keysEventListener);
         this.block.style.animation = "none";
       };
       keysEventListener = (event) => {
-        console.log(event.key);
         if (event.key === "Enter") {
           event.preventDefault();
           this.started = true;
@@ -269,7 +274,7 @@ var require_blockJumpGame = __commonJS({
           if (this.jumpCounter > 4) {
             setTimeout(() => {
               this.end();
-              this.displayMessage("You won!");
+              this.displayMessage("You won! \u{1F36A}");
               this.callback("Won");
             }, 500);
           }
