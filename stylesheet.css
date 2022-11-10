@@ -56,6 +56,13 @@ body {
   display: none;
 }
 
+#pills {
+  position: fixed;
+  top: 350px;
+  left: 525px;
+  display: none;
+}
+
 /* mini-game: block-jump */
 
 #block_jump_game_container {

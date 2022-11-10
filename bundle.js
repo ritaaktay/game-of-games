@@ -367,6 +367,7 @@ var require_matrixGame = __commonJS({
       constructor() {
         this.callback;
         this.image = document.getElementById("matrix");
+        this.pills = document.getElementById("pills");
       }
       run = (callback) => {
         this.callback = callback;
@@ -374,11 +375,13 @@ var require_matrixGame = __commonJS({
           "Make your choice. Press [R] for the red pill, [B] for the blue pill."
         );
         this.image.style.display = "inline";
+        this.pills.style.display = "inline";
         window.addEventListener("keydown", this.keyHandlerFunction);
       };
       end = () => {
         window.removeEventListener("keydown", this.keyHandlerFunction);
         this.image.style.display = "none";
+        this.pills.style.display = "none";
       };
       keyHandlerFunction = (event) => {
         if (event.key == "r") {
