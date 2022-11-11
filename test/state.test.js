@@ -7,6 +7,8 @@ const State = require("../lib/state");
 const Player = require("../lib/player");
 const Vec = require("../lib/vector");
 const mockLevelPlan = require("./mockLevelPlan");
+const noCookieJarsLevelPlan = require("./noCookieJarsLevelPlan");
+
 jest.mock("../lib/blockJumpGame");
 
 describe("State", () => {
@@ -199,5 +201,13 @@ describe("State", () => {
     expect(newerState.actors).toEqual(level.startActors);
     expect(newerState.status).toEqual("won");
     expect(newerState.miniGameStatus).toEqual(null);
+  });
+
+  it("does not check overlap when no cookie jars", () => {
+    const level = new Level(noCookieJarsLevelPlan);
+    const state = new State(level, [], "playing");
+    const spy = jest.spyOn(state, "overlap");
+    state.update(1, {});
+    expect(spy).not.toHaveBeenCalled();
   });
 });
