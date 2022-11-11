@@ -32,13 +32,13 @@ body {
 #main-game {
   position: fixed;
   top: 200px;
-  left: 200px;
+  left: 300px;
 }
 
 #text-container {
   position: fixed;
   top: 170px;
-  left: 200px;
+  left: 300px;
 }
 
 #text {
@@ -50,7 +50,7 @@ body {
 #matrix {
   position: fixed;
   top: 200px;
-  left: 200px;
+  left: 300px;
   width: 720px;
   height: 360px;
   display: none;
@@ -68,7 +68,7 @@ body {
 #block_jump_game_container {
   position: fixed;
   top: 200px;
-  left: 200px;
+  left: 300px;
   display: none;
 }
 
