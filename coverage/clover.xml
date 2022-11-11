@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668156308272" clover="3.2.0">
-  <project timestamp="1668156308273" name="All files">
-    <metrics statements="273" coveredstatements="265" conditionals="90" coveredconditionals="90" methods="64" coveredmethods="61" elements="427" coveredelements="416" complexity="0" loc="273" ncloc="273" packages="1" files="13" classes="13"/>
+<coverage generated="1668157136877" clover="3.2.0">
+  <project timestamp="1668157136878" name="All files">
+    <metrics statements="273" coveredstatements="273" conditionals="90" coveredconditionals="90" methods="64" coveredmethods="64" elements="427" coveredelements="427" complexity="0" loc="273" ncloc="273" packages="1" files="13" classes="13"/>
     <file name="blockJumpGame.js" path="/Users/ritaaktay/Projects/squid-game/lib/blockJumpGame.js">
       <metrics statements="50" coveredstatements="50" conditionals="15" coveredconditionals="15" methods="11" coveredmethods="11"/>
       <line num="3" count="11" type="stmt"/>
@@ -34,9 +34,9 @@
       <line num="45" count="30" type="stmt"/>
       <line num="48" count="11" type="stmt"/>
       <line num="49" count="9" type="stmt"/>
-      <line num="50" count="1045" type="stmt"/>
-      <line num="53" count="1045" type="stmt"/>
-      <line num="56" count="1045" type="cond" truecount="5" falsecount="0"/>
+      <line num="50" count="1089" type="stmt"/>
+      <line num="53" count="1089" type="stmt"/>
+      <line num="56" count="1089" type="cond" truecount="5" falsecount="0"/>
       <line num="57" count="8" type="stmt"/>
       <line num="58" count="8" type="stmt"/>
       <line num="59" count="8" type="stmt"/>
@@ -53,19 +53,19 @@
       <line num="75" count="1" type="stmt"/>
       <line num="79" count="25" type="stmt"/>
       <line num="80" count="23" type="stmt"/>
-      <line num="85" count="8" type="stmt"/>
+      <line num="85" count="9" type="stmt"/>
     </file>
     <file name="cookieJar1.js" path="/Users/ritaaktay/Projects/squid-game/lib/cookieJar1.js">
       <metrics statements="25" coveredstatements="25" conditionals="8" coveredconditionals="8" methods="6" coveredmethods="6"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="3" count="7" type="stmt"/>
-      <line num="7" count="56" type="stmt"/>
-      <line num="8" count="56" type="stmt"/>
-      <line num="9" count="56" type="stmt"/>
-      <line num="10" count="56" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="3" count="8" type="stmt"/>
+      <line num="7" count="57" type="stmt"/>
+      <line num="8" count="57" type="stmt"/>
+      <line num="9" count="57" type="stmt"/>
+      <line num="10" count="57" type="stmt"/>
       <line num="14" count="17" type="stmt"/>
-      <line num="18" count="33" type="stmt"/>
+      <line num="18" count="34" type="stmt"/>
       <line num="22" count="16" type="stmt"/>
       <line num="31" count="16" type="cond" truecount="2" falsecount="0"/>
       <line num="32" count="9" type="stmt"/>
@@ -80,20 +80,20 @@
       <line num="62" count="3" type="stmt"/>
       <line num="65" count="9" type="stmt"/>
       <line num="67" count="16" type="stmt"/>
-      <line num="71" count="7" type="stmt"/>
-      <line num="73" count="7" type="stmt"/>
+      <line num="71" count="8" type="stmt"/>
+      <line num="73" count="8" type="stmt"/>
     </file>
     <file name="cookieJar2.js" path="/Users/ritaaktay/Projects/squid-game/lib/cookieJar2.js">
       <metrics statements="25" coveredstatements="25" conditionals="8" coveredconditionals="8" methods="6" coveredmethods="6"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="3" count="7" type="stmt"/>
-      <line num="7" count="56" type="stmt"/>
-      <line num="8" count="56" type="stmt"/>
-      <line num="9" count="56" type="stmt"/>
-      <line num="10" count="56" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="3" count="8" type="stmt"/>
+      <line num="7" count="57" type="stmt"/>
+      <line num="8" count="57" type="stmt"/>
+      <line num="9" count="57" type="stmt"/>
+      <line num="10" count="57" type="stmt"/>
       <line num="14" count="54" type="stmt"/>
-      <line num="18" count="33" type="stmt"/>
+      <line num="18" count="34" type="stmt"/>
       <line num="22" count="16" type="stmt"/>
       <line num="31" count="9" type="cond" truecount="2" falsecount="0"/>
       <line num="32" count="5" type="stmt"/>
@@ -108,14 +108,14 @@
       <line num="62" count="1" type="stmt"/>
       <line num="65" count="5" type="stmt"/>
       <line num="67" count="9" type="stmt"/>
-      <line num="71" count="7" type="stmt"/>
-      <line num="73" count="7" type="stmt"/>
+      <line num="71" count="8" type="stmt"/>
+      <line num="73" count="8" type="stmt"/>
     </file>
     <file name="cookieMonster.js" path="/Users/ritaaktay/Projects/squid-game/lib/cookieMonster.js">
       <metrics statements="19" coveredstatements="19" conditionals="8" coveredconditionals="8" methods="5" coveredmethods="5"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="3" count="7" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="3" count="8" type="stmt"/>
       <line num="7" count="10" type="stmt"/>
       <line num="8" count="10" type="stmt"/>
       <line num="12" count="1" type="stmt"/>
@@ -130,27 +130,27 @@
       <line num="42" count="2" type="stmt"/>
       <line num="44" count="2" type="stmt"/>
       <line num="47" count="4" type="stmt"/>
-      <line num="51" count="7" type="stmt"/>
-      <line num="53" count="7" type="stmt"/>
+      <line num="51" count="8" type="stmt"/>
+      <line num="53" count="8" type="stmt"/>
     </file>
     <file name="exit.js" path="/Users/ritaaktay/Projects/squid-game/lib/exit.js">
-      <metrics statements="16" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="2"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="3" count="7" type="stmt"/>
-      <line num="7" count="2" type="stmt"/>
-      <line num="8" count="2" type="stmt"/>
-      <line num="12" count="0" type="stmt"/>
-      <line num="16" count="2" type="stmt"/>
-      <line num="20" count="0" type="stmt"/>
-      <line num="24" count="0" type="stmt"/>
-      <line num="33" count="0" type="stmt"/>
-      <line num="35" count="0" type="stmt"/>
-      <line num="36" count="0" type="stmt"/>
-      <line num="37" count="0" type="stmt"/>
-      <line num="38" count="0" type="stmt"/>
-      <line num="42" count="7" type="stmt"/>
-      <line num="44" count="7" type="stmt"/>
+      <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="3" count="8" type="stmt"/>
+      <line num="7" count="9" type="stmt"/>
+      <line num="8" count="9" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="16" count="7" type="stmt"/>
+      <line num="20" count="1" type="stmt"/>
+      <line num="24" count="1" type="stmt"/>
+      <line num="33" count="1" type="stmt"/>
+      <line num="35" count="1" type="stmt"/>
+      <line num="36" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
+      <line num="38" count="1" type="stmt"/>
+      <line num="42" count="8" type="stmt"/>
+      <line num="44" count="8" type="stmt"/>
     </file>
     <file name="game.js" path="/Users/ritaaktay/Projects/squid-game/lib/game.js">
       <metrics statements="25" coveredstatements="25" conditionals="4" coveredconditionals="4" methods="5" coveredmethods="5"/>
@@ -182,20 +182,20 @@
     </file>
     <file name="level.js" path="/Users/ritaaktay/Projects/squid-game/lib/level.js">
       <metrics statements="25" coveredstatements="25" conditionals="10" coveredconditionals="10" methods="5" coveredmethods="5"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="6" count="43" type="stmt"/>
-      <line num="9" count="291" type="stmt"/>
-      <line num="10" count="43" type="stmt"/>
-      <line num="11" count="43" type="stmt"/>
-      <line num="12" count="43" type="stmt"/>
-      <line num="21" count="43" type="stmt"/>
-      <line num="22" count="291" type="stmt"/>
-      <line num="23" count="5022" type="stmt"/>
-      <line num="24" count="5022" type="cond" truecount="2" falsecount="0"/>
-      <line num="25" count="95" type="stmt"/>
-      <line num="26" count="95" type="stmt"/>
-      <line num="36" count="43" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="6" count="45" type="stmt"/>
+      <line num="9" count="309" type="stmt"/>
+      <line num="10" count="45" type="stmt"/>
+      <line num="11" count="45" type="stmt"/>
+      <line num="12" count="45" type="stmt"/>
+      <line num="21" count="45" type="stmt"/>
+      <line num="22" count="309" type="stmt"/>
+      <line num="23" count="5346" type="stmt"/>
+      <line num="24" count="5346" type="cond" truecount="2" falsecount="0"/>
+      <line num="25" count="99" type="stmt"/>
+      <line num="26" count="99" type="stmt"/>
+      <line num="36" count="45" type="stmt"/>
       <line num="38" count="42" type="stmt"/>
       <line num="39" count="42" type="stmt"/>
       <line num="40" count="42" type="stmt"/>
@@ -206,24 +206,24 @@
       <line num="47" count="42" type="cond" truecount="2" falsecount="0"/>
       <line num="48" count="42" type="cond" truecount="2" falsecount="0"/>
       <line num="51" count="38" type="stmt"/>
-      <line num="55" count="7" type="stmt"/>
+      <line num="55" count="8" type="stmt"/>
     </file>
     <file name="levelCharTypes.js" path="/Users/ritaaktay/Projects/squid-game/lib/levelCharTypes.js">
       <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="3" count="7" type="stmt"/>
-      <line num="4" count="7" type="stmt"/>
-      <line num="5" count="7" type="stmt"/>
-      <line num="7" count="7" type="stmt"/>
-      <line num="18" count="7" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="3" count="8" type="stmt"/>
+      <line num="4" count="8" type="stmt"/>
+      <line num="5" count="8" type="stmt"/>
+      <line num="7" count="8" type="stmt"/>
+      <line num="17" count="8" type="stmt"/>
     </file>
     <file name="levelPlans.js" path="/Users/ritaaktay/Projects/squid-game/lib/levelPlans.js">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="12" count="7" type="stmt"/>
-      <line num="23" count="7" type="stmt"/>
-      <line num="34" count="7" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="12" count="8" type="stmt"/>
+      <line num="23" count="8" type="stmt"/>
+      <line num="34" count="8" type="stmt"/>
     </file>
     <file name="matrixGame.js" path="/Users/ritaaktay/Projects/squid-game/lib/matrixGame.js">
       <metrics statements="25" coveredstatements="25" conditionals="4" coveredconditionals="4" methods="5" coveredmethods="5"/>
@@ -251,17 +251,17 @@
       <line num="33" count="1" type="stmt"/>
       <line num="37" count="6" type="stmt"/>
       <line num="38" count="8" type="stmt"/>
-      <line num="42" count="8" type="stmt"/>
+      <line num="42" count="9" type="stmt"/>
     </file>
     <file name="player.js" path="/Users/ritaaktay/Projects/squid-game/lib/player.js">
       <metrics statements="23" coveredstatements="23" conditionals="12" coveredconditionals="12" methods="4" coveredmethods="4"/>
-      <line num="1" count="7" type="stmt"/>
-      <line num="2" count="7" type="stmt"/>
-      <line num="6" count="64" type="stmt"/>
-      <line num="7" count="64" type="stmt"/>
-      <line num="8" count="64" type="stmt"/>
+      <line num="1" count="8" type="stmt"/>
+      <line num="2" count="8" type="stmt"/>
+      <line num="6" count="66" type="stmt"/>
+      <line num="7" count="66" type="stmt"/>
+      <line num="8" count="66" type="stmt"/>
       <line num="12" count="40" type="stmt"/>
-      <line num="16" count="42" type="stmt"/>
+      <line num="16" count="44" type="stmt"/>
       <line num="34" count="20" type="stmt"/>
       <line num="35" count="20" type="cond" truecount="2" falsecount="0"/>
       <line num="36" count="20" type="cond" truecount="2" falsecount="0"/>
@@ -276,20 +276,20 @@
       <line num="52" count="20" type="cond" truecount="2" falsecount="0"/>
       <line num="53" count="19" type="stmt"/>
       <line num="55" count="20" type="stmt"/>
-      <line num="59" count="7" type="stmt"/>
-      <line num="61" count="7" type="stmt"/>
+      <line num="59" count="8" type="stmt"/>
+      <line num="61" count="8" type="stmt"/>
     </file>
     <file name="state.js" path="/Users/ritaaktay/Projects/squid-game/lib/state.js">
       <metrics statements="24" coveredstatements="24" conditionals="21" coveredconditionals="21" methods="9" coveredmethods="9"/>
-      <line num="10" count="83" type="stmt"/>
-      <line num="11" count="83" type="stmt"/>
-      <line num="12" count="83" type="stmt"/>
-      <line num="13" count="83" type="stmt"/>
-      <line num="14" count="83" type="stmt"/>
-      <line num="15" count="83" type="stmt"/>
+      <line num="10" count="85" type="stmt"/>
+      <line num="11" count="85" type="stmt"/>
+      <line num="12" count="85" type="stmt"/>
+      <line num="13" count="85" type="stmt"/>
+      <line num="14" count="85" type="stmt"/>
+      <line num="15" count="85" type="stmt"/>
       <line num="19" count="18" type="stmt"/>
       <line num="23" count="44" type="stmt"/>
-      <line num="33" count="83" type="stmt"/>
+      <line num="33" count="85" type="stmt"/>
       <line num="34" count="45" type="stmt"/>
       <line num="35" count="16" type="stmt"/>
       <line num="44" count="16" type="stmt"/>
@@ -302,17 +302,17 @@
       <line num="54" count="15" type="cond" truecount="2" falsecount="0"/>
       <line num="59" count="1" type="stmt"/>
       <line num="63" count="16" type="stmt"/>
-      <line num="72" count="83" type="stmt"/>
+      <line num="72" count="85" type="stmt"/>
       <line num="73" count="55" type="stmt"/>
-      <line num="82" count="7" type="stmt"/>
+      <line num="82" count="8" type="stmt"/>
     </file>
     <file name="vector.js" path="/Users/ritaaktay/Projects/squid-game/lib/vector.js">
       <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
-      <line num="3" count="442" type="stmt"/>
-      <line num="4" count="442" type="stmt"/>
+      <line num="3" count="474" type="stmt"/>
+      <line num="4" count="474" type="stmt"/>
       <line num="7" count="42" type="stmt"/>
       <line num="10" count="2" type="stmt"/>
-      <line num="14" count="8" type="stmt"/>
+      <line num="14" count="9" type="stmt"/>
     </file>
   </project>
 </coverage>
