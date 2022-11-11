@@ -31,14 +31,14 @@ body {
 
 #main-game {
   position: fixed;
-  top: 200px;
-  left: 300px;
+  top: 230px;
+  left: 360px;
 }
 
 #text-container {
   position: fixed;
-  top: 170px;
-  left: 300px;
+  top: 190px;
+  left: 360px;
 }
 
 #text {
@@ -49,8 +49,8 @@ body {
 /* matrix-game */
 #matrix {
   position: fixed;
-  top: 200px;
-  left: 300px;
+  top: 230px;
+  left: 360px;
   width: 720px;
   height: 360px;
   display: none;
@@ -58,8 +58,8 @@ body {
 
 #pills {
   position: fixed;
-  top: 350px;
-  left: 525px;
+  top: 380px;
+  left: 690px;
   display: none;
 }
 
@@ -67,8 +67,8 @@ body {
 
 #block_jump_game_container {
   position: fixed;
-  top: 200px;
-  left: 300px;
+  top: 230px;
+  left: 360px;
   display: none;
 }
 
