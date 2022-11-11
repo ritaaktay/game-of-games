@@ -7,6 +7,8 @@ const State = require("../lib/state");
 const Player = require("../lib/player");
 const Vec = require("../lib/vector");
 const mockLevelPlan = require("./mockLevelPlan");
+const noCookieJarsLevelPlan = require("./noCookieJarsLevelPlan");
+
 jest.mock("../lib/blockJumpGame");
 
 describe("State", () => {
@@ -76,7 +78,6 @@ describe("State", () => {
     });
     expect(newState.level).toEqual(level);
     expect(newState.player.pos).toEqual(new Vec(0, 2));
-    console.log(newState.actors);
     expect(newState.status).toEqual("playing");
     expect(newState.miniGameStatus).toEqual(null);
   });
@@ -89,7 +90,7 @@ describe("State", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    level.startActors[1].miniGame = MockMiniGame;
+    level.startActors[2].miniGame = MockMiniGame;
     const state = State.start(level, level.startActors, "playing");
     const newState = state.update(1, {
       "ArrowRight": true,
@@ -116,7 +117,7 @@ describe("State", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    level.startActors[1].miniGame = MockMiniGame;
+    level.startActors[2].miniGame = MockMiniGame;
     const state = State.start(level, level.startActors, "playing", "null");
     const newState = state.update(1, {
       "ArrowRight": true,
@@ -145,7 +146,7 @@ describe("State", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    level.startActors[1].miniGame = MockMiniGame;
+    level.startActors[2].miniGame = MockMiniGame;
     const state = State.start(level, level.startActors, "playing", "null");
     const newState = state.update(1, {
       "ArrowRight": true,
@@ -174,7 +175,7 @@ describe("State", () => {
     const MockMiniGame = jest.fn().mockImplementation(() => {
       return mockMiniGame;
     });
-    level.startActors[1].miniGame = MockMiniGame;
+    level.startActors[2].miniGame = MockMiniGame;
     const state = State.start(level, level.startActors, "playing", "null");
     const newState = state.update(1, {
       "ArrowRight": true,
@@ -200,5 +201,13 @@ describe("State", () => {
     expect(newerState.actors).toEqual(level.startActors);
     expect(newerState.status).toEqual("won");
     expect(newerState.miniGameStatus).toEqual(null);
+  });
+
+  it("does not check overlap when no cookie jars", () => {
+    const level = new Level(noCookieJarsLevelPlan);
+    const state = new State(level, [], "playing");
+    const spy = jest.spyOn(state, "overlap");
+    state.update(1, {});
+    expect(spy).not.toHaveBeenCalled();
   });
 });

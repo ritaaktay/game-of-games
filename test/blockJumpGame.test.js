@@ -13,37 +13,45 @@ beforeEach(() => {
 });
 
 describe("BlockJumpGame", () => {
-  it("has character, a block, a jump button, a start button, and a jump counter initialized to 0", () => {
+  it("has character, a block, and a jump counter initialized to 0", () => {
     const game = new BlockJumpGame();
     expect(game.character).toEqual(document.getElementById("character"));
     expect(game.block).toEqual(document.getElementById("block"));
-    expect(game.jumpButton).toEqual(document.getElementById("jump-button"));
-    expect(game.startButton).toEqual(document.getElementById("start-button"));
     expect(game.jumpCounter).toEqual(0);
+    expect(game.started).toEqual(false);
   });
 
   it("start button animates the block", () => {
     const game = new BlockJumpGame();
-    document.getElementById("start-button").click();
+    game.run((result) => {});
+    const event = new KeyboardEvent("keydown", { "key": "Enter" });
+    window.dispatchEvent(event);
     const block = document.getElementById("block");
     expect(block.style.animation).toEqual("block 1s infinite linear");
   });
 
   it("jump button makes character jump", () => {
     const game = new BlockJumpGame();
-    document.getElementById("jump-button").click();
+    game.run((result) => {});
+    game.start();
+    const event = new KeyboardEvent("keydown", { "key": " " });
+    window.dispatchEvent(event);
     const character = document.getElementById("character");
     expect(character.classList[0]).toEqual("animate");
   });
 
   it("jump button increments jump counter", () => {
     const game = new BlockJumpGame();
-    document.getElementById("jump-button").click();
+    game.run((result) => {});
+    game.start();
+    const event = new KeyboardEvent("keydown", { "key": " " });
+    window.dispatchEvent(event);
     expect(game.jumpCounter).toEqual(1);
   });
 
   it("jump button increments jump counter", (done) => {
     const game = new BlockJumpGame();
+    game.start();
     const jumpLater = () => {
       setTimeout(() => {
         game.jump();
@@ -59,7 +67,9 @@ describe("BlockJumpGame", () => {
 
   it("animation is removed 500 ms after jump button is clicked", (done) => {
     const game = new BlockJumpGame();
-    document.getElementById("jump-button").click();
+    game.run((result) => {});
+    const event = new KeyboardEvent("keydown", { "key": " " });
+    window.dispatchEvent(event);
     const character = document.getElementById("character");
     expect(character.classList[0]).toEqual("animate");
     setTimeout(() => {
@@ -118,6 +128,7 @@ describe("BlockJumpGame", () => {
       done();
     });
     game.run(mockWinCallback);
+    game.start();
     let counter = 0;
     const jumpLater = () => {
       setTimeout(() => {
