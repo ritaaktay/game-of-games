@@ -41,7 +41,10 @@ var require_state = __commonJS({
         return this.actors.find((a) => a.type == "player");
       }
       update = function(time, keys, levelConstructor) {
-        let actors = this.actors.map((actor) => actor.update(time, this, keys));
+        let actors = this.actors;
+        if (this.miniGameStatus != "playing") {
+          actors = this.actors.map((actor) => actor.update(time, this, keys));
+        }
         let newState = new State(
           this.level,
           actors,
