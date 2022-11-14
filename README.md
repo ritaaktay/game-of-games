@@ -1,6 +1,4 @@
-# Project: Loopy Cookies
-
-### A Retro Game
+# Game of Games
 
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
 - Built with JavaScript, HTML, CSS and Jest
