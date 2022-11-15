@@ -53,14 +53,14 @@ body {
   left: 360px;
   width: 720px;
   height: 360px;
-  display: none;
+  /* display: none; */
 }
 
 #pills {
   position: fixed;
   top: 380px;
   left: 690px;
-  display: none;
+  /* display: none; */
 }
 
 /* mini-game: block-jump */

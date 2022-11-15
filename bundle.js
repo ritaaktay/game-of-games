@@ -368,23 +368,20 @@ var require_matrixGame = __commonJS({
     var MatrixGame = class {
       constructor() {
         this.callback;
-        this.matrixImg = this.addImage("img/matrix.png", "matrix");
-        this.pillsImg = this.addImage("img/pills.png", "pills");
       }
       run = (callback) => {
         this.callback = callback;
         this.displayMessage(
           "Make your choice. Press [R] for the red pill, [B] for the blue pill."
         );
-        console.log(this.matrixImg);
-        this.matrixImg.style.display = "inline";
-        this.pillsImg.style.display = "inline";
+        this.addImage("img/matrix.png", "matrix");
+        this.addImage("img/pills.png", "pills");
         window.addEventListener("keydown", this.keyHandlerFunction);
       };
       end = () => {
         window.removeEventListener("keydown", this.keyHandlerFunction);
-        this.matrixImg.style.display = "none";
-        this.pillsImg.style.display = "none";
+        document.getElementById("matrix").remove();
+        document.getElementById("pills").remove();
       };
       keyHandlerFunction = (event) => {
         if (event.key == "r") {
