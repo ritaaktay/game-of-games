@@ -53,14 +53,12 @@ body {
   left: 360px;
   width: 720px;
   height: 360px;
-  /* display: none; */
 }
 
 #pills {
   position: fixed;
   top: 380px;
   left: 690px;
-  /* display: none; */
 }
 
 /* mini-game: block-jump */
@@ -76,7 +74,6 @@ body {
   width: 720px;
   height: 360px;
   background-image: url("./img/background.png");
-  /* background-color: aqua; */
 }
 
 #character {
