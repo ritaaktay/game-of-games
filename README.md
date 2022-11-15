@@ -1,7 +1,7 @@
 # A Game of Games
 
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
-- Built with JavaScript, HTML, CSS and Jest
+- Built with vanilla JavaScript, HTML and CSS on a custom game engine.
 
 ![image](img/game-1.png)
 
