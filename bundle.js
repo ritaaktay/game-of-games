@@ -539,9 +539,9 @@ var require_levelCharTypes = __commonJS({
       "#": "wall",
       "M": CookieMonster,
       "@": Player,
+      "*": Exit,
       "1": CookieJar1,
-      "2": CookieJar2,
-      "*": Exit
+      "2": CookieJar2
     };
     module2.exports = levelCharTypes;
   }
