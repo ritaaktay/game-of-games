@@ -368,22 +368,23 @@ var require_matrixGame = __commonJS({
     var MatrixGame = class {
       constructor() {
         this.callback;
-        this.image = document.getElementById("matrix");
-        this.pills = document.getElementById("pills");
+        this.matrixImg = this.addImage("img/matrix.png", "matrix");
+        this.pillsImg = this.addImage("img/pills.png", "pills");
       }
       run = (callback) => {
         this.callback = callback;
         this.displayMessage(
           "Make your choice. Press [R] for the red pill, [B] for the blue pill."
         );
-        this.image.style.display = "inline";
-        this.pills.style.display = "inline";
+        console.log(this.matrixImg);
+        this.matrixImg.style.display = "inline";
+        this.pillsImg.style.display = "inline";
         window.addEventListener("keydown", this.keyHandlerFunction);
       };
       end = () => {
         window.removeEventListener("keydown", this.keyHandlerFunction);
-        this.image.style.display = "none";
-        this.pills.style.display = "none";
+        this.matrixImg.style.display = "none";
+        this.pillsImg.style.display = "none";
       };
       keyHandlerFunction = (event) => {
         if (event.key == "r") {
@@ -399,6 +400,13 @@ var require_matrixGame = __commonJS({
       };
       displayMessage = (message) => {
         document.getElementById("text").textContent = message;
+      };
+      addImage = (url, id) => {
+        const image = document.createElement("img");
+        image.src = url;
+        image.id = id;
+        document.body.appendChild(image);
+        return image;
       };
     };
     module2.exports = MatrixGame;
