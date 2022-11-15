@@ -374,14 +374,14 @@ var require_matrixGame = __commonJS({
         this.displayMessage(
           "Make your choice. Press [R] for the red pill, [B] for the blue pill."
         );
-        this.addImage("img/matrix.png", "matrix");
-        this.addImage("img/pills.png", "pills");
+        this.imageOne = this.addImage("img/matrix.png", "matrix");
+        this.imageTwo = this.addImage("img/pills.png", "pills");
         window.addEventListener("keydown", this.keyHandlerFunction);
       };
       end = () => {
+        this.imageOne.remove();
+        this.imageTwo.remove();
         window.removeEventListener("keydown", this.keyHandlerFunction);
-        document.getElementById("matrix").remove();
-        document.getElementById("pills").remove();
       };
       keyHandlerFunction = (event) => {
         if (event.key == "r") {
