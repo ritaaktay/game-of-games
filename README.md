@@ -2,6 +2,7 @@
 
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
 - Built with vanilla JavaScript, HTML and CSS on a custom game engine.
+- [A blog post on building this game engine](https://medium.com/@rita.aktay/a-game-engine-building-a-dependency-injection-container-27905b2a10ff)
 
 ![image](img/game-1.png)
 
