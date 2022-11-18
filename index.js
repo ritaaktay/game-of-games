@@ -8,5 +8,3 @@ const level = new Level(levelPlans[0], MiniGameContainer);
 const game = new Game(level, CanvasDisplay, Level);
 
 game.run();
-
-const level = new Level(levelPlan, new MiniGameContainer(Tetris, Pong, Snake));
