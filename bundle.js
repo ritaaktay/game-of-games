@@ -46,7 +46,7 @@ var require_state = __commonJS({
       get cookieCount() {
         return this.cookieJars.map((cj) => cj.cookies).reduce((a, b) => a + b);
       }
-      update = function(time, keys, levelConstructor2) {
+      update = function(time, keys, Level2) {
         let newState = new State(
           this.level,
           this.actors,
@@ -55,14 +55,14 @@ var require_state = __commonJS({
         );
         newState = this.#updatePlayer(newState, time, keys);
         newState = this.#resetMiniGameStatus(newState);
-        newState = this.#checkCollisions(newState, levelConstructor2);
+        newState = this.#checkCollisions(newState, Level2);
         return newState;
       };
-      #checkCollisions(state, levelConstructor2) {
+      #checkCollisions(state, Level2) {
         let player = state.player;
         for (let actor of state.actors) {
           if (actor != player && this.#overlap(actor, player)) {
-            return actor.collide(state, levelConstructor2);
+            return actor.collide(state, Level2);
           }
         }
         return state;
@@ -162,7 +162,7 @@ var require_cookieMonster = __commonJS({
           );
         } else {
           this.#speak("Mmmm delicious! Now, escape before it's too late!");
-          state.level = new levelConstructor(levelPlans2[1]);
+          state.level = new Level2(levelPlans2[1]);
         }
         return state;
       }
@@ -366,7 +366,7 @@ var require_exit = __commonJS({
       static create(pos) {
         return new Exit(pos, new Vec(0, 0));
       }
-      collide(state, levelConstructor2) {
+      collide(state, levelConstructor) {
         const newState = new State(
           state.level,
           state.actors,
@@ -374,7 +374,7 @@ var require_exit = __commonJS({
           state.miniGameStatus
         );
         this.#speak(message);
-        newState.level = new levelConstructor2(levelPlans2[2]);
+        newState.level = new levelConstructor(levelPlans2[2]);
         newState.actors = newState.level.startActors;
         newState.status = "won";
         return newState;
@@ -543,9 +543,7 @@ var require_canvasDisplay = __commonJS({
           let y = actor.pos.y * this.scale;
           if (actor.type == "player") {
             this.drawPlayer(actor, x, y, width, height);
-          } else if (actor.type == "cookieJar1") {
-            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
-          } else if (actor.type == "cookieJar2") {
+          } else if (actor.type == "cookieJar") {
             this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
           } else if (actor.type == "exit") {
             this.cx.drawImage(this.exitSprite, x, y, this.scale, this.scale);
