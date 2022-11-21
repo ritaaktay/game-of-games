@@ -29,6 +29,7 @@ var require_state = __commonJS({
       constructor(level2, actors, status = "playing", miniGameStatus = null) {
         this.level = level2;
         this.actors = actors;
+        console.log(this.actors);
         this.status = status;
         this.miniGameStatus = miniGameStatus;
       }
@@ -51,6 +52,7 @@ var require_state = __commonJS({
           actors = this.actors.map((actor) => {
             if (actor.type == "player")
               return actor.update(time, this, keys);
+            return actor;
           });
         }
         let newState = new State(
