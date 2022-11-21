@@ -26,52 +26,55 @@ var require_vector = __commonJS({
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
     var State = class {
-      constructor(level2, actors, status, miniGameStatus = null, cookieJar1Cookie = 0, cookieJar2Cookie = 0) {
+      constructor(level2, actors, status = "playing", miniGameStatus = null) {
         this.level = level2;
         this.actors = actors;
         this.status = status;
         this.miniGameStatus = miniGameStatus;
-        this.cookieJar1Cookie = cookieJar1Cookie;
-        this.cookieJar2Cookie = cookieJar2Cookie;
       }
       static start(level2) {
-        return new State(level2, level2.startActors, "playing");
+        return new State(level2, level2.startActors);
       }
       get player() {
+        console.log(this.actors);
         return this.actors.find((a) => a.type == "player");
       }
-      update = function(time, keys, levelConstructor) {
+      get cookieJars() {
+        return this.actors.filter((actor) => actor.type == "cookieJar");
+      }
+      get cookieCount() {
+        return this.cookieJars.map((cj) => cj.cookies).reduce((a, b) => a + b);
+      }
+      update = function(time, keys, levelConstructor2) {
         let actors = this.actors;
         if (this.miniGameStatus != "playing") {
-          actors = this.updateActors(time, keys);
+          actors = this.actors.map((actor) => {
+            if (actor.type == "player")
+              return actor.update(time, this, keys);
+          });
         }
         let newState = new State(
           this.level,
           actors,
           this.status,
-          this.miniGameStatus,
-          this.cookieJar1Cookie,
-          this.cookieJar2Cookie
+          this.miniGameStatus
         );
         let player = newState.player;
         for (let actor of actors) {
           if (actor != player && this.overlap(actor, player)) {
-            newState = actor.collide(newState, levelConstructor);
+            newState = actor.collide(newState, levelConstructor2);
           }
         }
-        if (this.resetMiniGameStatus(newState, player))
-          newState.miniGameStatus = null;
+        newState = this.#resetMiniGameStatus(state, player);
         return newState;
       };
-      resetMiniGameStatus = (state, player) => {
-        const cookieJar1 = this.actors.find((actor) => actor.type == "cookieJar1");
-        const cookieJar2 = this.actors.find((actor) => actor.type == "cookieJar2");
-        return cookieJar1 != void 0 && cookieJar2 != void 0 && !this.overlap(cookieJar1, player) && !this.overlap(cookieJar2, player) && (state.miniGameStatus == "Won" || state.miniGameStatus == "Lost");
+      #resetMiniGameStatus = (state2, player) => {
+        if (state2.cookieJars.every((cj) => !this.#overlap(cj, player)) && (state2.miniGameStatus == "won" || state2.miniGameStatus == "lost")) {
+          state2.miniGameStatus = null;
+        }
+        return state2;
       };
-      updateActors = (time, keys) => {
-        return this.actors.map((actor) => actor.update(time, this, keys));
-      };
-      overlap = function(actor1, actor2) {
+      #overlap = function(actor1, actor2) {
         return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
       };
     };
@@ -84,24 +87,24 @@ var require_levelPlans = __commonJS({
   "lib/levelPlans.js"(exports, module2) {
     var mvpLevelPlan = `
 ..................
-.................2
+.................!
 ..............####
 ..########....#..*
 ..#......#....#...
 ..#......#......#.
 ..#...#..#....M.#.
 ..#...#.........#.
-.@#..1#.......#...`;
+.@#..!#.......#...`;
     var noMonsterLevelPlan = `
 ..................
-.................2
+.................!
 ..............####
 ..########....#...
 ..#......#....#...
 ..#......#........
 ..#...#..#........
 ..#...#...........
-.@#..1#.......#...`;
+.@#..!#.......#...`;
     var winLevelPlan = `
 ..................
 ..................
@@ -133,32 +136,31 @@ var require_cookieMonster = __commonJS({
       static create(pos) {
         return new CookieMonster(pos, new Vec(0, 0));
       }
-      update(time, state, keys) {
-        return new CookieMonster(this.pos, this.speed);
-      }
-      collide(state, levelConstructor) {
-        const newState = new State(
-          state.level,
-          state.actors,
-          state.status,
-          state.miniGameStatus,
-          state.cookieJar1Cookie,
-          state.cookieJar2Cookie
+      collide(state2, Level2) {
+        let newState = new State(
+          state2.level,
+          state2.actors,
+          state2.status,
+          state2.miniGameStatus
         );
-        if (state.cookieJar1Cookie == 0 && state.cookieJar2Cookie == 0) {
-          document.getElementById("text").textContent = "Give me cookies!";
-        } else if (state.cookieJar1Cookie < 1 || state.cookieJar2Cookie < 1) {
-          const cookieCount = state.cookieJar1Cookie + state.cookieJar2Cookie;
-          document.getElementById(
-            "text"
-          ).textContent = `Give me more cookies! You have: ${"\u{1F36A}".repeat(
-            cookieCount
-          )}`;
-        } else {
-          document.getElementById("text").textContent = "Thanks! Now, escape before it's too late!";
-          newState.level = new levelConstructor(levelPlans2[1]);
-        }
+        newState = this.#checkCookies(newState, Level2);
         return newState;
+      }
+      #checkCookies(state2, Level2) {
+        if (state2.cookieJars.every((cj) => cj.cookies < 1)) {
+          this.#speak("Give me cookies!");
+        } else if (state2.cookieJars.some((cj) => cj.cookies < 1)) {
+          this.#speak(
+            `Give me more cookies! You have: ${"\u{1F36A}".repeat(state2.cookieCount)}`
+          );
+        } else {
+          this.#speak("Mmmm delicious! Now, escape before it's too late!");
+          state2.level = new levelConstructor(levelPlans2[1]);
+        }
+        return state2;
+      }
+      #speak(message2) {
+        document.getElementById("text").textContent = message2;
       }
     };
     CookieMonster.prototype.size = new Vec(1, 1);
@@ -183,7 +185,7 @@ var require_player = __commonJS({
       static create(pos) {
         return new Player(pos, new Vec(0, 0));
       }
-      update(time, state, keys) {
+      update(time, state2, keys) {
         let xSpeed = 0;
         if (keys.ArrowLeft)
           xSpeed -= this.xySpeed;
@@ -196,11 +198,11 @@ var require_player = __commonJS({
           ySpeed += this.xySpeed;
         let pos = this.pos;
         let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesElement(movedX, this.size, "wall")) {
+        if (!state2.level.touchesElement(movedX, this.size, "wall")) {
           pos = movedX;
         }
         let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesElement(movedY, this.size, "wall")) {
+        if (!state2.level.touchesElement(movedY, this.size, "wall")) {
           pos = movedY;
         }
         return new Player(pos, new Vec(xSpeed, ySpeed));
@@ -251,8 +253,8 @@ var require_blockJumpGame = __commonJS({
         this.started = true;
         this.block.style.animation = "block 1s infinite linear";
       };
-      displayMessage = (message) => {
-        document.getElementById("text").textContent = message;
+      displayMessage = (message2) => {
+        document.getElementById("text").textContent = message2;
       };
       checkIfDead = () => {
         this.setInterval = setInterval(() => {
@@ -265,7 +267,7 @@ var require_blockJumpGame = __commonJS({
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
             this.end();
             this.displayMessage("You lost!");
-            this.callback("Lost");
+            this.callback("lost");
           }
         }, 10);
       };
@@ -280,7 +282,7 @@ var require_blockJumpGame = __commonJS({
             setTimeout(() => {
               this.end();
               this.displayMessage("You won! \u{1F36A}");
-              this.callback("Won");
+              this.callback("won");
             }, 500);
           }
         }
@@ -293,195 +295,50 @@ var require_blockJumpGame = __commonJS({
   }
 });
 
-// lib/cookieJar1.js
-var require_cookieJar1 = __commonJS({
-  "lib/cookieJar1.js"(exports, module2) {
+// lib/cookieJar.js
+var require_cookieJar = __commonJS({
+  "lib/cookieJar.js"(exports, module2) {
     var Vec = require_vector();
     var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
-    var CookieJar1 = class {
-      constructor(pos, speed, updatedState = null, miniGame = BlockJumpGame) {
+    var CookieJar = class {
+      constructor(pos, speed, MiniGameConsturctor, storedState = null, cookies = 0) {
         this.pos = pos;
         this.speed = speed;
-        this.updatedState = updatedState;
-        this.miniGame = miniGame;
+        this.MiniGameConsturctor = MiniGameConsturctor;
+        this.storedState = storedState;
+        this.cookies = cookies;
       }
       get type() {
-        return "cookieJar1";
+        return "cookieJar";
       }
-      static create(pos) {
-        return new CookieJar1(pos, new Vec(0, 0));
+      static create(pos, MiniGameConsturctor) {
+        return new CookieJar(pos, new Vec(0, 0), MiniGameConsturctor);
       }
-      update(time, state, keys) {
-        return new CookieJar1(
-          this.pos,
-          this.speed,
-          this.updatedState,
-          this.miniGame
-        );
-      }
-      collide(state) {
-        if (state.miniGameStatus == null) {
-          this.updatedState = new State(
-            state.level,
-            state.actors,
-            state.status,
-            "playing",
-            state.cookieJar1Cookie,
-            state.cookieJar2Cookie
+      collide(state2) {
+        if (state2.miniGameStatus == null) {
+          this.storedState = new State(
+            state2.level,
+            state2.actors,
+            state2.status,
+            "playing"
           );
-          const miniGame = new this.miniGame();
-          const callbackFunction = (result) => {
-            if (result === "Lost") {
-              let newState = new State(
-                state.level,
-                state.actors,
-                state.status,
-                "Lost",
-                state.cookieJar1Cookie,
-                state.cookieJar2Cookie
-              );
-              this.updatedState = newState;
-            } else if (result === "Won") {
-              let newState = new State(
-                state.level,
-                state.actors,
-                state.status,
-                "Won",
-                state.cookieJar1Cookie,
-                state.cookieJar2Cookie
-              );
-              newState.cookieJar1Cookie += 1;
-              this.updatedState = newState;
-            }
-          };
-          miniGame.run(callbackFunction);
+          const miniGame = new this.MiniGameConsturctor();
+          miniGame.run(this.miniGameCallback);
         }
-        return this.updatedState;
+        return this.storedState;
       }
-    };
-    CookieJar1.prototype.size = new Vec(1, 1);
-    module2.exports = CookieJar1;
-  }
-});
-
-// lib/matrixGame.js
-var require_matrixGame = __commonJS({
-  "lib/matrixGame.js"(exports, module2) {
-    var MatrixGame = class {
-      constructor() {
-        this.callback;
-      }
-      run = (callback) => {
-        this.callback = callback;
-        this.displayMessage(
-          "Make your choice. Press [R] for the red pill, [B] for the blue pill."
-        );
-        this.imageOne = this.addImage("img/matrix.png", "matrix");
-        this.imageTwo = this.addImage("img/pills.png", "pills");
-        window.addEventListener("keydown", this.keyHandlerFunction);
-      };
-      end = () => {
-        this.imageOne.remove();
-        this.imageTwo.remove();
-        window.removeEventListener("keydown", this.keyHandlerFunction);
-      };
-      keyHandlerFunction = (event) => {
-        if (event.key == "r") {
-          this.end();
-          this.displayMessage("You won! \u{1F36A}");
-          this.callback("Won");
+      miniGameCallback = (result) => {
+        if (result === "lost") {
+          this.storedState.miniGameStatus = "lost";
+        } else if (result === "won") {
+          this.cookies += 1;
+          this.storedState.miniGameStatus = "won";
         }
-        if (event.key == "b") {
-          this.end();
-          this.displayMessage("You lost!");
-          this.callback("Lost");
-        }
-      };
-      displayMessage = (message) => {
-        document.getElementById("text").textContent = message;
-      };
-      addImage = (url, id) => {
-        const image = document.createElement("img");
-        image.src = url;
-        image.id = id;
-        document.body.appendChild(image);
-        return image;
       };
     };
-    module2.exports = MatrixGame;
-  }
-});
-
-// lib/cookieJar2.js
-var require_cookieJar2 = __commonJS({
-  "lib/cookieJar2.js"(exports, module2) {
-    var Vec = require_vector();
-    var MatrixGame = require_matrixGame();
-    var State = require_state();
-    var CookieJar2 = class {
-      constructor(pos, speed, updatedState = null, miniGame = MatrixGame) {
-        this.pos = pos;
-        this.speed = speed;
-        this.updatedState = updatedState;
-        this.miniGame = miniGame;
-      }
-      get type() {
-        return "cookieJar2";
-      }
-      static create(pos) {
-        return new CookieJar2(pos, new Vec(0, 0));
-      }
-      update(time, state, keys) {
-        return new CookieJar2(
-          this.pos,
-          this.speed,
-          this.updatedState,
-          this.miniGame
-        );
-      }
-      collide(state) {
-        if (state.miniGameStatus == null) {
-          this.updatedState = new State(
-            state.level,
-            state.actors,
-            state.status,
-            "playing",
-            state.cookieJar1Cookie,
-            state.cookieJar2Cookie
-          );
-          const miniGame = new this.miniGame();
-          const callbackFunction = (result) => {
-            if (result === "Lost") {
-              let newState = new State(
-                state.level,
-                state.actors,
-                state.status,
-                "Lost",
-                state.cookieJar1Cookie,
-                state.cookieJar2Cookie
-              );
-              this.updatedState = newState;
-            } else if (result === "Won") {
-              let newState = new State(
-                state.level,
-                state.actors,
-                state.status,
-                "Won",
-                state.cookieJar1Cookie,
-                state.cookieJar2Cookie
-              );
-              newState.cookieJar2Cookie += 1;
-              this.updatedState = newState;
-            }
-          };
-          miniGame.run(callbackFunction, this);
-        }
-        return this.updatedState;
-      }
-    };
-    CookieJar2.prototype.size = new Vec(1, 1);
-    module2.exports = CookieJar2;
+    CookieJar.prototype.size = new Vec(1, 1);
+    module2.exports = CookieJar;
   }
 });
 
@@ -502,23 +359,21 @@ var require_exit = __commonJS({
       static create(pos) {
         return new Exit(pos, new Vec(0, 0));
       }
-      update(time, state, keys) {
-        return new Exit(this.pos, this.speed);
-      }
-      collide(state, levelConstructor) {
+      collide(state2, levelConstructor2) {
         const newState = new State(
-          state.level,
-          state.actors,
-          state.status,
-          state.miniGameStatus,
-          state.cookieJar1Cookie,
-          state.cookieJar2Cookie
+          state2.level,
+          state2.actors,
+          state2.status,
+          state2.miniGameStatus
         );
-        document.getElementById("text").textContent = "You escaped!";
-        newState.level = new levelConstructor(levelPlans2[2]);
+        this.#speak(message);
+        newState.level = new levelConstructor2(levelPlans2[2]);
         newState.actors = newState.level.startActors;
-        newState.status = "Won";
+        newState.status = "won";
         return newState;
+      }
+      #speak(message2) {
+        document.getElementById("text").textContent = message2;
       }
     };
     Exit.prototype.size = new Vec(1, 1);
@@ -531,8 +386,7 @@ var require_levelCharTypes = __commonJS({
   "lib/levelCharTypes.js"(exports, module2) {
     var Player = require_player();
     var CookieMonster = require_cookieMonster();
-    var CookieJar1 = require_cookieJar1();
-    var CookieJar2 = require_cookieJar2();
+    var CookieJar = require_cookieJar();
     var Exit = require_exit();
     var levelCharTypes = {
       ".": "empty",
@@ -540,8 +394,7 @@ var require_levelCharTypes = __commonJS({
       "M": CookieMonster,
       "@": Player,
       "*": Exit,
-      "1": CookieJar1,
-      "2": CookieJar2
+      "!": CookieJar
     };
     module2.exports = levelCharTypes;
   }
@@ -553,21 +406,35 @@ var require_level = __commonJS({
     var Vec = require_vector();
     var levelCharTypes = require_levelCharTypes();
     var Level2 = class {
-      constructor(plan) {
-        let rows = plan.trim().split("\n").map((l) => [...l]);
-        this.height = rows.length;
-        this.width = rows[0].length;
+      constructor(plan, MiniGameLocator2) {
+        this.rows = this.#makeMatrix(plan);
+        this.height = this.rows.length;
+        this.width = this.rows[0].length;
         this.startActors = [];
-        this.rows = rows.map((row, y) => {
+        this.MiniGameLocator = new MiniGameLocator2();
+        this.#mapActors();
+        console.log(this.startActors);
+      }
+      #makeMatrix = (levelPlan) => {
+        return levelPlan.trim().split("\n").map((l) => [...l]);
+      };
+      #mapActors = () => {
+        this.rows = this.rows.map((row, y) => {
           return row.map((ch, x) => {
             let type = levelCharTypes[ch];
             if (typeof type == "string")
               return type;
-            this.startActors.push(type.create(new Vec(x, y)));
+            if (ch == "!") {
+              this.startActors.push(
+                type.create(new Vec(x, y), this.MiniGameLocator.getGame())
+              );
+            } else {
+              this.startActors.push(type.create(new Vec(x, y)));
+            }
             return "empty";
           });
         });
-      }
+      };
       touchesElement = function(pos, size, type) {
         let xStart = Math.floor(pos.x);
         let xEnd = Math.ceil(pos.x + size.x);
@@ -623,14 +490,14 @@ var require_canvasDisplay = __commonJS({
       clear() {
         this.canvas.remove();
       }
-      syncState(state) {
-        if (state.miniGameStatus == "playing") {
+      syncState(state2) {
+        if (state2.miniGameStatus == "playing") {
           this.canvas.style.display = "none";
         } else {
           this.canvas.style.display = "inline";
-          this.clearDisplay(state.status);
-          this.drawBackground(state.level);
-          this.drawActors(state.actors);
+          this.clearDisplay(state2.status);
+          this.drawBackground(state2.level);
+          this.drawActors(state2.actors);
         }
       }
       clearDisplay = function(status) {
@@ -691,6 +558,82 @@ var require_canvasDisplay = __commonJS({
       };
     };
     module2.exports = CanvasDisplay2;
+  }
+});
+
+// lib/matrixGame.js
+var require_matrixGame = __commonJS({
+  "lib/matrixGame.js"(exports, module2) {
+    var MatrixGame = class {
+      constructor() {
+        this.callback;
+      }
+      run = (callback) => {
+        this.callback = callback;
+        this.displayMessage(
+          "Make your choice. Press [R] for the red pill, [B] for the blue pill."
+        );
+        this.imageOne = this.addImage("img/matrix.png", "matrix");
+        this.imageTwo = this.addImage("img/pills.png", "pills");
+        window.addEventListener("keydown", this.keyHandlerFunction);
+      };
+      end = () => {
+        this.imageOne.remove();
+        this.imageTwo.remove();
+        window.removeEventListener("keydown", this.keyHandlerFunction);
+      };
+      keyHandlerFunction = (event) => {
+        if (event.key == "r") {
+          this.end();
+          this.displayMessage("You won! \u{1F36A}");
+          this.callback("won");
+        }
+        if (event.key == "b") {
+          this.end();
+          this.displayMessage("You lost!");
+          this.callback("lost");
+        }
+      };
+      displayMessage = (message2) => {
+        document.getElementById("text").textContent = message2;
+      };
+      addImage = (url, id) => {
+        const image = document.createElement("img");
+        image.src = url;
+        image.id = id;
+        document.body.appendChild(image);
+        return image;
+      };
+    };
+    module2.exports = MatrixGame;
+  }
+});
+
+// lib/miniGameLocator.js
+var require_miniGameLocator = __commonJS({
+  "lib/miniGameLocator.js"(exports, module2) {
+    var BlockJumpGame = require_blockJumpGame();
+    var MatrixGame = require_matrixGame();
+    var MiniGameLocator2 = class {
+      constructor() {
+        this.games = [BlockJumpGame, MatrixGame];
+        this.assigned = [];
+      }
+      getGame() {
+        const index = this.#getRandomIndex();
+        const game2 = this.games[index];
+        this.assigned.push(game2);
+        this.games.splice(index, 1);
+        return game2;
+      }
+      #getRandomIndex() {
+        if (this.games.length < 1) {
+          throw Error("No more mini-games left to assign!");
+        }
+        return Math.floor(Math.random() * this.games.length);
+      }
+    };
+    module2.exports = MiniGameLocator2;
   }
 });
 
@@ -755,7 +698,8 @@ var require_game = __commonJS({
 var Level = require_level();
 var levelPlans = require_levelPlans();
 var CanvasDisplay = require_canvasDisplay();
+var MiniGameLocator = require_miniGameLocator();
 var Game = require_game();
-var level = new Level(levelPlans[0]);
+var level = new Level(levelPlans[0], MiniGameLocator);
 var game = new Game(level, CanvasDisplay, Level);
 game.run();
