@@ -47,34 +47,39 @@ var require_state = __commonJS({
         return this.cookieJars.map((cj) => cj.cookies).reduce((a, b) => a + b);
       }
       update = function(time, keys, levelConstructor2) {
-        let actors = this.actors;
-        if (this.miniGameStatus != "playing") {
-          actors = this.actors.map((actor) => {
-            if (actor.type == "player")
-              return actor.update(time, this, keys);
-            return actor;
-          });
-        }
         let newState = new State(
           this.level,
-          actors,
+          this.actors,
           this.status,
           this.miniGameStatus
         );
-        let player = newState.player;
-        for (let actor of actors) {
-          if (actor != player && this.overlap(actor, player)) {
-            newState = actor.collide(newState, levelConstructor2);
-          }
-        }
-        newState = this.#resetMiniGameStatus(state, player);
+        newState = this.#updatePlayer(newState, time, keys);
+        newState = this.#resetMiniGameStatus(newState);
+        newState = this.#checkCollisions(newState, levelConstructor2);
         return newState;
       };
-      #resetMiniGameStatus = (state2, player) => {
-        if (state2.cookieJars.every((cj) => !this.#overlap(cj, player)) && (state2.miniGameStatus == "won" || state2.miniGameStatus == "lost")) {
-          state2.miniGameStatus = null;
+      #checkCollisions(state, levelConstructor2) {
+        let player = state.player;
+        for (let actor of state.actors) {
+          if (actor != player && this.#overlap(actor, player)) {
+            return actor.collide(state, levelConstructor2);
+          }
         }
-        return state2;
+        return state;
+      }
+      #updatePlayer(state, time, keys) {
+        if (state.miniGameStatus != "playing") {
+          state.actors = state.actors.map((actor) => {
+            return actor.type == "player" ? actor.update(time, state, keys) : actor;
+          });
+        }
+        return state;
+      }
+      #resetMiniGameStatus = (state) => {
+        if (state.cookieJars.every((cj) => !this.#overlap(cj, state.player)) && (state.miniGameStatus == "won" || state.miniGameStatus == "lost")) {
+          state.miniGameStatus = null;
+        }
+        return state;
       };
       #overlap = function(actor1, actor2) {
         return actor1.pos.x + actor1.size.x > actor2.pos.x && actor1.pos.x < actor2.pos.x + actor2.size.x && actor1.pos.y + actor1.size.y > actor2.pos.y && actor1.pos.y < actor2.pos.y + actor2.size.y;
@@ -138,28 +143,28 @@ var require_cookieMonster = __commonJS({
       static create(pos) {
         return new CookieMonster(pos, new Vec(0, 0));
       }
-      collide(state2, Level2) {
+      collide(state, Level2) {
         let newState = new State(
-          state2.level,
-          state2.actors,
-          state2.status,
-          state2.miniGameStatus
+          state.level,
+          state.actors,
+          state.status,
+          state.miniGameStatus
         );
         newState = this.#checkCookies(newState, Level2);
         return newState;
       }
-      #checkCookies(state2, Level2) {
-        if (state2.cookieJars.every((cj) => cj.cookies < 1)) {
+      #checkCookies(state, Level2) {
+        if (state.cookieJars.every((cj) => cj.cookies < 1)) {
           this.#speak("Give me cookies!");
-        } else if (state2.cookieJars.some((cj) => cj.cookies < 1)) {
+        } else if (state.cookieJars.some((cj) => cj.cookies < 1)) {
           this.#speak(
-            `Give me more cookies! You have: ${"\u{1F36A}".repeat(state2.cookieCount)}`
+            `Give me more cookies! You have: ${"\u{1F36A}".repeat(state.cookieCount)}`
           );
         } else {
           this.#speak("Mmmm delicious! Now, escape before it's too late!");
-          state2.level = new levelConstructor(levelPlans2[1]);
+          state.level = new levelConstructor(levelPlans2[1]);
         }
-        return state2;
+        return state;
       }
       #speak(message2) {
         document.getElementById("text").textContent = message2;
@@ -187,7 +192,7 @@ var require_player = __commonJS({
       static create(pos) {
         return new Player(pos, new Vec(0, 0));
       }
-      update(time, state2, keys) {
+      update(time, state, keys) {
         let xSpeed = 0;
         if (keys.ArrowLeft)
           xSpeed -= this.xySpeed;
@@ -200,11 +205,11 @@ var require_player = __commonJS({
           ySpeed += this.xySpeed;
         let pos = this.pos;
         let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state2.level.touchesElement(movedX, this.size, "wall")) {
+        if (!state.level.touchesElement(movedX, this.size, "wall")) {
           pos = movedX;
         }
         let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state2.level.touchesElement(movedY, this.size, "wall")) {
+        if (!state.level.touchesElement(movedY, this.size, "wall")) {
           pos = movedY;
         }
         return new Player(pos, new Vec(xSpeed, ySpeed));
@@ -317,12 +322,12 @@ var require_cookieJar = __commonJS({
       static create(pos, MiniGameConsturctor) {
         return new CookieJar(pos, new Vec(0, 0), MiniGameConsturctor);
       }
-      collide(state2) {
-        if (state2.miniGameStatus == null) {
+      collide(state) {
+        if (state.miniGameStatus == null) {
           this.storedState = new State(
-            state2.level,
-            state2.actors,
-            state2.status,
+            state.level,
+            state.actors,
+            state.status,
             "playing"
           );
           const miniGame = new this.MiniGameConsturctor();
@@ -361,12 +366,12 @@ var require_exit = __commonJS({
       static create(pos) {
         return new Exit(pos, new Vec(0, 0));
       }
-      collide(state2, levelConstructor2) {
+      collide(state, levelConstructor2) {
         const newState = new State(
-          state2.level,
-          state2.actors,
-          state2.status,
-          state2.miniGameStatus
+          state.level,
+          state.actors,
+          state.status,
+          state.miniGameStatus
         );
         this.#speak(message);
         newState.level = new levelConstructor2(levelPlans2[2]);
@@ -492,14 +497,14 @@ var require_canvasDisplay = __commonJS({
       clear() {
         this.canvas.remove();
       }
-      syncState(state2) {
-        if (state2.miniGameStatus == "playing") {
+      syncState(state) {
+        if (state.miniGameStatus == "playing") {
           this.canvas.style.display = "none";
         } else {
           this.canvas.style.display = "inline";
-          this.clearDisplay(state2.status);
-          this.drawBackground(state2.level);
-          this.drawActors(state2.actors);
+          this.clearDisplay(state.status);
+          this.drawBackground(state.level);
+          this.drawActors(state.actors);
         }
       }
       clearDisplay = function(status) {
