@@ -29,7 +29,6 @@ var require_state = __commonJS({
       constructor(level2, actors, status = "playing", miniGameStatus = null) {
         this.level = level2;
         this.actors = actors;
-        console.log(this.actors);
         this.status = status;
         this.miniGameStatus = miniGameStatus;
       }
@@ -37,7 +36,6 @@ var require_state = __commonJS({
         return new State(level2, level2.startActors);
       }
       get player() {
-        console.log(this.actors);
         return this.actors.find((a) => a.type == "player");
       }
       get cookieJars() {
@@ -162,7 +160,7 @@ var require_cookieMonster = __commonJS({
           );
         } else {
           this.#speak("Mmmm delicious! Now, escape before it's too late!");
-          state.level = new Level2(levelPlans2[1]);
+          state.level = new Level2(levelPlans2[1], MiniGameLocator);
         }
         return state;
       }
@@ -413,14 +411,13 @@ var require_level = __commonJS({
     var Vec = require_vector();
     var levelCharTypes = require_levelCharTypes();
     var Level2 = class {
-      constructor(plan, MiniGameLocator2) {
+      constructor(plan, MiniGameLocator3) {
         this.rows = this.#makeMatrix(plan);
         this.height = this.rows.length;
         this.width = this.rows[0].length;
         this.startActors = [];
-        this.MiniGameLocator = new MiniGameLocator2();
+        this.MiniGameLocator = new MiniGameLocator3();
         this.#mapActors();
-        console.log(this.startActors);
       }
       #makeMatrix = (levelPlan) => {
         return levelPlan.trim().split("\n").map((l) => [...l]);
@@ -619,7 +616,7 @@ var require_miniGameLocator = __commonJS({
   "lib/miniGameLocator.js"(exports, module2) {
     var BlockJumpGame = require_blockJumpGame();
     var MatrixGame = require_matrixGame();
-    var MiniGameLocator2 = class {
+    var MiniGameLocator3 = class {
       constructor() {
         this.games = [BlockJumpGame, MatrixGame];
         this.assigned = [];
@@ -638,7 +635,7 @@ var require_miniGameLocator = __commonJS({
         return Math.floor(Math.random() * this.games.length);
       }
     };
-    module2.exports = MiniGameLocator2;
+    module2.exports = MiniGameLocator3;
   }
 });
 
@@ -703,8 +700,8 @@ var require_game = __commonJS({
 var Level = require_level();
 var levelPlans = require_levelPlans();
 var CanvasDisplay = require_canvasDisplay();
-var MiniGameLocator = require_miniGameLocator();
+var MiniGameLocator2 = require_miniGameLocator();
 var Game = require_game();
-var level = new Level(levelPlans[0], MiniGameLocator);
+var level = new Level(levelPlans[0], MiniGameLocator2);
 var game = new Game(level, CanvasDisplay, Level);
 game.run();
