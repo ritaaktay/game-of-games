@@ -123,7 +123,7 @@ var require_levelPlans = __commonJS({
     var levelPlans2 = {
       "start": start,
       "pass": pass,
-      "espace": escape
+      "escape": escape
     };
     module2.exports = levelPlans2;
   }
@@ -169,8 +169,8 @@ var require_cookieMonster = __commonJS({
         }
         return state;
       }
-      #speak(message2) {
-        document.getElementById("text").textContent = message2;
+      #speak(message) {
+        document.getElementById("text").textContent = message;
       }
     };
     CookieMonster.prototype.size = new Vec(1, 1);
@@ -263,8 +263,8 @@ var require_blockJumpGame = __commonJS({
         this.started = true;
         this.block.style.animation = "block 1s infinite linear";
       };
-      displayMessage = (message2) => {
-        document.getElementById("text").textContent = message2;
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
       };
       checkIfDead = () => {
         this.setInterval = setInterval(() => {
@@ -376,14 +376,14 @@ var require_exit = __commonJS({
           state.status,
           state.miniGameStatus
         );
-        this.#speak(message);
+        this.#speak("");
         newState.level = newState.level.switch("escape");
         newState.actors = newState.level.startActors;
         newState.status = "won";
         return newState;
       }
-      #speak(message2) {
-        document.getElementById("text").textContent = message2;
+      #speak(message) {
+        document.getElementById("text").textContent = message;
       }
     };
     Exit.prototype.size = new Vec(1, 1);
@@ -427,8 +427,12 @@ var require_level = __commonJS({
       }
       switch = (stage) => {
         this.rows = this.#makeMatrix(this.plans[stage]);
+        this.#resetActors();
         this.#mapActors();
         return this;
+      };
+      #resetActors = () => {
+        this.startActors = [];
       };
       #makeMatrix = (levelPlan) => {
         return levelPlan.trim().split("\n").map((l) => [...l]);
@@ -607,8 +611,8 @@ var require_matrixGame = __commonJS({
           this.callback("lost");
         }
       };
-      displayMessage = (message2) => {
-        document.getElementById("text").textContent = message2;
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
       };
       addImage = (url, id) => {
         const image = document.createElement("img");
@@ -637,9 +641,6 @@ var require_miniGameLocator = __commonJS({
         const game2 = this.games[index];
         this.assigned.push(game2);
         this.games.splice(index, 1);
-        console.log("ASSIGNED A GAME");
-        console.log(this.games);
-        console.log(this.assigned);
         return game2;
       }
       #getRandomIndex() {
