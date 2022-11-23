@@ -4,7 +4,7 @@ const CanvasDisplay = require("./lib/canvasDisplay");
 const MiniGameLocator = require("./lib/miniGameLocator");
 const Game = require("./lib/game");
 
-const level = new Level(levelPlans[0], MiniGameLocator);
-const game = new Game(level, CanvasDisplay, Level);
+const level = new Level(levelPlans, MiniGameLocator);
+const game = new Game(level, CanvasDisplay);
 
 game.run();
