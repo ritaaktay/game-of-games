@@ -223,100 +223,10 @@ var require_player = __commonJS({
   }
 });
 
-// lib/blockJumpGame.js
-var require_blockJumpGame = __commonJS({
-  "lib/blockJumpGame.js"(exports, module2) {
-    var BlockJumpGame = class {
-      constructor(cookieJarId) {
-        this.character = document.getElementById("character");
-        this.block = document.getElementById("block");
-        this.jumpCounter = 0;
-        this.callback;
-        this.started = false;
-      }
-      run = (callback) => {
-        window.addEventListener("keydown", this.keysEventListener);
-        this.checkIfDead();
-        this.displayMessage(
-          "Jump over the meteorites! Press [Enter] to start and [Space Bar] to jump"
-        );
-        this.callback = callback;
-        document.getElementById("block_jump_game_container").style.display = "inline";
-      };
-      end = () => {
-        document.getElementById("block_jump_game_container").style.display = "none";
-        this.jumpCounter = 0;
-        clearInterval(this.setInterval);
-        window.removeEventListener("keydown", this.keysEventListener);
-        this.block.style.animation = "none";
-      };
-      keysEventListener = (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          this.start();
-        }
-        if (event.key === " ") {
-          this.jump();
-        }
-      };
-      start = () => {
-        this.started = true;
-        this.block.style.animation = "block 1s infinite linear";
-      };
-      displayMessage = (message) => {
-        document.getElementById("text").textContent = message;
-      };
-      checkIfDead = () => {
-        this.setInterval = setInterval(() => {
-          var characterTop = parseInt(
-            window.getComputedStyle(this.character).getPropertyValue("top")
-          );
-          var blockLeft = parseInt(
-            window.getComputedStyle(this.block).getPropertyValue("left")
-          );
-          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
-            this.#lose();
-          }
-        }, 10);
-      };
-      jump = () => {
-        if (this.character.classList != "animate") {
-          this.character.classList.add("animate");
-          if (this.started)
-            this.#increment();
-          if (this.jumpCounter > 4)
-            this.#win();
-        }
-        setTimeout(function() {
-          this.character.classList.remove("animate");
-        }, 500);
-      };
-      #increment = () => {
-        this.jumpCounter += 1;
-        this.displayMessage(`Almost there... ${this.jumpCounter}`);
-      };
-      #win = () => {
-        setTimeout(() => {
-          this.end();
-          this.displayMessage("You won! \u{1F36A}");
-          this.callback("won");
-        }, 500);
-      };
-      #lose = () => {
-        this.end();
-        this.displayMessage("You lost!");
-        this.callback("lost");
-      };
-    };
-    module2.exports = BlockJumpGame;
-  }
-});
-
 // lib/cookieJar.js
 var require_cookieJar = __commonJS({
   "lib/cookieJar.js"(exports, module2) {
     var Vec = require_vector();
-    var BlockJumpGame = require_blockJumpGame();
     var State = require_state();
     var CookieJar = class {
       constructor(pos, speed, MiniGameConsturctor, storedState = null, cookies = 0) {
@@ -500,26 +410,21 @@ var require_canvasDisplay = __commonJS({
         this.parent.appendChild(this.canvas);
         this.cx = this.canvas.getContext("2d");
       }
-      clear() {
-        this.canvas.remove();
-      }
       syncState(state) {
         if (state.miniGameStatus == "playing") {
           this.canvas.style.display = "none";
         } else {
           this.canvas.style.display = "inline";
-          this.clearDisplay(state.status);
+          this.resetDisplay(state.status);
           this.drawBackground(state.level);
           this.drawActors(state.actors);
         }
       }
-      clearDisplay = function(status) {
-        let pattern;
-        if (status == "playing") {
-          pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
-        } else if (status == "won") {
-          pattern = this.cx.createPattern(this.winBackgroundSprite, "repeat");
-        }
+      resetDisplay = function(status) {
+        let pattern = this.cx.createPattern(
+          this.backgroundSprites[status],
+          "repeat"
+        );
         this.cx.fillStyle = pattern;
         this.cx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       };
@@ -527,17 +432,15 @@ var require_canvasDisplay = __commonJS({
         for (let y = 0; y < level2.height; y++) {
           for (let x = 0; x < level2.width; x++) {
             let tile = level2.rows[y][x];
-            if (tile == "empty") {
+            if (tile == "empty")
               continue;
-            } else if (tile == "wall") {
-              this.cx.drawImage(
-                this.wallSprite,
-                x * this.scale,
-                y * this.scale,
-                this.scale,
-                this.scale
-              );
-            }
+            this.cx.drawImage(
+              this.backgroundSprites[tile],
+              x * this.scale,
+              y * this.scale,
+              this.scale,
+              this.scale
+            );
           }
         }
       };
@@ -547,44 +450,127 @@ var require_canvasDisplay = __commonJS({
           let height = actor.size.y * this.scale;
           let x = actor.pos.x * this.scale;
           let y = actor.pos.y * this.scale;
-          if (actor.type == "player") {
-            this.drawPlayer(actor, x, y, width, height);
-          } else if (actor.type == "cookieJar") {
-            this.cx.drawImage(this.cookieJarSprite, x, y, this.scale, this.scale);
-          } else if (actor.type == "exit") {
-            this.cx.drawImage(this.exitSprite, x, y, this.scale, this.scale);
-          } else if (actor.type == "cookieMonster") {
-            this.cx.drawImage(
-              this.cookieMonsterSprite,
-              x,
-              y,
-              this.scale,
-              this.scale
-            );
-          }
+          this.cx.drawImage(this.actorSprites[actor.type], x, y, width, height);
         }
       };
-      drawPlayer = function(player, x, y, width, height) {
-        this.cx.drawImage(this.playerSprites, x, y, width, height);
-      };
       #setSprites = () => {
-        this.cookieJarSprite = document.createElement("img");
-        this.cookieJarSprite.src = "../img/cookieJar.png";
-        this.playerSprites = document.createElement("img");
-        this.playerSprites.src = "../img/player.png";
-        this.wallSprite = document.createElement("img");
-        this.wallSprite.src = "img/wall.png";
-        this.cookieMonsterSprite = document.createElement("img");
-        this.cookieMonsterSprite.src = "img/cookieMonster2.png";
-        this.backgroundSprite = document.createElement("img");
-        this.backgroundSprite.src = "img/background-tile.jpeg";
-        this.exitSprite = document.createElement("img");
-        this.exitSprite.src = "img/diamond.png";
-        this.winBackgroundSprite = document.createElement("img");
-        this.winBackgroundSprite.src = "img/clouds.jpeg";
+        const cookieJarSprite = document.createElement("img");
+        cookieJarSprite.src = "../img/cookieJar.png";
+        const playerSprite = document.createElement("img");
+        playerSprite.src = "../img/player.png";
+        const cookieMonsterSprite = document.createElement("img");
+        cookieMonsterSprite.src = "img/cookieMonster2.png";
+        const exitSprite = document.createElement("img");
+        exitSprite.src = "img/diamond.png";
+        const backgroundSprite = document.createElement("img");
+        backgroundSprite.src = "img/background-tile.jpeg";
+        const wonBackgroundSprite = document.createElement("img");
+        wonBackgroundSprite.src = "img/clouds.jpeg";
+        const wallSprite = document.createElement("img");
+        wallSprite.src = "img/wall.png";
+        this.backgroundSprites = {
+          "playing": backgroundSprite,
+          "won": wonBackgroundSprite,
+          "wall": wallSprite
+        };
+        this.actorSprites = {
+          "cookieMonster": cookieMonsterSprite,
+          "player": playerSprite,
+          "exit": exitSprite,
+          "cookieJar": cookieJarSprite
+        };
       };
     };
     module2.exports = CanvasDisplay2;
+  }
+});
+
+// lib/jumpGame.js
+var require_jumpGame = __commonJS({
+  "lib/jumpGame.js"(exports, module2) {
+    var JumpGame = class {
+      constructor(cookieJarId) {
+        this.character = document.getElementById("character");
+        this.block = document.getElementById("block");
+        this.jumpCounter = 0;
+        this.callback;
+        this.started = false;
+      }
+      run = (callback) => {
+        window.addEventListener("keydown", this.keysEventListener);
+        this.checkIfDead();
+        this.displayMessage(
+          "Jump over the meteorites! Press [Enter] to start and [Space Bar] to jump"
+        );
+        this.callback = callback;
+        document.getElementById("block_jump_game_container").style.display = "inline";
+      };
+      end = () => {
+        document.getElementById("block_jump_game_container").style.display = "none";
+        this.jumpCounter = 0;
+        clearInterval(this.setInterval);
+        window.removeEventListener("keydown", this.keysEventListener);
+        this.block.style.animation = "none";
+      };
+      keysEventListener = (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          this.start();
+        }
+        if (event.key === " ") {
+          this.jump();
+        }
+      };
+      start = () => {
+        this.started = true;
+        this.block.style.animation = "block 1s infinite linear";
+      };
+      displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
+      };
+      checkIfDead = () => {
+        this.setInterval = setInterval(() => {
+          var characterTop = parseInt(
+            window.getComputedStyle(this.character).getPropertyValue("top")
+          );
+          var blockLeft = parseInt(
+            window.getComputedStyle(this.block).getPropertyValue("left")
+          );
+          if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
+            this.#lose();
+          }
+        }, 10);
+      };
+      jump = () => {
+        if (this.character.classList != "animate") {
+          this.character.classList.add("animate");
+          if (this.started)
+            this.#increment();
+          if (this.jumpCounter > 4)
+            this.#win();
+        }
+        setTimeout(function() {
+          this.character.classList.remove("animate");
+        }, 500);
+      };
+      #increment = () => {
+        this.jumpCounter += 1;
+        this.displayMessage(`Almost there... ${this.jumpCounter}`);
+      };
+      #win = () => {
+        setTimeout(() => {
+          this.end();
+          this.displayMessage("You won! \u{1F36A}");
+          this.callback("won");
+        }, 500);
+      };
+      #lose = () => {
+        this.end();
+        this.displayMessage("You lost!");
+        this.callback("lost");
+      };
+    };
+    module2.exports = JumpGame;
   }
 });
 
@@ -639,11 +625,11 @@ var require_matrixGame = __commonJS({
 // lib/miniGameLocator.js
 var require_miniGameLocator = __commonJS({
   "lib/miniGameLocator.js"(exports, module2) {
-    var BlockJumpGame = require_blockJumpGame();
+    var JumpGame = require_jumpGame();
     var MatrixGame = require_matrixGame();
     var MiniGameLocator2 = class {
       constructor() {
-        this.games = [BlockJumpGame, MatrixGame];
+        this.games = [JumpGame, MatrixGame];
         this.assigned = [];
       }
       getGame() {
