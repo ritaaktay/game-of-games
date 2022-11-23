@@ -275,30 +275,37 @@ var require_blockJumpGame = __commonJS({
             window.getComputedStyle(this.block).getPropertyValue("left")
           );
           if (blockLeft < 20 && blockLeft > 0 && characterTop >= 290) {
-            this.end();
-            this.displayMessage("You lost!");
-            this.callback("lost");
+            this.#lose();
           }
         }, 10);
       };
       jump = () => {
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
-          if (this.started) {
-            this.jumpCounter += 1;
-            this.displayMessage(`Almost there... ${this.jumpCounter}`);
-          }
-          if (this.jumpCounter > 4) {
-            setTimeout(() => {
-              this.end();
-              this.displayMessage("You won! \u{1F36A}");
-              this.callback("won");
-            }, 500);
-          }
+          if (this.started)
+            this.#increment();
+          if (this.jumpCounter > 4)
+            this.#win();
         }
         setTimeout(function() {
           this.character.classList.remove("animate");
         }, 500);
+      };
+      #increment = () => {
+        this.jumpCounter += 1;
+        this.displayMessage(`Almost there... ${this.jumpCounter}`);
+      };
+      #win = () => {
+        setTimeout(() => {
+          this.end();
+          this.displayMessage("You won! \u{1F36A}");
+          this.callback("won");
+        }, 500);
+      };
+      #lose = () => {
+        this.end();
+        this.displayMessage("You lost!");
+        this.callback("lost");
       };
     };
     module2.exports = BlockJumpGame;
