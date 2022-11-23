@@ -482,20 +482,7 @@ var require_canvasDisplay = __commonJS({
         this.scale = 40;
         this.parent = parent;
         this.addCanvas(level2);
-        this.cookieJarSprite = document.createElement("img");
-        this.cookieJarSprite.src = "../img/cookieJar.png";
-        this.playerSprites = document.createElement("img");
-        this.playerSprites.src = "../img/player.png";
-        this.wallSprite = document.createElement("img");
-        this.wallSprite.src = "img/wall.png";
-        this.cookieMonsterSprite = document.createElement("img");
-        this.cookieMonsterSprite.src = "img/cookieMonster2.png";
-        this.backgroundSprite = document.createElement("img");
-        this.backgroundSprite.src = "img/background-tile.jpeg";
-        this.exitSprite = document.createElement("img");
-        this.exitSprite.src = "img/diamond.png";
-        this.winBackgroundSprite = document.createElement("img");
-        this.winBackgroundSprite.src = "img/clouds.jpeg";
+        this.#setSprites();
         this.drawBackground(level2);
       }
       addCanvas(level2) {
@@ -523,7 +510,7 @@ var require_canvasDisplay = __commonJS({
         let pattern;
         if (status == "playing") {
           pattern = this.cx.createPattern(this.backgroundSprite, "repeat");
-        } else if (status == "Won") {
+        } else if (status == "won") {
           pattern = this.cx.createPattern(this.winBackgroundSprite, "repeat");
         }
         this.cx.fillStyle = pattern;
@@ -572,6 +559,22 @@ var require_canvasDisplay = __commonJS({
       };
       drawPlayer = function(player, x, y, width, height) {
         this.cx.drawImage(this.playerSprites, x, y, width, height);
+      };
+      #setSprites = () => {
+        this.cookieJarSprite = document.createElement("img");
+        this.cookieJarSprite.src = "../img/cookieJar.png";
+        this.playerSprites = document.createElement("img");
+        this.playerSprites.src = "../img/player.png";
+        this.wallSprite = document.createElement("img");
+        this.wallSprite.src = "img/wall.png";
+        this.cookieMonsterSprite = document.createElement("img");
+        this.cookieMonsterSprite.src = "img/cookieMonster2.png";
+        this.backgroundSprite = document.createElement("img");
+        this.backgroundSprite.src = "img/background-tile.jpeg";
+        this.exitSprite = document.createElement("img");
+        this.exitSprite.src = "img/diamond.png";
+        this.winBackgroundSprite = document.createElement("img");
+        this.winBackgroundSprite.src = "img/clouds.jpeg";
       };
     };
     module2.exports = CanvasDisplay2;
