@@ -22,6 +22,50 @@ var require_vector = __commonJS({
   }
 });
 
+// lib/player.js
+var require_player = __commonJS({
+  "lib/player.js"(exports, module2) {
+    var Vec = require_vector();
+    var Player = class {
+      constructor(pos, velocity) {
+        this.pos = pos;
+        this.velocity = velocity;
+        this.speed = 6;
+      }
+      get type() {
+        return "player";
+      }
+      static create(pos) {
+        return new Player(pos, new Vec(0, 0));
+      }
+      update(time, state, keys) {
+        let xVelocity = 0;
+        if (keys.ArrowLeft)
+          xVelocity -= this.speed;
+        if (keys.ArrowRight)
+          xVelocity += this.speed;
+        let yVelocity = 0;
+        if (keys.ArrowUp)
+          yVelocity -= this.speed;
+        if (keys.ArrowDown)
+          yVelocity += this.speed;
+        let pos = this.pos;
+        let movedX = pos.plus(new Vec(xVelocity * time, 0));
+        if (!state.level.touchesWall(movedX, this.size)) {
+          pos = movedX;
+        }
+        let movedY = pos.plus(new Vec(0, yVelocity * time));
+        if (!state.level.touchesWall(movedY, this.size)) {
+          pos = movedY;
+        }
+        return new Player(pos, new Vec(xVelocity, yVelocity));
+      }
+    };
+    Player.prototype.size = new Vec(1, 1);
+    module2.exports = Player;
+  }
+});
+
 // lib/state.js
 var require_state = __commonJS({
   "lib/state.js"(exports, module2) {
@@ -132,51 +176,6 @@ var require_cookieMonster = __commonJS({
     };
     CookieMonster.prototype.size = new Vec(1, 1);
     module2.exports = CookieMonster;
-  }
-});
-
-// lib/player.js
-var require_player = __commonJS({
-  "lib/player.js"(exports, module2) {
-    var CookieMonster = require_cookieMonster();
-    var Vec = require_vector();
-    var Player = class {
-      constructor(pos, speed) {
-        this.pos = pos;
-        this.speed = speed;
-        this.xySpeed = 6;
-      }
-      get type() {
-        return "player";
-      }
-      static create(pos) {
-        return new Player(pos, new Vec(0, 0));
-      }
-      update(time, state, keys) {
-        let xSpeed = 0;
-        if (keys.ArrowLeft)
-          xSpeed -= this.xySpeed;
-        if (keys.ArrowRight)
-          xSpeed += this.xySpeed;
-        let ySpeed = 0;
-        if (keys.ArrowUp)
-          ySpeed -= this.xySpeed;
-        if (keys.ArrowDown)
-          ySpeed += this.xySpeed;
-        let pos = this.pos;
-        let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesWall(movedX, this.size)) {
-          pos = movedX;
-        }
-        let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesWall(movedY, this.size)) {
-          pos = movedY;
-        }
-        return new Player(pos, new Vec(xSpeed, ySpeed));
-      }
-    };
-    Player.prototype.size = new Vec(1, 1);
-    module2.exports = Player;
   }
 });
 
