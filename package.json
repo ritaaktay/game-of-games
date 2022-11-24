@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "esbuild index.js --outfile=bundle.js --external:nod_modules --platform=node --bundle --watch",
-    "start": "http-server -c-1"
+    "start": "http-server -c-1",
+    "deploy": "git push heroku main"
   },
   "author": "",
   "license": "ISC",
