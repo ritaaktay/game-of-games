@@ -101,9 +101,8 @@ var require_state = __commonJS({
         return newState;
       };
       #checkCollisions(state) {
-        let player = state.player;
         for (let actor of state.actors) {
-          if (actor != player && this.#checkOverlap(actor, player)) {
+          if (actor != state.player && this.#checkOverlap(actor, state.player)) {
             return actor.collide(state);
           }
         }
