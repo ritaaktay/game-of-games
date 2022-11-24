@@ -622,12 +622,10 @@ var require_miniGameLocator = __commonJS({
     var MiniGameLocator2 = class {
       constructor() {
         this.games = [JumpGame, MatrixGame];
-        this.assigned = [];
       }
       getGame() {
         const index = this.#getRandomIndex();
         const game2 = this.games[index];
-        this.assigned.push(game2);
         this.games.splice(index, 1);
         return game2;
       }
