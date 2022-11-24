@@ -165,11 +165,11 @@ var require_player = __commonJS({
           ySpeed += this.xySpeed;
         let pos = this.pos;
         let movedX = pos.plus(new Vec(xSpeed * time, 0));
-        if (!state.level.touchesElement(movedX, this.size, "wall")) {
+        if (!state.level.touchesWall(movedX, this.size)) {
           pos = movedX;
         }
         let movedY = pos.plus(new Vec(0, ySpeed * time));
-        if (!state.level.touchesElement(movedY, this.size, "wall")) {
+        if (!state.level.touchesWall(movedY, this.size)) {
           pos = movedY;
         }
         return new Player(pos, new Vec(xSpeed, ySpeed));
@@ -186,18 +186,18 @@ var require_cookieJar = __commonJS({
     var Vec = require_vector();
     var State = require_state();
     var CookieJar = class {
-      constructor(pos, speed, MiniGameConsturctor, storedState = null, cookies = 0) {
+      constructor(pos, speed, miniGameLocator, storedState = null, cookies = 0) {
         this.pos = pos;
         this.speed = speed;
-        this.MiniGameConsturctor = MiniGameConsturctor;
+        this.MiniGameConsturctor = miniGameLocator.getGame();
         this.storedState = storedState;
         this.cookies = cookies;
       }
       get type() {
         return "cookieJar";
       }
-      static create(pos, MiniGameConsturctor) {
-        return new CookieJar(pos, new Vec(0, 0), MiniGameConsturctor);
+      static create(pos, miniGameLocator) {
+        return new CookieJar(pos, new Vec(0, 0), miniGameLocator);
       }
       collide(state) {
         if (state.miniGameStatus == null) {
@@ -264,14 +264,14 @@ var require_exit = __commonJS({
   }
 });
 
-// lib/levelCharTypes.js
-var require_levelCharTypes = __commonJS({
-  "lib/levelCharTypes.js"(exports, module2) {
+// lib/levelTypes.js
+var require_levelTypes = __commonJS({
+  "lib/levelTypes.js"(exports, module2) {
     var Player = require_player();
     var CookieMonster = require_cookieMonster();
     var CookieJar = require_cookieJar();
     var Exit = require_exit();
-    var levelCharTypes = {
+    var levelTypes = {
       ".": "empty",
       "#": "wall",
       "M": CookieMonster,
@@ -279,7 +279,7 @@ var require_levelCharTypes = __commonJS({
       "*": Exit,
       "!": CookieJar
     };
-    module2.exports = levelCharTypes;
+    module2.exports = levelTypes;
   }
 });
 
@@ -287,47 +287,40 @@ var require_levelCharTypes = __commonJS({
 var require_level = __commonJS({
   "lib/level.js"(exports, module2) {
     var Vec = require_vector();
-    var levelCharTypes = require_levelCharTypes();
+    var levelTypes = require_levelTypes();
     var Level2 = class {
       constructor(plans, MiniGameLocator2) {
         this.plans = plans;
-        this.rows = this.#makeMatrix(this.plans["start"]);
-        this.height = this.rows.length;
-        this.width = this.rows[0].length;
         this.startActors = [];
         this.MiniGameLocator = new MiniGameLocator2();
-        this.#mapActors();
+        this.#makeMatrix(this.plans["start"]);
       }
       switch = (stage) => {
+        this.startActors = [];
         this.rows = this.#makeMatrix(this.plans[stage]);
-        this.#resetActors();
-        this.#mapActors();
         return this;
       };
-      #resetActors = () => {
-        this.startActors = [];
-      };
       #makeMatrix = (levelPlan) => {
-        return levelPlan.trim().split("\n").map((l) => [...l]);
+        this.rows = levelPlan.trim().split("\n").map((l) => [...l]);
+        this.height = this.rows.length;
+        this.width = this.rows[0].length;
+        this.#mapActors();
       };
       #mapActors = () => {
         this.rows = this.rows.map((row, y) => {
-          return row.map((ch, x) => {
-            let type = levelCharTypes[ch];
-            if (typeof type == "string")
+          return row.map((index, x) => {
+            let type = levelTypes[index];
+            if (this.#isBackground(type))
               return type;
-            if (ch == "!") {
-              this.startActors.push(
-                type.create(new Vec(x, y), this.MiniGameLocator.getGame())
-              );
-            } else {
-              this.startActors.push(type.create(new Vec(x, y)));
-            }
+            this.startActors.push(type.create(new Vec(x, y), this.MiniGameLocator));
             return "empty";
           });
         });
       };
-      touchesElement = function(pos, size, type) {
+      #isBackground = (type) => {
+        return typeof type == "string";
+      };
+      touchesWall = function(pos, size) {
         let xStart = Math.floor(pos.x);
         let xEnd = Math.ceil(pos.x + size.x);
         let yStart = Math.floor(pos.y);
@@ -336,7 +329,7 @@ var require_level = __commonJS({
           for (let x = xStart; x < xEnd; x++) {
             let isOutside = x < 0 || x >= this.width || y < 0 || y >= this.height;
             let here = isOutside ? "wall" : this.rows[y][x];
-            if (here == type)
+            if (here == "wall")
               return true;
           }
         }
@@ -666,24 +659,24 @@ var require_game = __commonJS({
         ]);
       }
       run() {
-        this.#runAnimation(this.#updateFrame);
+        this.#runAnimation();
+      }
+      #runAnimation() {
+        let lastTime = null;
+        const animationCallback = (time) => {
+          if (lastTime != null) {
+            let timeStep = Math.min(time - lastTime, 100) / 1e3;
+            this.#updateFrame(timeStep);
+          }
+          lastTime = time;
+          requestAnimationFrame(animationCallback);
+        };
+        requestAnimationFrame(animationCallback);
       }
       #updateFrame = (time) => {
         this.state = this.state.update(time, this.arrowKeysTracker);
         this.display.syncState(this.state);
       };
-      #runAnimation(updateFrame) {
-        let lastTime = null;
-        function frame(time) {
-          if (lastTime != null) {
-            let timeStep = Math.min(time - lastTime, 100) / 1e3;
-            updateFrame(timeStep);
-          }
-          lastTime = time;
-          requestAnimationFrame(frame);
-        }
-        requestAnimationFrame(frame);
-      }
       #trackKeys(keys) {
         let down = /* @__PURE__ */ Object.create(null);
         function track(event) {
