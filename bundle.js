@@ -295,7 +295,7 @@ var require_level = __commonJS({
       }
       switch = (stage) => {
         this.startActors = [];
-        this.rows = this.#makeMatrix(this.plans[stage]);
+        this.#makeMatrix(this.plans[stage]);
         return this;
       };
       #makeMatrix = (levelPlan) => {
