@@ -44,7 +44,7 @@ var require_state = __commonJS({
       get cookieCount() {
         return this.cookieJars.map((cj) => cj.cookies).reduce((a, b) => a + b);
       }
-      update = function(time, keys, Level2) {
+      update = function(time, keys) {
         let newState = new State(
           this.level,
           this.actors,
@@ -53,14 +53,14 @@ var require_state = __commonJS({
         );
         newState = this.#updatePlayer(newState, time, keys);
         newState = this.#resetMiniGameStatus(newState);
-        newState = this.#checkCollisions(newState, Level2);
+        newState = this.#checkCollisions(newState);
         return newState;
       };
-      #checkCollisions(state, Level2) {
+      #checkCollisions(state) {
         let player = state.player;
         for (let actor of state.actors) {
           if (actor != player && this.#checkOverlap(actor, player)) {
-            return actor.collide(state, Level2);
+            return actor.collide(state);
           }
         }
         return state;
@@ -87,54 +87,11 @@ var require_state = __commonJS({
   }
 });
 
-// lib/levelPlans.js
-var require_levelPlans = __commonJS({
-  "lib/levelPlans.js"(exports, module2) {
-    var start = `
-..................
-.................!
-..............####
-..########....#..*
-..#......#....#...
-..#......#......#.
-..#...#..#....M.#.
-..#...#.........#.
-.@#..!#.......#...`;
-    var pass = `
-..................
-..................
-..............####
-..########....#...
-..#......#....#...
-..#......#........
-..#...#..#........
-..#...#...........
-..#...#.......#...`;
-    var escape = `
-..................
-..................
-..................
-.................@
-..................
-..................
-..................
-..................
-..................`;
-    var levelPlans2 = {
-      "start": start,
-      "pass": pass,
-      "escape": escape
-    };
-    module2.exports = levelPlans2;
-  }
-});
-
 // lib/cookieMonster.js
 var require_cookieMonster = __commonJS({
   "lib/cookieMonster.js"(exports, module2) {
     var Vec = require_vector();
     var State = require_state();
-    var levelPlans2 = require_levelPlans();
     var CookieMonster = class {
       constructor(pos, speed) {
         this.pos = pos;
@@ -146,17 +103,17 @@ var require_cookieMonster = __commonJS({
       static create(pos) {
         return new CookieMonster(pos, new Vec(0, 0));
       }
-      collide(state, Level2) {
+      collide(state) {
         let newState = new State(
           state.level,
           state.actors,
           state.status,
           state.miniGameStatus
         );
-        newState = this.#checkCookies(newState, Level2);
+        newState = this.#checkCookies(newState);
         return newState;
       }
-      #checkCookies(state, Level2) {
+      #checkCookies(state) {
         if (state.cookieJars.every((cj) => cj.cookies < 1)) {
           this.#speak("Give me cookies!");
         } else if (state.cookieJars.some((cj) => cj.cookies < 1)) {
@@ -274,7 +231,6 @@ var require_exit = __commonJS({
   "lib/exit.js"(exports, module2) {
     var Vec = require_vector();
     var State = require_state();
-    var levelPlans2 = require_levelPlans();
     var Exit = class {
       constructor(pos, speed) {
         this.pos = pos;
@@ -286,21 +242,21 @@ var require_exit = __commonJS({
       static create(pos) {
         return new Exit(pos, new Vec(0, 0));
       }
-      collide(state, levelConstructor) {
+      collide(state) {
         const newState = new State(
           state.level,
           state.actors,
           state.status,
           state.miniGameStatus
         );
-        this.#speak("");
+        this.#clearSpeech();
         newState.level = newState.level.switch("escape");
         newState.actors = newState.level.startActors;
         newState.status = "won";
         return newState;
       }
-      #speak(message) {
-        document.getElementById("text").textContent = message;
+      #clearSpeech(message) {
+        document.getElementById("text").textContent = "";
       }
     };
     Exit.prototype.size = new Vec(1, 1);
@@ -388,6 +344,48 @@ var require_level = __commonJS({
       };
     };
     module2.exports = Level2;
+  }
+});
+
+// lib/levelPlans.js
+var require_levelPlans = __commonJS({
+  "lib/levelPlans.js"(exports, module2) {
+    var start = `
+..................
+.................!
+..............####
+..########....#..*
+..#......#....#...
+..#......#......#.
+..#...#..#....M.#.
+..#...#.........#.
+.@#..!#.......#...`;
+    var pass = `
+..................
+..................
+..............####
+..########....#...
+..#......#....#...
+..#......#........
+..#...#..#........
+..#...#...........
+..#...#.......#...`;
+    var escape = `
+..................
+..................
+..................
+.................@
+..................
+..................
+..................
+..................
+..................`;
+    var levelPlans2 = {
+      "start": start,
+      "pass": pass,
+      "escape": escape
+    };
+    module2.exports = levelPlans2;
   }
 });
 
@@ -497,38 +495,29 @@ var require_jumpGame = __commonJS({
         this.started = false;
       }
       run = (callback) => {
-        window.addEventListener("keydown", this.keysEventListener);
-        this.checkIfDead();
-        this.displayMessage(
+        window.addEventListener("keydown", this.#keysEventListener);
+        this.#checkIfDead();
+        this.#displayMessage(
           "Jump over the meteorites! Press [Enter] to start and [Space Bar] to jump"
         );
         this.callback = callback;
         document.getElementById("block_jump_game_container").style.display = "inline";
       };
-      end = () => {
-        document.getElementById("block_jump_game_container").style.display = "none";
-        this.jumpCounter = 0;
-        clearInterval(this.setInterval);
-        window.removeEventListener("keydown", this.keysEventListener);
-        this.block.style.animation = "none";
-      };
-      keysEventListener = (event) => {
+      #keysEventListener = (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
-          this.start();
+          this.#start();
         }
         if (event.key === " ") {
-          this.jump();
+          event.preventDefault();
+          this.#jump();
         }
       };
-      start = () => {
+      #start = () => {
         this.started = true;
         this.block.style.animation = "block 1s infinite linear";
       };
-      displayMessage = (message) => {
-        document.getElementById("text").textContent = message;
-      };
-      checkIfDead = () => {
+      #checkIfDead = () => {
         this.setInterval = setInterval(() => {
           var characterTop = parseInt(
             window.getComputedStyle(this.character).getPropertyValue("top")
@@ -541,7 +530,7 @@ var require_jumpGame = __commonJS({
           }
         }, 10);
       };
-      jump = () => {
+      #jump = () => {
         if (this.character.classList != "animate") {
           this.character.classList.add("animate");
           if (this.started)
@@ -555,19 +544,29 @@ var require_jumpGame = __commonJS({
       };
       #increment = () => {
         this.jumpCounter += 1;
-        this.displayMessage(`Almost there... ${this.jumpCounter}`);
+        this.#displayMessage(`Almost there... ${this.jumpCounter}`);
       };
       #win = () => {
         setTimeout(() => {
-          this.end();
-          this.displayMessage("You won! \u{1F36A}");
+          this.#end();
+          this.#displayMessage("You won! \u{1F36A}");
           this.callback("won");
         }, 500);
       };
       #lose = () => {
-        this.end();
-        this.displayMessage("You lost!");
+        this.#end();
+        this.#displayMessage("You lost!");
         this.callback("lost");
+      };
+      #end = () => {
+        document.getElementById("block_jump_game_container").style.display = "none";
+        this.jumpCounter = 0;
+        clearInterval(this.setInterval);
+        window.removeEventListener("keydown", this.#keysEventListener);
+        this.block.style.animation = "none";
+      };
+      #displayMessage = (message) => {
+        document.getElementById("text").textContent = message;
       };
     };
     module2.exports = JumpGame;
@@ -655,7 +654,7 @@ var require_game = __commonJS({
   "lib/game.js"(exports, module2) {
     var State = require_state();
     var Game2 = class {
-      constructor(level2, Display, Level2) {
+      constructor(level2, Display) {
         this.level = level2;
         this.display = new Display(document.body, level2);
         this.state = State.start(level2);
@@ -665,17 +664,12 @@ var require_game = __commonJS({
           "ArrowUp",
           "ArrowDown"
         ]);
-        this.levelConstructor = Level2;
       }
       run() {
         this.#runAnimation(this.#updateFrame);
       }
       #updateFrame = (time) => {
-        this.state = this.state.update(
-          time,
-          this.arrowKeysTracker,
-          this.levelConstructor
-        );
+        this.state = this.state.update(time, this.arrowKeysTracker);
         this.display.syncState(this.state);
       };
       #runAnimation(updateFrame) {
