@@ -9,7 +9,6 @@
 ### Credits
 
 - The implementation of our game and custom game engine was based on Marijn Haverbeke's tutorials in Chapter 16 of his book [Eloquent Javascript](https://eloquentjavascript.net/16_game.html)
-- The source code for one of our mini games is from Max Teaches Tech (@codewmax)
 
 ### Setup
 
