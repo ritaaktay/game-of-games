@@ -219,4 +219,12 @@ describe("State", () => {
     expect(newerState.status).toEqual("won");
     expect(newerState.miniGameStatus).toEqual(null);
   });
+
+  it("does not update player position while mini game is playing", () => {
+    const level = new Level(mockLevelPlans, miniGameLocator);
+    const state = State.start(level);
+    state.miniGameStatus = "playing";
+    const newState = state.update(1, { "ArrowRight": true });
+    expect(newState.player.pos).toEqual(new Vec(0, 8));
+  });
 });
