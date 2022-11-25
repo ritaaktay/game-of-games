@@ -58,4 +58,4 @@ http://localhost:8080/coverage/lcov-report/index.html
 
 ### Code Coverage
 
-![image](img/test.png)
+![image](img/test-coverage.png)
