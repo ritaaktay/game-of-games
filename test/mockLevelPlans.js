@@ -21,8 +21,7 @@ const noCookieJars = `
 @.................`;
 
 const mockLevelPlans = {
-  twoCookieJars: twoCookieJars,
-  noCookieJars: noCookieJars,
+  "start": twoCookieJars,
 };
 
 module.exports = mockLevelPlans;
