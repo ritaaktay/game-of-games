@@ -40,7 +40,7 @@ describe("MatrixGame", () => {
 
   it("calls callback with 'Won' and ends game when 'r' is pressed", (done) => {
     const mockCallback = jest.fn().mockImplementation((result) => {
-      expect(result).toEqual("Won");
+      expect(result).toEqual("won");
       expect(spy).toHaveBeenCalled();
       done();
     });
@@ -52,7 +52,7 @@ describe("MatrixGame", () => {
 
   it("calls callback with 'Lost' and ends game when 'b' is pressed", (done) => {
     const mockCallback = jest.fn().mockImplementation((result) => {
-      expect(result).toEqual("Lost");
+      expect(result).toEqual("lost");
       expect(spy).toHaveBeenCalled();
       done();
     });
