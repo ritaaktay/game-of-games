@@ -1,6 +1,6 @@
 # A Game of Games
 
-### ▶️▶️ [PLAY](https://cookie-monster-game-of-games.herokuapp.com/)
+### ▶️ [PLAY](https://cookie-monster-game-of-games.herokuapp.com/)
 
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
 - Built with vanilla JavaScript, HTML and CSS on a custom game engine.
