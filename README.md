@@ -8,9 +8,9 @@
 
 ![image](img/game-1.png)
 
-### Credits
+### Code Coverage
 
-- The implementation of our game and custom game engine was based on Marijn Haverbeke's tutorials in Chapter 16 of his book [Eloquent Javascript](https://eloquentjavascript.net/16_game.html)
+![image](img/test-coverage.png)
 
 ### Setup
 
@@ -56,6 +56,6 @@ http://localhost:8080/
 http://localhost:8080/coverage/lcov-report/index.html
 ```
 
-### Code Coverage
+### Credits
 
-![image](img/test-coverage.png)
+- The implementation of our game and custom game engine was based on Marijn Haverbeke's tutorials in Chapter 16 of his book [Eloquent Javascript](https://eloquentjavascript.net/16_game.html)
