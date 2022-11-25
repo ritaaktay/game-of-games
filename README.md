@@ -12,6 +12,10 @@
 
 ![image](img/test-coverage.png)
 
+### [Read More](https://medium.com/@rita.aktay/a-game-engine-building-a-dependency-injection-container-27905b2a10ff)
+
+![image](img/blog.png)
+
 ### Setup
 
 - Clone repository
