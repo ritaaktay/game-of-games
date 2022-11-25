@@ -3,7 +3,8 @@
 ### ▶️ [PLAY](https://cookie-monster-game-of-games.herokuapp.com/)
 
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
-- Built with vanilla JavaScript, HTML and CSS on a custom game engine.
+- Built with vanilla JavaScript, HTML and CSS on a custom game engine. 
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 - [Read a blog post on how I designed a solution for this game engine with dependency injections](https://medium.com/@rita.aktay/a-game-engine-building-a-dependency-injection-container-27905b2a10ff)
 
 ![image](img/game-1.png)
