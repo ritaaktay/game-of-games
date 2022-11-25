@@ -5,12 +5,17 @@ const Game = require("../lib/game");
 const CanvasDisplay = require("../lib/canvasDisplay");
 const Level = require("../lib/level");
 const State = require("../lib/state");
-const mockLevelPlan = require("./mockLevelPlan");
+const MiniGameLocator = require("../lib/miniGameLocator");
+const mockLevelPlans = require("./mockLevelPlans");
 jest.mock("../lib/canvasDisplay.js");
+
+beforeEach(() => {
+  miniGameLocator = new MiniGameLocator([{}, {}]);
+});
 
 describe("Game", () => {
   it("has a level, a display, a state and an arrow keys tracker", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     expect(game.level).toEqual(level);
     expect(game.display instanceof CanvasDisplay).toBe(true);
@@ -20,7 +25,7 @@ describe("Game", () => {
   });
 
   it("runs the game", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const spy = jest.spyOn(window, "requestAnimationFrame");
     game.run();
@@ -29,7 +34,7 @@ describe("Game", () => {
   });
 
   it("runs the game with recursive calls to requestAnimationFrame", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
       window,
@@ -44,7 +49,7 @@ describe("Game", () => {
   });
 
   it("runs the game with recursive calls to requestAnimationFrame", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
       window,
@@ -68,7 +73,7 @@ describe("Game", () => {
   });
 
   it("runs the game with recursive calls to requestAnimationFrame and updates state", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
       window,
@@ -92,7 +97,7 @@ describe("Game", () => {
   });
 
   it("tracks keyup and keydown events for arrow keys", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
       window,
@@ -108,8 +113,8 @@ describe("Game", () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("coverse else for line 58", () => {
-    const level = new Level(mockLevelPlan);
+  it("Does not track if key is not an arrow key", () => {
+    const level = new Level(mockLevelPlans, miniGameLocator);
     const game = new Game(level, CanvasDisplay);
     const mockRequestAnimationFrame = jest.spyOn(
       window,

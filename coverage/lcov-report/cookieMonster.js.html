@@ -25,21 +25,21 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -114,24 +114,17 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,32 +139,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Vec = require("./vector");
 const State = require("./state");
-const levelPlans = require("./levelPlans");
 &nbsp;
 class CookieMonster {
   constructor(pos, speed) {
@@ -187,35 +182,34 @@ class CookieMonster {
     return new CookieMonster(pos, new Vec(0, 0));
   }
 &nbsp;
-  update(time, state, keys) {
-    return new CookieMonster(this.pos, this.speed);
-  }
-&nbsp;
-  collide(state, levelConstructor) {
-    const newState = new State(
+  collide(state) {
+    let newState = new State(
       state.level,
       state.actors,
       state.status,
-      state.miniGameStatus,
-      state.cookieJar1Cookie,
-      state.cookieJar2Cookie
+      state.miniGameStatus
     );
-    if (state.cookieJar1Cookie == 0 &amp;&amp; state.cookieJar2Cookie == 0) {
-      document.getElementById("text").textContent = "Give me cookies!";
-    } else if (state.cookieJar1Cookie &lt; 1 || state.cookieJar2Cookie &lt; 1) {
-      const cookieCount = state.cookieJar1Cookie + state.cookieJar2Cookie;
-      document.getElementById(
-        "text"
-      ).textContent = `Give me more cookies! You have: ${"🍪".repeat(
-        cookieCount
-      )}`;
-    } else {
-      document.getElementById("text").textContent =
-        "Thanks! Now, escape before it's too late!";
-      newState.level = new levelConstructor(levelPlans[1]);
-    }
 &nbsp;
+    newState = this.#checkCookies(newState);
     return newState;
+  }
+&nbsp;
+  #checkCookies(state) {
+    if (state.cookieJars.every((cj) =&gt; cj.cookies &lt; 1)) {
+      this.#speak("Give me cookies!");
+    } else if (state.cookieJars.some((cj) =&gt; cj.cookies &lt; 1)) {
+      this.#speak(
+        `Give me more cookies! You have: ${"🍪".repeat(state.cookieCount)}`
+      );
+    } else {
+      this.#speak("Mmmm delicious! Now, escape before it's too late!");
+      state.level = state.level.switch("pass");
+    }
+    return state;
+  }
+&nbsp;
+  #speak(message) {
+    document.getElementById("text").textContent = message;
   }
 }
 &nbsp;
@@ -229,7 +223,7 @@ module.exports = CookieMonster;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-11-11T08:58:56.857Z
+                at 2022-11-25T11:08:08.448Z
             </div>
         <script src="prettify.js"></script>
         <script>

@@ -1,10 +1,10 @@
 # A Game of Games
 
+### [PLAY](https://cookie-monster-game-of-games.herokuapp.com/)
+
 - A front-end game that runs in the browser - move around with your keyboard to win mini games and escape the cookie monster!
 - Built with vanilla JavaScript, HTML and CSS on a custom game engine.
 - [Read a blog post on how I designed a solution for this game engine with dependency injections](https://medium.com/@rita.aktay/a-game-engine-building-a-dependency-injection-container-27905b2a10ff)
-
-### [PLAY](https://cookie-monster-game-of-games.herokuapp.com/) 
 
 ![image](img/game-1.png)
 
@@ -26,7 +26,13 @@ git clone https://github.com/ritaaktay/squid-game.git
 npm install
 ```
 
-- Bundle app
+- Run tests
+
+```sh
+npm test
+```
+
+- Bundle
 
 ```sh
 npm run build
@@ -44,10 +50,10 @@ npm run start
 http://localhost:8080/
 ```
 
-- Run tests
+- Check test coverage
 
 ```sh
-npm test
+http://localhost:8080/coverage/lcov-report/index.html
 ```
 
 ### Code Coverage

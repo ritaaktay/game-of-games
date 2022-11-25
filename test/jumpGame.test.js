@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const BlockJumpGame = require("../lib/blockJumpGame");
+const JumpGame = require("../lib/jumpGame");
 const fs = require("fs");
 const path = require("path");
 
@@ -12,9 +12,9 @@ beforeEach(() => {
   );
 });
 
-describe("BlockJumpGame", () => {
+describe("JumpGame", () => {
   it("has character, a block, and a jump counter initialized to 0", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     expect(game.character).toEqual(document.getElementById("character"));
     expect(game.block).toEqual(document.getElementById("block"));
     expect(game.jumpCounter).toEqual(0);
@@ -22,7 +22,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("start button animates the block", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     game.run((result) => {});
     const event = new KeyboardEvent("keydown", { "key": "Enter" });
     window.dispatchEvent(event);
@@ -31,7 +31,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("jump button makes character jump", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     game.run((result) => {});
     game.start();
     const event = new KeyboardEvent("keydown", { "key": " " });
@@ -41,7 +41,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("jump button increments jump counter", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     game.run((result) => {});
     game.start();
     const event = new KeyboardEvent("keydown", { "key": " " });
@@ -50,7 +50,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("jump button increments jump counter", (done) => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     game.start();
     const jumpLater = () => {
       setTimeout(() => {
@@ -66,7 +66,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("animation is removed 500 ms after jump button is clicked", (done) => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     game.run((result) => {});
     const event = new KeyboardEvent("keydown", { "key": " " });
     window.dispatchEvent(event);
@@ -79,14 +79,14 @@ describe("BlockJumpGame", () => {
   });
 
   it("takes a callback", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     const mockCallback = jest.fn().mockImplementation((callback) => {});
     game.run(mockCallback);
     expect(game.callback).toEqual(mockCallback);
   });
 
   it("run method displays game", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     const mockCallback = jest.fn().mockImplementation((callback) => {});
     game.run(mockCallback);
     const container = document.getElementById("block_jump_game_container");
@@ -94,7 +94,7 @@ describe("BlockJumpGame", () => {
   });
 
   it("run method calls checkIfDead()", () => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     const mockCallback = jest.fn().mockImplementation((callback) => {});
     const spy = jest.spyOn(game, "checkIfDead");
     game.run(mockCallback);
@@ -102,10 +102,10 @@ describe("BlockJumpGame", () => {
   });
 
   it("game is lost on contact with block", (done) => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     const originalGetComputedStyle = window.getComputedStyle;
     const mockLoseCallback = jest.fn().mockImplementation((message) => {
-      expect(message).toEqual("Lost");
+      expect(message).toEqual("lost");
       window.getComputedStyle = originalGetComputedStyle;
       done();
     });
@@ -122,9 +122,9 @@ describe("BlockJumpGame", () => {
   });
 
   it("game is won 500ms after 5 jumps", (done) => {
-    const game = new BlockJumpGame();
+    const game = new JumpGame();
     const mockWinCallback = jest.fn().mockImplementation((message) => {
-      expect(message).toEqual("Won");
+      expect(message).toEqual("won");
       done();
     });
     game.run(mockWinCallback);
