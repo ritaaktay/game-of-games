@@ -1,12 +1,12 @@
 const Vec = require("../lib/vector");
-const mockLevelPlan = require("./mockLevelPlan");
+const mockLevelPlans = require("./mockLevelPlans");
 const Level = require("../lib/level");
 
 // Future: use mocks to convert this to pure unit testing
 
 describe("Level", () => {
   it("creates an array of arrays representing a given level plan", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans.twoCookieJars);
 
     expect(level.height).toEqual(9);
     expect(level.width).toEqual(18);
@@ -29,7 +29,7 @@ describe("Level", () => {
   });
 
   it("touchesElement() checks if an actor is touching a given element of the game's level plan", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlans.twoCookieJars);
 
     // An actor within the game's boundaries
     actor1 = {

@@ -6,14 +6,13 @@ const Level = require("../lib/level");
 const State = require("../lib/state");
 const Player = require("../lib/player");
 const Vec = require("../lib/vector");
-const mockLevelPlan = require("./mockLevelPlan");
-const noCookieJarsLevelPlan = require("./noCookieJarsLevelPlan");
+const mockLevelPlans = require("./mockLevelPlans");
 
 jest.mock("../lib/blockJumpGame");
 
 describe("State", () => {
   it("has a level, actors, status and miniGameStatus", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = new State(level, [], "playing");
     expect(state.level).toEqual(level);
     expect(state.actors).toEqual([]);
@@ -22,7 +21,7 @@ describe("State", () => {
   });
 
   it("has a start method that creates a new state", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level, level.startActors, "playing");
     expect(state.level).toEqual(level);
     expect(state.actors).toEqual(level.startActors);
@@ -31,14 +30,14 @@ describe("State", () => {
   });
 
   it("has a getter that returns the player", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level, level.startActors, "playing");
     expect(state.player.type).toEqual("player");
     expect(state.player instanceof Player).toEqual(true);
   });
 
   it("has an overlap method that returns false if two actors are not overlapping", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level, level.startActors, "playing");
     const player1 = Player.create(new Vec(0, 0));
     const player2 = Player.create(new Vec(2, 2));
@@ -46,7 +45,7 @@ describe("State", () => {
   });
 
   it("has an overlap method that returns true if two actors are overlapping", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level, level.startActors, "playing");
     const player1 = Player.create(new Vec(0, 0));
     const player2 = Player.create(new Vec(0, 0));
@@ -54,7 +53,7 @@ describe("State", () => {
   });
 
   it("has an update method that returns an updated state", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level, level.startActors, "playing");
     const newState = state.update(1, {});
     expect(newState.level).toEqual(level);
@@ -64,7 +63,7 @@ describe("State", () => {
   });
 
   it("has an update method that returns an updated state with movement", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const mockMiniGame = {
       run: (callback) => {},
     };
@@ -83,7 +82,7 @@ describe("State", () => {
   });
 
   it("has an update method that returns an updated state with collision", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const mockMiniGame = {
       run: (callback) => {},
     };
@@ -102,7 +101,7 @@ describe("State", () => {
   });
 
   it("has an update method that returns an updated state with collision and mini game win", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const mockMiniGame = {
       run: jest.fn().mockImplementation((callback) => {
         this.callback = callback;
@@ -131,7 +130,7 @@ describe("State", () => {
   });
 
   it("has an update method that returns an updated state with collision and mini game loss", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const mockMiniGame = {
       run: jest.fn().mockImplementation((callback) => {
         this.callback = callback;
@@ -160,7 +159,7 @@ describe("State", () => {
   });
 
   it("when player moves away from cookieJar after mini game miniGameStatus will be null", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const mockMiniGame = {
       run: jest.fn().mockImplementation((callback) => {
         this.callback = callback;
@@ -192,7 +191,7 @@ describe("State", () => {
   });
 
   it("returns unmodified state if game has been won or lost ", () => {
-    const level = new Level(mockLevelPlan);
+    const level = new Level(mockLevelPlan.twoCookieJars);
     const state = State.start(level);
     const newState = state.update(1, {});
     newState.status = "won";
@@ -204,7 +203,7 @@ describe("State", () => {
   });
 
   it("does not check overlap when no cookie jars", () => {
-    const level = new Level(noCookieJarsLevelPlan);
+    const level = new Level(mockLevelPlan.noCookieJars);
     const state = new State(level, [], "playing");
     const spy = jest.spyOn(state, "overlap");
     state.update(1, {});
